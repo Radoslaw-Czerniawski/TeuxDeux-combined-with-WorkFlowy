@@ -2,14 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { BrowserRouter } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { Expenses } from "./Routes/Expenses"
+import { Invoices } from "./Routes/Invoices"
 
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-    <App />
-    </BrowserRouter>
+      <App />
+      {/* <Routes>
+            <Route path="/" element={<App />}>
+                <Route path="expenses" element={<Expenses />} />
+                <Route path="invoices" element={<Invoices />} />
+            </Route>
+      </Routes> */}
+  </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
