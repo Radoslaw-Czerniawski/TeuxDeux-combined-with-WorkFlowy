@@ -1,36 +1,35 @@
 import styled from "styled-components";
 import { List } from "./List";
 import { useState, useCallback, useEffect } from "react";
+import { NameInput } from "../Input/NameInput";
 
 const ListElement = styled.li`
+    /* display: flex;
+    align-items: left; */
     font-size: 16px;
     padding: 10px;
-    &:hover {
-        background: #ddd;
-    }
 `;
 
 const DotButton = styled.a`
-    width:20px;
-    height: 20px;
-    border-radius: 20px;
-    background: red;
+    display: block;
+    margin: 0 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background: grey;
+`
+
+const ListElementHeader = styled.div`
+    display: flex;
+    align-items: center;
 `
 
 const ListItem = ({ id }) => {
 
-
-    const [listItemObject, setListItemObject] = useState({
-        "id": "",
-        "name": "",
-        "subList": [],
-    });
-
     const fetchNotes = useCallback(() => {
-        fetch(`http://localhost:3000/notes/${id}`)
+        return fetch(`http://localhost:3000/notes/${id}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 setListItemObject({
                     "id": `${data.id}`,
                     "name": `${data.name}`,
@@ -40,27 +39,71 @@ const ListItem = ({ id }) => {
             });
         }, [id])
 
+    const [listItemObject, setListItemObject] = useState({
+        "id": "",
+        "name": "",
+        "subList": [],
+    });
+
+
     useEffect(() => {
         fetchNotes();
     }, [])
 
     return (
-        <ListElement>
-            {listItemObject.name} <br/>
+        <>
+        {(listItemObject["id"] !== "") &&
+            <ListElement>
+            <ListElementHeader>
             {/* popup menu */}
-
             {/* sublist hidden/shown button */}
             {/* dot button */}
+            <DotButton />
+
             {/* Item title = input with onchange attribute  */}
+            <NameInput listItemObject={listItemObject} />
+
             {/* drag list item handle */}
+
+            </ListElementHeader>
             {/* sublist */}
             { listItemObject.subList[0] &&
                 <List
                     subList={listItemObject.subList}
                 />
             }
-        </ListElement>
+            </ListElement>
+        }
+        </>
     );
 };
 
 export { ListItem };
+
+
+/*
+
+
+
+    const putNewInputValue = () => {
+        return fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                name: dataValue
+            })
+        })
+    }
+
+    const [dataValue, setDataValue] = useState(listItemObject.name)
+
+    return <NameInputField type="text" onChange={(e) => setDataValue(e.target.value)} value={dataValue} />;
+
+
+
+
+
+
+*/

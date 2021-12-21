@@ -7,7 +7,6 @@ function App() {
 
 	const { id } = useParams();
 
-	console.log(id);
 
     return (
         <ul>
