@@ -8,7 +8,7 @@ padding: 10px;
 
 const AddNote = ({nestedNotes, note, setState}) => {
 
-    const addNewNestedNote = (nestedNote, note) => {
+    const addNewNestedNote = (note) => {
         if(!note) {
             setState(
                 nestedNotes.push({
