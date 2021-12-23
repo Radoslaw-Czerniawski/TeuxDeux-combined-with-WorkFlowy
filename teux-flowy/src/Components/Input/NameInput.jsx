@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import styled, {  keyframes } from "styled-components";
+import debounce from "lodash/debounce"
 
 const activeTextPulse = keyframes`
     0% {
@@ -29,25 +30,31 @@ const NameInputField = styled.input`
 const NameInput = ({ listItemObject }) => {
 
     const initialValue = listItemObject.name;
-    console.log(initialValue, listItemObject.id)
 
     const [dataValue, setDataValue] = useState(initialValue);
 
-/*     const putNewInputValue = () => {
-        return fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
+    const putNewInputValue = useCallback(debounce((e) => {
+        fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
             method: "PATCH",
             headers: {
                 "Content-type": "application/json"
             },
             body: JSON.stringify({
-                name: dataValue
+                name: e.target.value
             })
         })
-    } */
+    }, 500), []);
 
-    return <NameInputField type="text" value={dataValue} onChange={(e) => {
-        setDataValue(e.target.value);
-    }}  />;
+    return (
+        <NameInputField
+            type="text"
+            value={dataValue}
+            onChange={(e) => {
+            setDataValue(e.target.value);
+            }}
+            onKeyUp={putNewInputValue}
+        />
+    )
 };
 
 export { NameInput };

@@ -2,16 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { BrowserRouter, Route, Routes, useParams } from "react-router-dom"
-import { Expenses } from "./Routes/Expenses"
-import { Invoices } from "./Routes/Invoices"
-
+import { AppClone } from "./AppClone";
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 ReactDOM.render(
 	<React.StrictMode>
 		<BrowserRouter>
 			<Routes>
-				<Route path="/:id" element={<App />} />
+				<Route path="/" element={<App />} />
+				<Route path="/:id" element={<AppClone />}/>
 			</Routes>
 		</BrowserRouter>
 	</React.StrictMode>,

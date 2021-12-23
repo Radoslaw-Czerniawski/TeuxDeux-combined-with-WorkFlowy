@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { ListItem } from "./ListItem";
-import { useState } from "react";
 
 const ListContainer = styled.ul`
     padding-left: 20px;
