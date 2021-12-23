@@ -7,12 +7,12 @@ const ListContainer = styled.ul`
 
 const DeleteItem = styled.button``;
 
-const List = ({ subList }) => {
+const List = ({ subList, parentList }) => {
     return (
         <ListContainer>
             {/* loop generating listItems */}
             {subList.map((id) => (
-                <ListItem id={id} />
+                <ListItem id={id} parentList={parentList}/>
             ))}
 
             {/* + button for adding listItem */}

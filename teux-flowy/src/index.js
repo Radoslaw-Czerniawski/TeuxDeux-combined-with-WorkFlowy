@@ -2,17 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { AppClone } from "./AppClone";
-import { BrowserRouter, Route, Routes } from "react-router-dom"
 
 ReactDOM.render(
 	<React.StrictMode>
-		<BrowserRouter>
-			<Routes>
-				<Route path="/" element={<App />} />
-				<Route path="/:id" element={<AppClone />}/>
-			</Routes>
-		</BrowserRouter>
+		<App />
 	</React.StrictMode>,
   document.getElementById('root')
 );

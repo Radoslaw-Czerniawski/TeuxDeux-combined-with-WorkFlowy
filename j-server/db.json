@@ -10,7 +10,7 @@
     },
     {
       "id": "ooaa",
-      "name": "Lista zakupów",
+      "name": "Lista zadupów",
       "subList": [
         "kkdasds1",
         "wwwkkk2"
@@ -18,7 +18,7 @@
     },
     {
       "id": "kkdasds1",
-      "name": "W Media Expert",
+      "name": "W Media Experta",
       "subList": [
         "ooooaaa",
         "bulbull"
@@ -26,7 +26,7 @@
     },
     {
       "id": "ooooaaa",
-      "name": "Myszka",
+      "name": "Myszek",
       "subList": []
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "id": "1234567",
-      "name": "Piwo",
+      "name": "Moje Paliwo",
       "subList": []
     },
     {

@@ -11,22 +11,43 @@ const ListElement = styled.li`
     padding: 10px;
 `;
 
-const DotButton = styled.a`
+const DotButton = styled.div`
     display: block;
     margin: 0 10px;
     width: 10px;
     height: 10px;
     border-radius: 100%;
     background: grey;
+    transition: opacity 0.4s;
+    &:hover {
+        opacity: 0.5;
+    }
 `;
 
 const ListElementHeader = styled.div`
+    position: relative;
     display: flex;
     align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    transition: background-color 0.3s linear;
+    &:hover {
+        background: #ddf;
+    }
 `;
 
-const ListItem = ({ id }) => {
-    const fetchNotes = useCallback(() => {
+const WeirdLineFromDotToDot = styled.div`
+    position: absolute;
+    left: 24px;
+    top: 3rem;
+    width: 2px;
+    height: 100%;
+    background: #eee;
+`
+
+const ListItem = ({ id, parentList, parentsNameList, globalState, setGlobalState  }) => {
+
+    const fetchCurrentNestedNoteBasedOnParentsSublistId = useCallback(() => {
         return fetch(`http://localhost:3000/notes/${id}`)
             .then((response) => response.json())
             .then((data) => {
@@ -44,32 +65,47 @@ const ListItem = ({ id }) => {
         subList: [],
     });
 
+
+
     useEffect(() => {
-        fetchNotes();
+        fetchCurrentNestedNoteBasedOnParentsSublistId();
     }, []);
+
+    // parentList to URL -> localhost:3001/
+    const nodeUrl = [...parentList, ...[id]].join(":")
+
 
     return (
         <>
-            {listItemObject["id"] !== "" && (
-                <ListElement key={listItemObject["id"]}>
+            {listItemObject.id !== "" && (
+                <ListElement key={listItemObject.id}>
                     <ListElementHeader>
                         {/* popup menu */}
                         {/* sublist hidden/shown button */}
                         {/* dot button */}
                         <Link
-                            to={`/${listItemObject["id"]}`}
-                            key={listItemObject["id"]}
+                            to={`/${nodeUrl}`}
+                            key={listItemObject.id}
                         >
-                            <DotButton key={listItemObject["id"]} />
+                            <DotButton
+                                key={listItemObject.id}
+                            />
                         </Link>
+                        <WeirdLineFromDotToDot/>
 
                         {/* Item title = input with onchange attribute  */}
-                        <NameInput listItemObject={listItemObject} />
+                        <NameInput
+                            listItemObject={listItemObject}
+                        />
 
                         {/* drag list item handle */}
                     </ListElementHeader>
                     {/* sublist */}
-                    {listItemObject.subList[0] && <List subList={listItemObject.subList} />}
+                    {listItemObject.subList[0] &&
+                    <List
+                        subList={listItemObject.subList}
+                        parentList={[...parentList, ...[id]]}
+                    />}
                 </ListElement>
             )}
         </>
