@@ -13,6 +13,7 @@ function DynamicView({ setCurrentPath, globalState }) {
             names: [],
             currentPath: idPath.split(":"),
         });
+        return;
     }, [idPath]);
 
     const parentList = idPath.split(":");

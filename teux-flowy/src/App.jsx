@@ -4,11 +4,13 @@ import { DynamicView } from "./views/DynamicView";
 import "./App.css";
 import { useState } from "react";
 import { Header } from "./Components/Header/Header";
+import { AppContext } from "./ContextApi";
 
 function App() {
     const [currentNotes, setCurrentNotes] = useState({
         names: [],
         currentPath: [],
+        more: [],
     });
 
     if (currentNotes.currentPath.length === 1) {
@@ -18,28 +20,35 @@ function App() {
         });
     }
 
+    const ContextElement = {
+        currentNotes,
+        setCurrentNotes
+    }
+
     console.log("CurrentPath: ", currentNotes);
 
     return (
         <BrowserRouter>
             <Header idPath={currentNotes} setGlobalState={setCurrentNotes} />
-            <Routes>
-                <Route
-                    path="/"
-                    element={
-                        <HomeView
-                            setCurrentPath={setCurrentNotes}
-                        />
-                    }
-                />
+            <AppContext.Provider value={ContextElement}>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <HomeView
+                                setCurrentPath={setCurrentNotes}
+                            />
+                        }
+                    />
 
-                <Route
-                    path="/:idPath"
-                    element={
-                        <DynamicView setCurrentPath={setCurrentNotes} globalState={currentNotes} />
-                    }
-                />
-            </Routes>
+                    <Route
+                        path="/:idPath"
+                        element={
+                            <DynamicView setCurrentPath={setCurrentNotes} globalState={currentNotes} />
+                        }
+                    />
+                </Routes>
+            </AppContext.Provider>
         </BrowserRouter>
     );
 }

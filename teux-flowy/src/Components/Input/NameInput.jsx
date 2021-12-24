@@ -1,6 +1,8 @@
 import { useCallback, useState } from "react";
 import styled, {  keyframes } from "styled-components";
 import debounce from "lodash/debounce"
+import uniqid from "uniqid";
+import { AppContext } from "../../ContextApi";
 
 const activeTextPulse = keyframes`
     0% {
@@ -45,15 +47,62 @@ const NameInput = ({ listItemObject }) => {
         })
     }, 500), []);
 
+    const addNewInputField = useCallback((e) => {
+        const newID = uniqid();
+        return fetch(`http://localhost:3000/notes`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                id: newID,
+                name:"undefined",
+                subList: [],
+            })
+        })
+        .then(() => {
+            fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                subList: [
+                    newID,
+                    ...listItemObject.subList,
+                ]
+            })
+        })
+        })
+    },[])
+
     return (
-        <NameInputField
-            type="text"
-            value={dataValue}
-            onChange={(e) => {
-            setDataValue(e.target.value);
-            }}
-            onKeyUp={putNewInputValue}
-        />
+        <AppContext.Consumer>
+            {(context) => (
+                <NameInputField
+                    type="text"
+                    value={dataValue}
+                    onChange={(e) => {
+                    setDataValue(e.target.value);
+                    }}
+                    onKeyUp={(e) => {
+                        putNewInputValue(e);
+
+                        if(e.key === "Enter" && e.target.value !== "") {
+                            addNewInputField(e)
+                            .then(() => window.location.reload())
+
+                            // .then(() => {
+                            //     context.setCurrentNotes({
+                            //         ...context.currentNotes,
+                            //         more: ["yes"],
+                            //     })
+                            // })
+                        }
+                    }}
+                />
+            )}
+        </AppContext.Consumer>
     )
 };
 
