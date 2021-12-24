@@ -25,20 +25,13 @@ const BreadcrumbCurrentElement = styled.span`
     padding: 10px;
 `;
 
-function Header({ idPath, setGlobalState, globalState }) {
-    const [breadCrumbNames, setBreadCrumbNames] = useState([]);
-
+function Header({ idPath, setGlobalState }) {
     const parentList = idPath.currentPath;
-    const id = parentList[parentList.length - 1];
-
-    console.log(parentList);
-
-    // console.log(parentList);
 
     useEffect(() => {
         const namesList = [];
 
-        if (parentList.length >= 1) {
+        if (idPath.currentPath.length >= 1) {
             Promise.all(
                 parentList.forEach((parent) => {
                     fetch(`http://localhost:3000/notes/${parent}`)
@@ -60,14 +53,16 @@ function Header({ idPath, setGlobalState, globalState }) {
     return (
         <HeaderContainer>
             <BreadcrumbsContainer>
-                {parentList.map((parent, index) => {
-                    const nodeUrl = "/" + parentList.slice(0, index + 1).join(":");
+                {idPath.currentPath.map((parent, index) => {
+                    const nodeUrl = "/" + idPath.currentPath.slice(0, index + 1).join(":");
                     return (
                         <>
-                            {index !== parentList.length - 1 && (
+                            {index !== idPath.currentPath.length - 1 && (
                                 <>
                                     <BreadcrumbElement>
-                                        <NodeUrlLink href={nodeUrl}>{idPath.names[index]}</NodeUrlLink>
+                                        <NodeUrlLink href={nodeUrl}>
+                                            {idPath.names[index]}
+                                        </NodeUrlLink>
                                     </BreadcrumbElement>
                                     <BreadcrumbElement role="img" aria-label="Play Button">
                                         &#9654;&#65039;
