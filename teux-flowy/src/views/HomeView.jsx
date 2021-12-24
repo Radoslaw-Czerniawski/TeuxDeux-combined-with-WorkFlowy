@@ -1,6 +1,8 @@
 import { ListItem } from "../Components/List/ListItem";
+import { useEffect } from "react";
 
-const HomeView= ({setCurrentPath}) => {
+
+const HomeView= ({ setCurrentPath }) => {
 
     return (
         <ul>

@@ -12,7 +12,7 @@ const List = ({ subList, parentList }) => {
         <ListContainer>
             {/* loop generating listItems */}
             {subList.map((id) => (
-                <ListItem id={id} parentList={parentList}/>
+                <ListItem id={id} parentList={parentList} />
             ))}
 
             {/* + button for adding listItem */}

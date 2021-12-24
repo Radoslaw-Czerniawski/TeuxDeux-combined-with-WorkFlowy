@@ -43,10 +43,9 @@ const WeirdLineFromDotToDot = styled.div`
     width: 2px;
     height: 100%;
     background: #eee;
-`
+`;
 
-const ListItem = ({ id, parentList, parentsNameList, globalState, setGlobalState  }) => {
-
+const ListItem = ({ id, parentList }) => {
     const fetchCurrentNestedNoteBasedOnParentsSublistId = useCallback(() => {
         return fetch(`http://localhost:3000/notes/${id}`)
             .then((response) => response.json())
@@ -65,15 +64,12 @@ const ListItem = ({ id, parentList, parentsNameList, globalState, setGlobalState
         subList: [],
     });
 
-
-
     useEffect(() => {
         fetchCurrentNestedNoteBasedOnParentsSublistId();
     }, []);
 
     // parentList to URL -> localhost:3001/
-    const nodeUrl = [...parentList, ...[id]].join(":")
-
+    const nodeUrl = [...parentList, ...[id]].join(":");
 
     return (
         <>
@@ -83,29 +79,23 @@ const ListItem = ({ id, parentList, parentsNameList, globalState, setGlobalState
                         {/* popup menu */}
                         {/* sublist hidden/shown button */}
                         {/* dot button */}
-                        <Link
-                            to={`/${nodeUrl}`}
-                            key={listItemObject.id}
-                        >
-                            <DotButton
-                                key={listItemObject.id}
-                            />
+                        <Link to={`/${nodeUrl}`} key={listItemObject.id}>
+                            <DotButton key={listItemObject.id} />
                         </Link>
-                        <WeirdLineFromDotToDot/>
+                        <WeirdLineFromDotToDot />
 
                         {/* Item title = input with onchange attribute  */}
-                        <NameInput
-                            listItemObject={listItemObject}
-                        />
+                        <NameInput listItemObject={listItemObject} />
 
                         {/* drag list item handle */}
                     </ListElementHeader>
                     {/* sublist */}
-                    {listItemObject.subList[0] &&
-                    <List
-                        subList={listItemObject.subList}
-                        parentList={[...parentList, ...[id]]}
-                    />}
+                    {listItemObject.subList[0] && (
+                        <List
+                            subList={listItemObject.subList}
+                            parentList={[...parentList, ...[id]]}
+                        />
+                    )}
                 </ListElement>
             )}
         </>

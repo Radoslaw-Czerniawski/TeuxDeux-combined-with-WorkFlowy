@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ListItem } from "../Components/List/ListItem"
+import { ListItem } from "../Components/List/ListItem";
 
-function DynamicView({setCurrentPath, globalState}) {
-
+function DynamicView({ setCurrentPath, globalState }) {
     let { idPath } = useParams();
 
     const [givenIdPath, setGivenIdPath] = useState(idPath);
@@ -11,24 +10,23 @@ function DynamicView({setCurrentPath, globalState}) {
     useEffect(() => {
         setGivenIdPath(idPath);
         setCurrentPath({
-            ...globalState,
-            currentPath: idPath.split(":")
+            names: [],
+            currentPath: idPath.split(":"),
         });
-    }, [idPath])
+    }, [idPath]);
 
     const parentList = idPath.split(":");
     const id = parentList.pop();
 
     return (
         <ul>
-            {(givenIdPath === idPath) &&
-            <ListItem
-                id={id}
-                parentList={parentList}
-                key={id}
-                globalState={globalState}
-                setGlobalState={setCurrentPath}
-            />}
+            {givenIdPath === idPath && (
+                <ListItem
+                    id={id}
+                    parentList={parentList}
+                    key={id}
+                />
+            )}
         </ul>
     );
 }
