@@ -9,8 +9,7 @@ import { AppContext } from "./ContextApi";
 function App() {
     const [currentNotes, setCurrentNotes] = useState({
         names: [],
-        currentPath: [],
-        more: [],
+        currentPath: []
     });
 
     if (currentNotes.currentPath.length === 1) {
@@ -21,22 +20,21 @@ function App() {
     }
 
     const ContextElement = {
-        currentNotes,
+        ...currentNotes,
         setCurrentNotes
     }
 
-    console.log("CurrentPath: ", currentNotes);
-
     return (
         <BrowserRouter>
-            <Header idPath={currentNotes} setGlobalState={setCurrentNotes} />
             <AppContext.Provider value={ContextElement}>
+                <Header idPath={currentNotes} setGlobalState={setCurrentNotes} />
                 <Routes>
                     <Route
                         path="/"
                         element={
-                            <HomeView
+                            <DynamicView
                                 setCurrentPath={setCurrentNotes}
+                                currentNotes={currentNotes}
                             />
                         }
                     />
@@ -44,7 +42,9 @@ function App() {
                     <Route
                         path="/:idPath"
                         element={
-                            <DynamicView setCurrentPath={setCurrentNotes} globalState={currentNotes} />
+                            <DynamicView
+                                setCurrentPath={setCurrentNotes}
+                                currentNotes={currentNotes} />
                         }
                     />
                 </Routes>

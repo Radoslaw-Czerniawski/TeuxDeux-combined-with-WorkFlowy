@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import styled, {  keyframes } from "styled-components";
 import debounce from "lodash/debounce"
 import uniqid from "uniqid";
@@ -18,10 +18,12 @@ const activeTextPulse = keyframes`
 
 const NameInputField = styled.input`
     background: transparent;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
     border: none;
     display: block;
     overflow: visible;
-    width: 100%;
     &:active, &:focus {
         border: none;
         outline: none;
@@ -29,11 +31,26 @@ const NameInputField = styled.input`
     }
 `;
 
-const NameInput = ({ listItemObject }) => {
+const NameInput = ({ listItemObject, parentList }) => {
 
     const initialValue = listItemObject.name;
 
     const [dataValue, setDataValue] = useState(initialValue);
+
+    let parentSublist = [];
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/notes/${parentList[parentList.length - 2]}`)
+        .then(res => res.json())
+        .then(data =>  {
+            parentSublist = data.subList
+            parentSublist = parentSublist.filter((value) => {
+                if(value !== listItemObject.id) {
+                    return value;
+                }
+            })
+        })
+    }, [])
 
     const putNewInputValue = useCallback(debounce((e) => {
         fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
@@ -56,7 +73,7 @@ const NameInput = ({ listItemObject }) => {
             },
             body: JSON.stringify({
                 id: newID,
-                name:"undefined",
+                name:"Pisz tutaj ...",
                 subList: [],
             })
         })
@@ -76,33 +93,48 @@ const NameInput = ({ listItemObject }) => {
         })
     },[])
 
+    const removeCurrentInput = useCallback((e) => {
+        return fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
+            method: "DELETE",
+        })
+        .then(() => {
+            fetch(`http://localhost:3000/notes/${parentList[parentList.length - 2]}`, {
+            method: "PATCH",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                subList: [
+                    ...parentSublist,
+                ]
+            })
+            })
+        })
+    }, [])
+
+
+
     return (
-        <AppContext.Consumer>
-            {(context) => (
-                <NameInputField
-                    type="text"
-                    value={dataValue}
-                    onChange={(e) => {
-                    setDataValue(e.target.value);
-                    }}
-                    onKeyUp={(e) => {
-                        putNewInputValue(e);
+        <NameInputField
+            type="text"
+            value={dataValue}
+            onChange={(e) => {
+            setDataValue(e.target.value);
+            }}
+            onKeyUp={(e) => {
+                putNewInputValue(e);
 
-                        if(e.key === "Enter" && e.target.value !== "") {
-                            addNewInputField(e)
-                            .then(() => window.location.reload())
+                if(e.key === "Enter" && e.target.value !== "") {
+                    addNewInputField(e)
+                    .then(() => window.location.reload())
+                }
 
-                            // .then(() => {
-                            //     context.setCurrentNotes({
-                            //         ...context.currentNotes,
-                            //         more: ["yes"],
-                            //     })
-                            // })
-                        }
-                    }}
-                />
-            )}
-        </AppContext.Consumer>
+                if(e.key === "Backspace" && e.target.value === "") {
+                    removeCurrentInput(e)
+                    .then(() => window.location.reload())
+                }
+            }}
+        />
     )
 };
 

@@ -6,7 +6,7 @@ const HomeView= ({ setCurrentPath }) => {
 
     return (
         <ul>
-            <ListItem id={"HOME"} parentList={[]} />
+            <ListItem  id={"HOME"} parentList={[]} parentNameList={[]} />
         </ul>
     );
 }
