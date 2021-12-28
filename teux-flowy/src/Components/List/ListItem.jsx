@@ -3,6 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
 import { AppContext } from "../../ContextApi";
+import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
 
 const ListItem = ({ id, parentList, parentNameList, isFirst }) => {
     const fetchCurrentNestedNoteBasedOnParentsSublistId = useCallback(() => {
@@ -21,6 +22,7 @@ const ListItem = ({ id, parentList, parentNameList, isFirst }) => {
             })
     }, [id]);
 
+    //Sync state with server
     const [outOfSync, setOutOfSync] = useState(true)
 
     const [listItemObject, setListItemObject] = useState({
@@ -40,7 +42,10 @@ const ListItem = ({ id, parentList, parentNameList, isFirst }) => {
         }
     },[changeSyncStatus]);
 
-    // parentList to URL -> localhost:3001/
+    //Visibility state for children
+    const [childrenVisible, setChildrenVisible] = useState(false);
+
+
     const listUrl = [...parentList, id];
 
     if (parentNameList[parentNameList.length - 1] !== listItemObject.name) {
@@ -57,7 +62,11 @@ const ListItem = ({ id, parentList, parentNameList, isFirst }) => {
                             {/* popup menu */}
 
                             {/* sublist hidden/shown button */}
-
+                            <ToggleVisibilty 
+                                childrenVisible={childrenVisible}
+                                setChildrenVisible={setChildrenVisible}
+                                subList = {listItemObject.subList}
+                            ></ToggleVisibilty>
 
                             {/* dot button */}
                             {!isFirst && (
@@ -85,25 +94,25 @@ const ListItem = ({ id, parentList, parentNameList, isFirst }) => {
                             {/* drag list item handle */}
                         </S.ListElementHeader>
                         {/* sublist */}
-                        <S.ListContainer>
-                            {/* loop generating listItems */}
-                            {listItemObject.subList.map((id, index) => (
-                                <>
-                                    <ListItem
-                                        isFirst={false}
-                                        id={id}
-                                        key={id}
-                                        parentList={parentList}
-                                        parentNameList={parentNameList}
-                                    />
-                                    {!isFirst && (
-                                        <S.CoveringLine />
-                                    )}
-                                </>
-                            ))}
+                            {childrenVisible && <S.ListContainer>
+                                {/* loop generating listItems */}
+                                {listItemObject.subList.map((id, index) => (
+                                    <>
+                                        <ListItem
+                                            isFirst={false}
+                                            id={id}
+                                            key={id}
+                                            parentList={parentList}
+                                            parentNameList={parentNameList}
+                                        />
+                                        {!isFirst && (
+                                            <S.CoveringLine />
+                                        )}
+                                    </>
+                                ))}
 
-                            {/* + button for adding listItem */}
-                        </S.ListContainer>
+                                {/* + button for adding listItem */}
+                            </S.ListContainer>}
                     </S.ListElement>
                 )
             }
