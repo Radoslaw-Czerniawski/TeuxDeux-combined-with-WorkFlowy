@@ -26,8 +26,10 @@ function DynamicView({ setCurrentPath, currentNotes }) {
                 <ListItem
                     id={id}
                     isFirst={true}
+                    parentSublist={undefined}
                     parentNameList={currentNotes.names}
                     parentList={parentList}
+                    parentChangeSyncStatus={undefined}
                     key={id}
                 />
             )}

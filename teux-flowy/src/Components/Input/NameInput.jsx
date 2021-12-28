@@ -33,26 +33,18 @@ const NameInputField = styled.input`
     }
 `;
 
-const NameInput = ({ listItemObject, parentList, isFirst, changeSyncStatus }) => {
+const NameInput = ({ listItemObject, /* parentList */ removeCurrentInput, isFirst, changeSyncStatus, parentSublist }) => {
 
-    const initialValue = listItemObject.name;
+    console.log("SUBLISTA KURDE", listItemObject.subList)
 
-    const [dataValue, setDataValue] = useState(initialValue);
 
-    let parentSublist = [];
+    const [dataValue, setDataValue] = useState(listItemObject.name);
 
-    useEffect(() => {
-        fetch(`http://localhost:3000/notes/${parentList[parentList.length - 2]}`)
-        .then(res => res.json())
-        .then(data =>  {
-            parentSublist = data.subList
-            parentSublist = parentSublist.filter((value) => {
-                if(value !== listItemObject.id) {
-                    return value;
-                }
-            })
-        })
-    }, [])
+    // let filteredParentSublist = (parentSublist) && parentSublist.filter((value) => {
+    //     if(value !== listItemObject.id) {
+    //         return value;
+    //     }
+    // })
 
     const putNewInputValue = useCallback(debounce((e) => {
         fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
@@ -96,25 +88,25 @@ const NameInput = ({ listItemObject, parentList, isFirst, changeSyncStatus }) =>
             });
             console.log("Patch ended ====");
         })
-    },[])
+    },[listItemObject])
 
-    const removeCurrentInput = useCallback((e) => {
-        fetch(`http://localhost:3000/notes/${parentList[parentList.length - 2]}`, {
-        method: "PATCH",
-        headers: {
-            "Content-type": "application/json"
-        },
-        body: JSON.stringify({
-            subList: [
-                ...parentSublist,
-            ]
-        })})
-        .then(() => {
-            fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
-            method: "DELETE",
-            })
-        })
-    }, [])
+    // const removeCurrentInput = useCallback((e) => {
+    //     fetch(`http://localhost:3000/notes/${parentList[parentList.length - 2]}`, {
+    //     method: "PATCH",
+    //     headers: {
+    //         "Content-type": "application/json"
+    //     },
+    //     body: JSON.stringify({
+    //         subList: [
+    //             ...filteredParentSublist,
+    //         ]
+    //     })})
+    //     .then(() => {
+    //         fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
+    //         method: "DELETE",
+    //         })
+    //     })
+    // }, [])
 
 
 
@@ -136,7 +128,6 @@ const NameInput = ({ listItemObject, parentList, isFirst, changeSyncStatus }) =>
 
                 if(e.key === "Backspace" && e.target.value === "") {
                     removeCurrentInput(e)
-                    .then(() => changeSyncStatus())
                 }
             }}
         />
