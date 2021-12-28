@@ -34,17 +34,7 @@ const NameInputField = styled.input`
 `;
 
 const NameInput = ({ listItemObject, /* parentList */ removeCurrentInput, isFirst, changeSyncStatus, parentSublist }) => {
-
-    console.log("SUBLISTA KURDE", listItemObject.subList)
-
-
     const [dataValue, setDataValue] = useState(listItemObject.name);
-
-    // let filteredParentSublist = (parentSublist) && parentSublist.filter((value) => {
-    //     if(value !== listItemObject.id) {
-    //         return value;
-    //     }
-    // })
 
     const putNewInputValue = useCallback(debounce((e) => {
         fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
@@ -89,24 +79,6 @@ const NameInput = ({ listItemObject, /* parentList */ removeCurrentInput, isFirs
             console.log("Patch ended ====");
         })
     },[listItemObject])
-
-    // const removeCurrentInput = useCallback((e) => {
-    //     fetch(`http://localhost:3000/notes/${parentList[parentList.length - 2]}`, {
-    //     method: "PATCH",
-    //     headers: {
-    //         "Content-type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //         subList: [
-    //             ...filteredParentSublist,
-    //         ]
-    //     })})
-    //     .then(() => {
-    //         fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
-    //         method: "DELETE",
-    //         })
-    //     })
-    // }, [])
 
 
 

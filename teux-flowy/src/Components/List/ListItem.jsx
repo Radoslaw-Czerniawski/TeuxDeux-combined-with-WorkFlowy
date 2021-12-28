@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
 import { AppContext } from "../../ContextApi";
+import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
 
 const ListItem = ({
     id,
@@ -49,7 +50,11 @@ const ListItem = ({
         if (outOfSync) {
             fetchCurrentNestedNoteBasedOnParentsSublistId();
         }
-    }, [changeSyncStatus]);
+    },[changeSyncStatus]);
+
+    //Visibility state for children
+    const [childrenVisible, setChildrenVisible] = useState(false);
+
 
     let filteredParentSublist =
         parentSublist &&
@@ -88,6 +93,11 @@ const ListItem = ({
                             {/* popup menu */}
 
                             {/* sublist hidden/shown button */}
+                            <ToggleVisibilty
+                                childrenVisible={childrenVisible}
+                                setChildrenVisible={setChildrenVisible}
+                                subList = {listItemObject.subList}
+                            ></ToggleVisibilty>
 
                             {/* dot button */}
                             {!isFirst && (
@@ -117,25 +127,27 @@ const ListItem = ({
                             {/* drag list item handle */}
                         </S.ListElementHeader>
                         {/* sublist */}
-                        <S.ListContainer>
-                            {/* loop generating listItems */}
-                            {listItemObject.subList.map((id, index) => (
-                                <>
-                                    <ListItem
-                                        isFirst={false}
-                                        id={id}
-                                        key={id}
-                                        parentSublist={listItemObject.subList}
-                                        parentList={parentList}
-                                        parentNameList={parentNameList}
-                                        parentChangeSyncStatus={changeSyncStatus}
-                                    />
-                                    {!isFirst && <S.CoveringLine />}
-                                </>
-                            ))}
+                            {childrenVisible && <S.ListContainer>
+                                {/* loop generating listItems */}
+                                {listItemObject.subList.map((id, index) => (
+                                    <>
+                                        <ListItem
+                                            isFirst={false}
+                                            id={id}
+                                            key={id}
+                                            parentSublist={listItemObject.subList}
+                                            parentList={parentList}
+                                            parentNameList={parentNameList}
+                                            parentChangeSyncStatus={changeSyncStatus}
+                                        />
+                                        {!isFirst && (
+                                            <S.CoveringLine />
+                                        )}
+                                    </>
+                                ))}
 
-                            {/* + button for adding listItem */}
-                        </S.ListContainer>
+                                {/* + button for adding listItem */}
+                            </S.ListContainer>}
                     </S.ListElement>
                 )
             }

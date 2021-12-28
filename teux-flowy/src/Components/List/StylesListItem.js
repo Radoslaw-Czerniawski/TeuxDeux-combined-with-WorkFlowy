@@ -36,7 +36,7 @@ export const ListElementHeader = styled.div`
     position: relative;
     display: flex;
     align-items: center;
-    padding-left: ${(props) => props.isFirst ? "2rem" : "1rem"};;
+    padding-left: ${(props) => props.isFirst ? "2rem" : "1rem"};
     padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
     padding-bottom: ${(props) => props.isFirst ? ".2rem" : "0"};
     transition: background-color 0.3s linear;
