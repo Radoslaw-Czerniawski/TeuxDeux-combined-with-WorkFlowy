@@ -4,8 +4,6 @@ import * as S from "./StylesHeader";
 
 
 function Header({ idPath, setGlobalState }) {
-    console.log(idPath);
-
     return (
         <S.HeaderContainer>
             <S.BreadcrumbsContainer>
@@ -17,9 +15,6 @@ function Header({ idPath, setGlobalState }) {
                                     <S.BreadcrumbElement>
                                         <S.NodeUrlLink
                                             onClick = {() => {
-                                                console.log(idPath.names);
-                                                console.log(idPath.currentPath);
-                                                console.log(index)
                                                 setGlobalState({
                                                     names: idPath.names.slice(0,index+1),
                                                     currentPath: idPath.currentPath.slice(0,index+1),

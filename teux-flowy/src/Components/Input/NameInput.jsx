@@ -21,6 +21,8 @@ const NameInputField = styled.input`
     margin: 0;
     padding: 0;
     flex-grow: 1;
+    font-weight: ${({isFirst}) => isFirst ? "bold" : "regular"};
+    font-size: ${({isFirst}) => isFirst ? "1.9rem" : "1.6rem"};
     border: none;
     display: block;
     overflow: visible;
@@ -31,7 +33,7 @@ const NameInputField = styled.input`
     }
 `;
 
-const NameInput = ({ listItemObject, parentList }) => {
+const NameInput = ({ listItemObject, parentList, isFirst, changeSyncStatus }) => {
 
     const initialValue = listItemObject.name;
 
@@ -66,6 +68,7 @@ const NameInput = ({ listItemObject, parentList }) => {
 
     const addNewInputField = useCallback((e) => {
         const newID = uniqid();
+        console.log(newID);
         return fetch(`http://localhost:3000/notes`, {
             method: "POST",
             headers: {
@@ -78,36 +81,37 @@ const NameInput = ({ listItemObject, parentList }) => {
             })
         })
         .then(() => {
+            console.log(listItemObject.subList);
             fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({
-                subList: [
-                    newID,
-                    ...listItemObject.subList,
-                ]
-            })
-        })
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    subList: [
+                        newID,
+                        ...listItemObject.subList,
+                    ]
+                })
+            });
+            console.log("Patch ended ====");
         })
     },[])
 
     const removeCurrentInput = useCallback((e) => {
-        return fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
-            method: "DELETE",
-        })
+        fetch(`http://localhost:3000/notes/${parentList[parentList.length - 2]}`, {
+        method: "PATCH",
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify({
+            subList: [
+                ...parentSublist,
+            ]
+        })})
         .then(() => {
-            fetch(`http://localhost:3000/notes/${parentList[parentList.length - 2]}`, {
-            method: "PATCH",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({
-                subList: [
-                    ...parentSublist,
-                ]
-            })
+            fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
+            method: "DELETE",
             })
         })
     }, [])
@@ -117,6 +121,7 @@ const NameInput = ({ listItemObject, parentList }) => {
     return (
         <NameInputField
             type="text"
+            isFirst={isFirst}
             value={dataValue}
             onChange={(e) => {
             setDataValue(e.target.value);
@@ -126,12 +131,12 @@ const NameInput = ({ listItemObject, parentList }) => {
 
                 if(e.key === "Enter" && e.target.value !== "") {
                     addNewInputField(e)
-                    .then(() => window.location.reload())
+                    .then(() => changeSyncStatus())
                 }
 
                 if(e.key === "Backspace" && e.target.value === "") {
                     removeCurrentInput(e)
-                    .then(() => window.location.reload())
+                    .then(() => changeSyncStatus())
                 }
             }}
         />

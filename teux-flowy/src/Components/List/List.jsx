@@ -12,10 +12,10 @@ const CoveringLine = styled.div`
     top: 0px;
     left: 2.3rem;
     position: absolute;
-    width: 1px;
+    width: 2px;
     height: 100%;
     background: grey;
-    opacity: .3;
+    opacity: .4;
 `
 
 const List = ({ subList, parentList, parentNameList, isFirst }) => {
@@ -34,7 +34,7 @@ const List = ({ subList, parentList, parentNameList, isFirst }) => {
                         parentList={parentList}
                         parentNameList={parentNameList}
                     />
-                    {(!isFirst && (index !== (subList.length - 1))  ) &&
+                    {(!isFirst && (index !== (subList.length))  ) &&
                         <CoveringLine />
                     }
                 </>

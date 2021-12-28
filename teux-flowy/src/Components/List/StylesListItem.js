@@ -37,8 +37,21 @@ export const ListElementHeader = styled.div`
     display: flex;
     align-items: center;
     padding-left: ${(props) => props.isFirst ? "2rem" : "1rem"};;
-    padding-top: ${(props) => props.isFirst ? "2rem" : "1rem"};
-    padding-bottom: ${(props) => props.isFirst ? "1rem" : "0"};
+    padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
+    padding-bottom: ${(props) => props.isFirst ? ".2rem" : "0"};
     transition: background-color 0.3s linear;
 `;
 
+export const ListContainer = styled.ul`
+    padding-left: 2rem;
+    position: relative;
+`;
+
+export const CoveringLine = styled.div`
+    top: .5rem;
+    left: 2.3rem;
+    position: absolute;
+    width: .1rem;
+    height: 100%;
+    background: lightgrey;
+`;
