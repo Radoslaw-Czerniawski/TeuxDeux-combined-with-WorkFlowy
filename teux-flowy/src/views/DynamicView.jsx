@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { ListItem } from "../Components/List/ListItem";
 import styled from "styled-components";
 
