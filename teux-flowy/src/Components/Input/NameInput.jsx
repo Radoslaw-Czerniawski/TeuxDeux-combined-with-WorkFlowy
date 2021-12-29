@@ -33,7 +33,7 @@ const NameInputField = styled.input`
     }
 `;
 
-const NameInput = ({ listItemObject, /* parentList */ removeCurrentInput, isFirst, changeSyncStatus, parentSublist }) => {
+const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStatus }) => {
     const [dataValue, setDataValue] = useState(listItemObject.name);
 
     const putNewInputValue = useCallback(debounce((e) => {
@@ -46,11 +46,10 @@ const NameInput = ({ listItemObject, /* parentList */ removeCurrentInput, isFirs
                 name: e.target.value
             })
         })
-    }, 500), []);
+    }, 100), []);
 
     const addNewInputField = useCallback((e) => {
         const newID = uniqid();
-        console.log(newID);
         return fetch(`http://localhost:3000/notes`, {
             method: "POST",
             headers: {
@@ -76,11 +75,8 @@ const NameInput = ({ listItemObject, /* parentList */ removeCurrentInput, isFirs
                     ]
                 })
             });
-            console.log("Patch ended ====");
         })
     },[listItemObject])
-
-
 
     return (
         <NameInputField
@@ -99,7 +95,7 @@ const NameInput = ({ listItemObject, /* parentList */ removeCurrentInput, isFirs
                 }
 
                 if(e.key === "Backspace" && e.target.value === "") {
-                    removeCurrentInput(e)
+                    removeCurrentInput()
                 }
             }}
         />

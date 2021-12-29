@@ -19,9 +19,11 @@ const ListItem = ({
         subList: [],
     });
 
+    console.log(listItemObject.name, "LIST OF PARENTS",parentList);
+
     const listUrl = [...parentList, id];
 
-    if (parentNameList[parentNameList.length - 1] !== listItemObject.name) {
+    if (parentList[parentList.length - 1] !== listItemObject.id) {
         parentNameList = [...parentNameList, listItemObject.name];
         parentList = [...parentList, id];
     }
@@ -53,7 +55,7 @@ const ListItem = ({
     },[changeSyncStatus]);
 
     //Visibility state for children
-    const [childrenVisible, setChildrenVisible] = useState(false);
+    const [childrenVisible, setChildrenVisible] = useState(true);
 
 
     let filteredParentSublist =
@@ -64,15 +66,22 @@ const ListItem = ({
             }
         });
 
-    const removeCurrentInput = useCallback((e) => {
-        if (parentChangeSyncStatus !== undefined) {
-            fetch(`http://localhost:3000/notes/${parentList[parentList.length - 2]}`, {
+        console.log(listItemObject.name, "FILTERED SUBLIST", filteredParentSublist);
+        console.log(listItemObject.name, "PARENT SUBLIST", parentSublist);
+
+    const removeCurrentInput = () => {
+        if (parentChangeSyncStatus !== null) {
+            let urlParent = parentList[parentList.length - 2];
+
+            console.log(urlParent);
+
+            fetch(`http://localhost:3000/notes/${urlParent}`, {
                 method: "PATCH",
                 headers: {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify({
-                    subList: [...filteredParentSublist],
+                    "subList": (filteredParentSublist === []) ? [] : filteredParentSublist,
                 }),
             })
             .then(() => {
@@ -82,7 +91,7 @@ const ListItem = ({
             })
             .then(() => parentChangeSyncStatus());
         }
-    }, [listItemObject]);
+    };
 
     return (
         <AppContext.Consumer>
@@ -117,9 +126,9 @@ const ListItem = ({
                             <NameInput
                                 isFirst={isFirst}
                                 removeCurrentInput={removeCurrentInput}
-                                parentSublist={parentSublist}
+                                lastParent={parentList[parentList.length - 1]}
                                 listItemObject={listItemObject}
-                                // parentList={parentList}
+                                parentList={parentList}
                                 changeSyncStatus={changeSyncStatus}
                             />
                             {/* <FontAwesomeIcon icon="fa-regular fa-circle-trash" /> */}

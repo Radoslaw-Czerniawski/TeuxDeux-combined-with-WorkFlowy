@@ -19,6 +19,7 @@ function DynamicView({ setCurrentPath, currentNotes }) {
     const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || "HOME";
     const parentList = currentNotes.currentPath;
 
+    console.log(currentNotes.currentPath)
 
     return (
         <ul>
@@ -26,7 +27,7 @@ function DynamicView({ setCurrentPath, currentNotes }) {
                 <ListItem
                     id={id}
                     isFirst={true}
-                    parentSublist={undefined}
+                    parentSublist={null}
                     parentNameList={currentNotes.names}
                     parentList={parentList}
                     parentChangeSyncStatus={undefined}

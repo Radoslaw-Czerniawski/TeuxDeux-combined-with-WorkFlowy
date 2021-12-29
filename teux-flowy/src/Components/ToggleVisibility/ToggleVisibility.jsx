@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const ToggleChildrenVisibiltyButton = styled.button`
     width: 10px;
+    left: -5px;
     height: 8px;
     padding: 5px;
     margin: 5px;
@@ -14,12 +15,13 @@ const ToggleChildrenVisibiltyButton = styled.button`
     transition: transform 0.3s;
     transform: ${(props) => props.childrenVisible ? "none" : "rotate(-90deg)"};
     visibility:  ${(props) => props.subList[0] ? "visible" : "hidden"};
+    position: absolute;
 
 `
 
 export const ToggleVisibilty = ({childrenVisible, setChildrenVisible, subList}) => {
-    return ( 
-        <ToggleChildrenVisibiltyButton 
+    return (
+        <ToggleChildrenVisibiltyButton
             childrenVisible={childrenVisible}
             subList={subList}
             onClick={ () => setChildrenVisible(!childrenVisible) }
