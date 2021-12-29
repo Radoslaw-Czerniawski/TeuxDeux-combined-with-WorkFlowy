@@ -3,6 +3,7 @@ import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
 import { AppContext } from "../../ContextApi";
 import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
+import { CSSTransition } from "react-transition-group"
 
 const ListItem = ({
     id,
@@ -18,8 +19,9 @@ const ListItem = ({
         name: "",
         subList: [],
     });
+    const [childrenVisible, setChildrenVisible] = useState(false);
+    const [inPort, setInPort] = useState(false)
 
-    console.log(listItemObject.name, "LIST OF PARENTS",parentList);
 
     const listUrl = [...parentList, id];
 
@@ -40,6 +42,7 @@ const ListItem = ({
             })
             .then(() => {
                 setOutOfSync(false);
+                setInPort(true);
             });
     }, [id]);
 
@@ -50,24 +53,17 @@ const ListItem = ({
 
     useEffect(() => {
         if (outOfSync) {
-            fetchCurrentNestedNoteBasedOnParentsSublistId();
+            fetchCurrentNestedNoteBasedOnParentsSublistId()
         }
-    },[changeSyncStatus]);
+    }, [changeSyncStatus]);
 
     //Visibility state for children
-    const [childrenVisible, setChildrenVisible] = useState(true);
 
-
-    let filteredParentSublist =
-        parentSublist &&
-        parentSublist.filter((value) => {
-            if (value !== listItemObject.id) {
-                return value;
-            }
-        });
-
-        console.log(listItemObject.name, "FILTERED SUBLIST", filteredParentSublist);
-        console.log(listItemObject.name, "PARENT SUBLIST", parentSublist);
+    let filteredParentSublist = parentSublist && parentSublist.filter((value) => {
+        if (value !== listItemObject.id) {
+            return value;
+        }
+    });
 
     const removeCurrentInput = () => {
         if (parentChangeSyncStatus !== null) {
@@ -81,15 +77,15 @@ const ListItem = ({
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify({
-                    "subList": (filteredParentSublist === []) ? [] : filteredParentSublist,
+                    subList: filteredParentSublist === [] ? [] : filteredParentSublist,
                 }),
             })
-            .then(() => {
-                fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
-                    method: "DELETE",
-                });
-            })
-            .then(() => parentChangeSyncStatus());
+                .then(() => {
+                    fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
+                        method: "DELETE",
+                    });
+                })
+                .then(() => parentChangeSyncStatus());
         }
     };
 
@@ -97,15 +93,25 @@ const ListItem = ({
         <AppContext.Consumer>
             {(context) =>
                 listItemObject.id !== "" && (
-                    <S.ListElement key={listItemObject.id}>
-                        <S.ListElementHeader isFirst={isFirst}>
+                    <CSSTransition
+                        in={inPort}
+                        timeout={300}
+                        classNames="page"
+                        unmountOnExit
+                    >
+                    <S.ListElement
+                        key={listItemObject.id}
+                    >
+                        <S.ListElementHeader
+                            isFirst={isFirst}
+                        >
                             {/* popup menu */}
 
                             {/* sublist hidden/shown button */}
                             <ToggleVisibilty
                                 childrenVisible={childrenVisible}
                                 setChildrenVisible={setChildrenVisible}
-                                subList = {listItemObject.subList}
+                                subList={listItemObject.subList}
                             ></ToggleVisibilty>
 
                             {/* dot button */}
@@ -126,17 +132,17 @@ const ListItem = ({
                             <NameInput
                                 isFirst={isFirst}
                                 removeCurrentInput={removeCurrentInput}
-                                lastParent={parentList[parentList.length - 1]}
                                 listItemObject={listItemObject}
-                                parentList={parentList}
                                 changeSyncStatus={changeSyncStatus}
+                                setChildrenVisible={setChildrenVisible}
                             />
                             {/* <FontAwesomeIcon icon="fa-regular fa-circle-trash" /> */}
 
                             {/* drag list item handle */}
                         </S.ListElementHeader>
                         {/* sublist */}
-                            {childrenVisible && <S.ListContainer>
+                        {childrenVisible && (
+                            <S.ListContainer >
                                 {/* loop generating listItems */}
                                 {listItemObject.subList.map((id, index) => (
                                     <>
@@ -149,15 +155,16 @@ const ListItem = ({
                                             parentNameList={parentNameList}
                                             parentChangeSyncStatus={changeSyncStatus}
                                         />
-                                        {!isFirst && (
-                                            <S.CoveringLine />
-                                        )}
+                                        {!isFirst && <S.CoveringLine />}
                                     </>
                                 ))}
 
                                 {/* + button for adding listItem */}
-                            </S.ListContainer>}
+                            </S.ListContainer>
+                        )}
                     </S.ListElement>
+                </CSSTransition>
+
                 )
             }
         </AppContext.Consumer>

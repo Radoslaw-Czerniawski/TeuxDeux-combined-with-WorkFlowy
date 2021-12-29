@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { ListItem } from "../Components/List/ListItem";
 
 function DynamicView({ setCurrentPath, currentNotes }) {
@@ -23,17 +21,15 @@ function DynamicView({ setCurrentPath, currentNotes }) {
 
     return (
         <ul>
-            {(
-                <ListItem
-                    id={id}
-                    isFirst={true}
-                    parentSublist={null}
-                    parentNameList={currentNotes.names}
-                    parentList={parentList}
-                    parentChangeSyncStatus={undefined}
-                    key={id}
-                />
-            )}
+            <ListItem
+                id={id}
+                isFirst={true}
+                parentSublist={null}
+                parentNameList={currentNotes.names}
+                parentList={parentList}
+                parentChangeSyncStatus={undefined}
+                key={id}
+            />
         </ul>
     );
 }

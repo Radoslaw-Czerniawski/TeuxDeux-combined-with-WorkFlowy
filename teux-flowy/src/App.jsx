@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { HomeView } from "./views/HomeView";
 import { DynamicView } from "./views/DynamicView";
 import "./App.css";
 import { useState } from "react";
@@ -36,15 +35,6 @@ function App() {
                                 setCurrentPath={setCurrentNotes}
                                 currentNotes={currentNotes}
                             />
-                        }
-                    />
-
-                    <Route
-                        path="/:idPath"
-                        element={
-                            <DynamicView
-                                setCurrentPath={setCurrentNotes}
-                                currentNotes={currentNotes} />
                         }
                     />
                 </Routes>

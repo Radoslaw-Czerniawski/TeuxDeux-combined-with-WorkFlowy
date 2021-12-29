@@ -1,0 +1,14 @@
+.myNodeEnter {
+    opacity: 0;
+}
+  .myNodeEnterActive {
+    opacity: 1;
+    transition: opacity 200ms;
+}
+  .myNodeExit {
+    opacity: 1;
+}
+  .myNodeExitActive {
+    opacity: 0;
+    transition: opacity 200ms;
+}

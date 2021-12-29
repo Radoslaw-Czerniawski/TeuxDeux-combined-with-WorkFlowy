@@ -1,8 +1,7 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import styled, {  keyframes } from "styled-components";
 import debounce from "lodash/debounce"
 import uniqid from "uniqid";
-import { AppContext } from "../../ContextApi";
 
 const activeTextPulse = keyframes`
     0% {
@@ -33,7 +32,7 @@ const NameInputField = styled.input`
     }
 `;
 
-const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStatus }) => {
+const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStatus, setChildrenVisible }) => {
     const [dataValue, setDataValue] = useState(listItemObject.name);
 
     const putNewInputValue = useCallback(debounce((e) => {
@@ -91,7 +90,11 @@ const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStat
 
                 if(e.key === "Enter" && e.target.value !== "") {
                     addNewInputField(e)
-                    .then(() => changeSyncStatus())
+                    .then(() => {
+                        setChildrenVisible(true)
+                        changeSyncStatus()
+                    })
+
                 }
 
                 if(e.key === "Backspace" && e.target.value === "") {
