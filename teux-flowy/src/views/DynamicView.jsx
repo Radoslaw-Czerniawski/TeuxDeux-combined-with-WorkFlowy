@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ListItem } from "../Components/List/ListItem";
+import styled from "styled-components";
 
 function DynamicView({ setCurrentPath, currentNotes }) {
     // let { idPath } = useParams();
@@ -16,13 +17,18 @@ function DynamicView({ setCurrentPath, currentNotes }) {
         return;
     }, [idPath]); */
 
+    const StyledMainList = styled.ul`
+        max-width:700px;
+        margin: 5rem auto;
+    `
+
     const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || "HOME";
     const parentList = currentNotes.currentPath;
 
     console.log(currentNotes.currentPath)
 
     return (
-        <ul>
+        <StyledMainList>
             {(
                 <ListItem
                     id={id}
@@ -34,7 +40,7 @@ function DynamicView({ setCurrentPath, currentNotes }) {
                     key={id}
                 />
             )}
-        </ul>
+        </StyledMainList>
     );
 }
 

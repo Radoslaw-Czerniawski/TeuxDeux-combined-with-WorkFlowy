@@ -16,7 +16,7 @@ const activeTextPulse = keyframes`
     }
 `
 
-const NameInputField = styled.input`
+const NameInputField = styled.span`
     background: transparent;
     margin: 0;
     padding: 0;
@@ -43,7 +43,7 @@ const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStat
                 "Content-type": "application/json"
             },
             body: JSON.stringify({
-                name: e.target.value
+                name: e.target.textContent
             })
         })
     }, 100), []);
@@ -81,24 +81,35 @@ const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStat
     return (
         <NameInputField
             type="text"
+            contentEditable = {true}
             isFirst={isFirst}
-            value={dataValue}
-            onChange={(e) => {
-            setDataValue(e.target.value);
+            onBlur={(e) => {
+                setDataValue(e.target.textContent);
+                console.log(e.target.textContent);
             }}
+            onKeyDown={(e) => {
+                if(e.key === "Enter") {
+                    e.preventDefault();
+                }
+            }}
+
             onKeyUp={(e) => {
                 putNewInputValue(e);
+                
 
-                if(e.key === "Enter" && e.target.value !== "") {
+                if(e.key === "Enter" && e.target.textContent !== "") {
+                    e.preventDefault();
                     addNewInputField(e)
                     .then(() => changeSyncStatus())
                 }
 
-                if(e.key === "Backspace" && e.target.value === "") {
+                if(e.key === "Backspace" && e.target.textContent === "") {
                     removeCurrentInput()
                 }
             }}
-        />
+        >
+            {dataValue}
+        </NameInputField>
     )
 };
 
