@@ -4,6 +4,8 @@ import * as S from "./StylesListItem";
 import { AppContext } from "../../ContextApi";
 import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
 
+
+
 const ListItem = ({
     id,
     parentList,
@@ -100,6 +102,9 @@ const ListItem = ({
                     <S.ListElement key={listItemObject.id}>
                         <S.ListElementHeader isFirst={isFirst}>
                             {/* popup menu */}
+                            <S.PopUpMenuButton>
+                            &#8943;
+                            </S.PopUpMenuButton>
 
                             {/* sublist hidden/shown button */}
                             <ToggleVisibilty
