@@ -5,6 +5,8 @@ import { AppContext } from "../../ContextApi";
 import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
 import { CSSTransition } from "react-transition-group"
 
+
+
 const ListItem = ({
     id,
     parentList,
@@ -106,6 +108,9 @@ const ListItem = ({
                             isFirst={isFirst}
                         >
                             {/* popup menu */}
+                            <S.PopUpMenuButton>
+                            &#8943;
+                            </S.PopUpMenuButton>
 
                             {/* sublist hidden/shown button */}
                             <ToggleVisibilty
