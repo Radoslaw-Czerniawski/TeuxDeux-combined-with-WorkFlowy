@@ -23,8 +23,6 @@ function DynamicView({ setCurrentPath, currentNotes }) {
     const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || "HOME";
     const parentList = currentNotes.currentPath;
 
-    console.log(currentNotes.currentPath)
-
     return (
         <StyledMainList>
             {(

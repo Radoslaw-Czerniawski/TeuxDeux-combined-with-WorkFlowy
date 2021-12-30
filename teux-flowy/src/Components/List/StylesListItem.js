@@ -30,7 +30,7 @@ export const DotButton = styled.div`
         }
     }
 `;
-export const PopUpMenuButton = styled.div`
+export const InlineContextButton = styled.div`
     visibility: hidden;
     display: flex;
     width: 2rem;
@@ -49,7 +49,7 @@ export const ListElementHeader = styled.div`
     padding-bottom: ${(props) => props.isFirst ? ".2rem" : "0"};
     transition: background-color 0.3s linear;
 
-    &:hover ${PopUpMenuButton} {
+    &:hover ${InlineContextButton} {
         visibility: visible;
         align-items: center;
         justify-content: center;

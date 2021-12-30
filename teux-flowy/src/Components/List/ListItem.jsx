@@ -4,6 +4,7 @@ import * as S from "./StylesListItem";
 import { AppContext } from "../../ContextApi";
 import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
 import { CSSTransition } from "react-transition-group"
+import InlineContext from "../InlineContext/InlineContext";
 
 
 
@@ -14,7 +15,7 @@ const ListItem = ({
     isFirst,
     parentSublist,
     parentChangeSyncStatus,
-}) => {
+    }) => {
     const [outOfSync, setOutOfSync] = useState(true);
     const [listItemObject, setListItemObject] = useState({
         id: "",
@@ -22,9 +23,10 @@ const ListItem = ({
         subList: [],
     });
     const [childrenVisible, setChildrenVisible] = useState(false);
-    const [inPort, setInPort] = useState(false)
+    const [inPort, setInPort] = useState(false);
+    const [isInlineContextVisibile, setIsInlineContextVisibile] = useState(false);
 
-
+    // Extend forwarded parentList
     const listUrl = [...parentList, id];
 
     if (parentList[parentList.length - 1] !== listItemObject.id) {
@@ -58,8 +60,6 @@ const ListItem = ({
             fetchCurrentNestedNoteBasedOnParentsSublistId()
         }
     }, [changeSyncStatus]);
-
-    //Visibility state for children
 
     let filteredParentSublist = parentSublist && parentSublist.filter((value) => {
         if (value !== listItemObject.id) {
@@ -108,9 +108,26 @@ const ListItem = ({
                             isFirst={isFirst}
                         >
                             {/* popup menu */}
-                            <S.PopUpMenuButton>
+                            {!isInlineContextVisibile && 
+                            <S.InlineContextButton
+                                 onClickCapture = {(e) => {
+                                        console.log("Before stop", e);
+                                        setIsInlineContextVisibile(!isInlineContextVisibile);
+                                    }}
+                            >
                             &#8943;
-                            </S.PopUpMenuButton>
+                            </S.InlineContextButton>}
+                            {isInlineContextVisibile && 
+                            <S.InlineContextButton>
+                            X
+                            </S.InlineContextButton>}
+
+
+                            {isInlineContextVisibile && <InlineContext
+                                isFirst={isFirst}
+                                setIsInlineContextVisibile={setIsInlineContextVisibile}
+                                removeCurrentInput = {removeCurrentInput}
+                            />}
 
                             {/* sublist hidden/shown button */}
                             <ToggleVisibilty

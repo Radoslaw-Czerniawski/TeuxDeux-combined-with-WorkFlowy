@@ -81,6 +81,7 @@ const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStat
         <NameInputField
             type="text"
             contentEditable = {true}
+            suppressContentEditableWarning={true}
             isFirst={isFirst}
             onBlur={(e) => {
                 setDataValue(e.target.textContent);
