@@ -3,78 +3,57 @@
     {
       "id": "HOME",
       "name": "HOME",
+      "done": false,
+      "expanded": false,
       "subList": [
-        "kxt4325o",
-        "kxt4321g",
-        "kxt431wl",
-        "kxt431is",
-        "kxt431e6",
-        "kxt3yvzg"
+        "kxt62nwf",
+        "kxt62nr8",
+        "kxt62nkn",
+        "kxt62mwg",
+        "kxt62mcg",
+        "kxt5nr6v"
       ]
     },
     {
-      "id": "kkdasds1",
-      "name": "W Media Expert",
-      "subList": [
-        "ooooaaa",
-        "bulbull"
-      ]
-    },
-    {
-      "id": "ooooaaa",
-      "name": "Myszkaasdasaasdas",
-      "subList": []
-    },
-    {
-      "id": "bulbull",
-      "name": "Komputorasdaa6dfs9622",
-      "subList": []
-    },
-    {
-      "id": "wwwkkk2",
-      "name": "W Biedrze",
-      "subList": [
-        "1234567"
-      ]
-    },
-    {
-      "id": "1234567",
-      "name": "Piwoasdaasasda",
-      "subList": []
-    },
-    {
-      "id": "kxt3r5wc",
+      "id": "kxt5nr6v",
       "name": "Pisz tutaj ...",
+      "done": false,
+      "expanded": false,
       "subList": []
     },
     {
-      "id": "kxt3yvzg",
+      "id": "kxt62mcg",
       "name": "Pisz tutaj ...",
+      "done": false,
+      "expanded": false,
       "subList": []
     },
     {
-      "id": "kxt431e6",
+      "id": "kxt62mwg",
       "name": "Pisz tutaj ...",
+      "done": false,
+      "expanded": false,
       "subList": []
     },
     {
-      "id": "kxt431is",
+      "id": "kxt62nkn",
       "name": "Pisz tutaj ...",
+      "done": false,
+      "expanded": false,
       "subList": []
     },
     {
-      "id": "kxt431wl",
+      "id": "kxt62nr8",
       "name": "Pisz tutaj ...",
+      "done": false,
+      "expanded": false,
       "subList": []
     },
     {
-      "id": "kxt4321g",
+      "id": "kxt62nwf",
       "name": "Pisz tutaj ...",
-      "subList": []
-    },
-    {
-      "id": "kxt4325o",
-      "name": "Pisz tutaj ...",
+      "done": false,
+      "expanded": false,
       "subList": []
     }
   ]
