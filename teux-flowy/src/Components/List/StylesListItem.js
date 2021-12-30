@@ -64,7 +64,7 @@ export const ListContainer = styled.ul`
 `;
 export const CoveringLine = styled.div`
     top: .5rem;
-    left: 2.3rem;
+    left: 6.3rem;
     position: absolute;
     width: .1rem;
     height: 100%;

@@ -3,9 +3,8 @@ import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
 import { AppContext } from "../../ContextApi";
 import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
-import { CSSTransition } from "react-transition-group"
-
-
+import { CSSTransition } from "react-transition-group";
+import { useTheme } from "styled-components";
 
 const ListItem = ({
     id,
@@ -14,16 +13,21 @@ const ListItem = ({
     isFirst,
     parentSublist,
     parentChangeSyncStatus,
+    cssAnimationState,
+    setCssAnimationState,
+    parentLocalAnimationState,
+    setParentLocalAnimationState,
 }) => {
+    // States
     const [outOfSync, setOutOfSync] = useState(true);
     const [listItemObject, setListItemObject] = useState({
         id: "",
         name: "",
         subList: [],
     });
-    const [childrenVisible, setChildrenVisible] = useState(false);
-    const [inPort, setInPort] = useState(false)
-
+    const [childrenVisible, setChildrenVisible] = useState(true);
+    const [localAnimationState, setLocalAnimationState] = useState(true);
+    const [childrenAnimationAdd, setChildrenAnimationAdd] = useState(false);
 
     const listUrl = [...parentList, id];
 
@@ -43,35 +47,33 @@ const ListItem = ({
                 });
             })
             .then(() => {
+                setChildrenAnimationAdd(true)
+                setCssAnimationState(true);
                 setOutOfSync(false);
-                setInPort(true);
             });
     }, [id]);
 
-    const changeSyncStatus = useCallback(() => {
+    const changeSyncStatus = () => {
         setOutOfSync(true);
-        console.log("Changed sync status");
-    }, [outOfSync]);
+    };
 
     useEffect(() => {
         if (outOfSync) {
-            fetchCurrentNestedNoteBasedOnParentsSublistId()
+            fetchCurrentNestedNoteBasedOnParentsSublistId();
         }
     }, [changeSyncStatus]);
 
-    //Visibility state for children
-
-    let filteredParentSublist = parentSublist && parentSublist.filter((value) => {
-        if (value !== listItemObject.id) {
-            return value;
-        }
-    });
+    let filteredParentSublist =
+        parentSublist &&
+        parentSublist.filter((value) => {
+            if (value !== listItemObject.id) {
+                return value;
+            }
+        });
 
     const removeCurrentInput = () => {
         if (parentChangeSyncStatus !== null) {
             let urlParent = parentList[parentList.length - 2];
-
-            console.log(urlParent);
 
             fetch(`http://localhost:3000/notes/${urlParent}`, {
                 method: "PATCH",
@@ -87,7 +89,13 @@ const ListItem = ({
                         method: "DELETE",
                     });
                 })
-                .then(() => parentChangeSyncStatus());
+                .then(() => {
+                    setLocalAnimationState(false);
+
+                    setTimeout(() => {
+                        parentChangeSyncStatus();
+                    }, 100);
+                });
         }
     };
 
@@ -96,80 +104,101 @@ const ListItem = ({
             {(context) =>
                 listItemObject.id !== "" && (
                     <CSSTransition
-                        in={inPort}
+                        in={childrenAnimationAdd}
                         timeout={300}
-                        classNames="page"
+                        classNames={"page"}
                         unmountOnExit
                     >
-                    <S.ListElement
-                        key={listItemObject.id}
-                    >
-                        <S.ListElementHeader
-                            isFirst={isFirst}
+                        <CSSTransition
+                            in={localAnimationState}
+                            timeout={300}
+                            classNames={"pageMain"}
+                            unmountOnExit
                         >
-                            {/* popup menu */}
-                            <S.PopUpMenuButton>
-                            &#8943;
-                            </S.PopUpMenuButton>
+                            <S.ListElement key={listItemObject.id}>
+                                <S.ListElementHeader isFirst={isFirst}>
+                                    {/* popup menu */}
+                                    <S.PopUpMenuButton>&#8943;</S.PopUpMenuButton>
 
-                            {/* sublist hidden/shown button */}
-                            <ToggleVisibilty
-                                childrenVisible={childrenVisible}
-                                setChildrenVisible={setChildrenVisible}
-                                subList={listItemObject.subList}
-                            ></ToggleVisibilty>
+                                    {/* sublist hidden/shown button */}
+                                    <ToggleVisibilty
+                                        setChildrenAnimationAdd={setChildrenAnimationAdd}
+                                        childrenVisible={childrenVisible}
+                                        setChildrenVisible={setChildrenVisible}
+                                        subList={listItemObject.subList}
+                                        setLocalAnimationState={setLocalAnimationState}
+                                    ></ToggleVisibilty>
 
-                            {/* dot button */}
-                            {!isFirst && (
-                                <S.DotButton
-                                    /* to={`/${nodeUrl}`} */
-                                    key={listItemObject.id}
-                                    onClick={() => {
-                                        context.setCurrentNotes({
-                                            names: parentNameList,
-                                            currentPath: listUrl,
-                                        });
-                                    }}
-                                ></S.DotButton>
-                            )}
+                                    {/* dot button */}
+                                    {!isFirst && (
+                                        <S.DotButton
+                                            /* to={`/${nodeUrl}`} */
+                                            key={listItemObject.id}
+                                            onClick={() => {
+                                                setCssAnimationState(false);
+                                                setLocalAnimationState(false);
 
-                            {/* Item title = input with onchange attribute  */}
-                            <NameInput
-                                isFirst={isFirst}
-                                removeCurrentInput={removeCurrentInput}
-                                listItemObject={listItemObject}
-                                changeSyncStatus={changeSyncStatus}
-                                setChildrenVisible={setChildrenVisible}
-                            />
-                            {/* <FontAwesomeIcon icon="fa-regular fa-circle-trash" /> */}
+                                                setTimeout(() => {
+                                                    context.setCurrentNotes({
+                                                        names: parentNameList,
+                                                        currentPath: listUrl,
+                                                    });
+                                                }, 300);
+                                            }}
+                                        ></S.DotButton>
+                                    )}
 
-                            {/* drag list item handle */}
-                        </S.ListElementHeader>
-                        {/* sublist */}
-                        {childrenVisible && (
-                            <S.ListContainer >
-                                {/* loop generating listItems */}
-                                {listItemObject.subList.map((id, index) => (
-                                    <>
-                                        <ListItem
-                                            isFirst={false}
-                                            id={id}
-                                            key={id}
-                                            parentSublist={listItemObject.subList}
-                                            parentList={parentList}
-                                            parentNameList={parentNameList}
-                                            parentChangeSyncStatus={changeSyncStatus}
-                                        />
-                                        {!isFirst && <S.CoveringLine />}
-                                    </>
-                                ))}
+                                    {/* Item title = input with onchange attribute  */}
+                                    <NameInput
+                                        setChildrenAnimationAdd={setChildrenAnimationAdd}
+                                        isFirst={isFirst}
+                                        setParentLocalAnimationState={setParentLocalAnimationState}
+                                        removeCurrentInput={removeCurrentInput}
+                                        listItemObject={listItemObject}
+                                        changeSyncStatus={changeSyncStatus}
+                                        setChildrenVisible={setChildrenVisible}
+                                        setLocalAnimationState={setLocalAnimationState}
+                                    />
+                                    {/* <FontAwesomeIcon icon="fa-regular fa-circle-trash" /> */}
 
-                                {/* + button for adding listItem */}
-                            </S.ListContainer>
-                        )}
-                    </S.ListElement>
-                </CSSTransition>
+                                    {/* drag list item handle */}
+                                </S.ListElementHeader>
+                                {/* sublist */}
+                                {childrenVisible && (
+                                    <S.ListContainer>
+                                        {/* loop generating listItems */}
+                                        {listItemObject.subList.map((id, index) => (
 
+                                            <>
+
+                                                    <ListItem
+                                                        parentLocalAnimationState={
+                                                            localAnimationState
+                                                        }
+                                                        setParentLocalAnimationState={
+                                                            setLocalAnimationState
+                                                        }
+                                                        setCssAnimationState={setCssAnimationState}
+                                                        cssAnimationState={cssAnimationState}
+                                                        isFirst={false}
+                                                        id={id}
+                                                        key={id}
+                                                        parentSublist={listItemObject.subList}
+                                                        parentList={parentList}
+                                                        parentNameList={parentNameList}
+                                                        parentChangeSyncStatus={changeSyncStatus}
+                                                    />
+                                                {!isFirst && <S.CoveringLine />}
+                                            </>
+
+
+                                        ))}
+                                        {/* + button for adding listItem */}
+                                    </S.ListContainer>
+                                )}
+                            </S.ListElement>
+                        </CSSTransition>
+                    </CSSTransition>
                 )
             }
         </AppContext.Consumer>

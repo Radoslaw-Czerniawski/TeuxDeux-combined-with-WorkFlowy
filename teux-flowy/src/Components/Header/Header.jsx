@@ -3,7 +3,8 @@ import styled from "styled-components";
 import * as S from "./StylesHeader";
 
 
-function Header({ idPath, setGlobalState }) {
+function Header({ idPath, setGlobalState, cssAnimationState, setCssAnimationState }) {
+
     return (
         <S.HeaderContainer>
             <S.BreadcrumbsContainer>
@@ -15,12 +16,16 @@ function Header({ idPath, setGlobalState }) {
                                     <S.BreadcrumbElement>
                                         <S.NodeUrlLink
                                             onClick = {() => {
-                                                setGlobalState({
-                                                    names: idPath.names.slice(0,index+1),
-                                                    currentPath: idPath.currentPath.slice(0,index+1),
+                                                setCssAnimationState(false);
+
+                                                setTimeout(() => {
+                                                    setGlobalState({
+                                                        names: idPath.names.slice(0,index+1),
+                                                        currentPath: idPath.currentPath.slice(0,index+1),
                                                     })
-                                                }
-                                            }
+                                                }, 300);
+
+                                            }}
                                         >
                                             {idPath.names[index]}
                                         </S.NodeUrlLink>
@@ -42,29 +47,3 @@ function Header({ idPath, setGlobalState }) {
 }
 
 export { Header };
-
-
-
-
-/*     console.log(parentList)
-    console.log(idPath.names)
- */
-/*     useEffect(() => {
-        const namesList = [];
-
-        if (idPath.currentPath.length >= 1) {
-            parentList.forEach((parent) => {
-                fetch(`http://localhost:3000/notes/${parent}`)
-                    .then((res) => res.json())
-                    .then((data) => {
-                        namesList.push(data.name);
-                    })
-                    .then(() => {
-                        setGlobalState({
-                            ...idPath,
-                            names: namesList,
-                        });
-                    });
-            })
-        }
-    }, [idPath.currentPath]); */
