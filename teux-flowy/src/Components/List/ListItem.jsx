@@ -52,7 +52,6 @@ const ListItem = ({
 
     const changeSyncStatus = useCallback(() => {
         setOutOfSync(true);
-        console.log("Changed sync status");
     }, [outOfSync]);
 
     useEffect(() => {
@@ -70,8 +69,6 @@ const ListItem = ({
     const removeCurrentInput = () => {
         if (parentChangeSyncStatus !== null) {
             let urlParent = parentList[parentList.length - 2];
-
-            console.log(urlParent);
 
             fetch(`http://localhost:3000/notes/${urlParent}`, {
                 method: "PATCH",
@@ -111,7 +108,6 @@ const ListItem = ({
                             {!isInlineContextVisibile && 
                             <S.InlineContextButton
                                  onClickCapture = {(e) => {
-                                        console.log("Before stop", e);
                                         setIsInlineContextVisibile(!isInlineContextVisibile);
                                     }}
                             >

@@ -85,7 +85,7 @@ const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStat
             isFirst={isFirst}
             onBlur={(e) => {
                 setDataValue(e.target.textContent);
-                console.log(e.target.textContent);
+
             }}
             onKeyDown={(e) => {
                 if(e.key === "Enter") {

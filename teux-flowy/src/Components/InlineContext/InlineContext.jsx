@@ -14,9 +14,11 @@ const StyledInlineContext = styled.ul`
     flex-direction: column;
     align-items: center;
     box-shadow: .5rem .5rem 1.5rem -1rem;
+
 `
 
 const StyledInlineContextOption = styled.li`
+    color: ${(props) => props.isClickable ? "black" : "#ddd" };
     font-size: 1.2rem;
     padding: 1rem 2rem;
     cursor: pointer;
@@ -24,9 +26,6 @@ const StyledInlineContextOption = styled.li`
     width: 100%;
     &:hover {
         background: #ccf
-    }
-    &:disabled {
-        color: #ccc;
     }
 `
 
@@ -36,10 +35,8 @@ const useOutsideClickDetector = (ref, setIsInlineContextVisibile) => {
         const handleClickOutside = (e) => {
             if (ref.current && !ref.current.contains(e.target)) {
                 setIsInlineContextVisibile(false);
-                console.log("InlineContext", e);
             }
         }
-
         document.addEventListener("mousedown", handleClickOutside, true);
         
         return () => {
@@ -53,9 +50,9 @@ const useOutsideClickDetector = (ref, setIsInlineContextVisibile) => {
 export const InlineContext = ({isFirst, setIsInlineContextVisibile, removeCurrentInput}) => {
 
     const OPTIONS_HANDLER_LIST = [
-        {name: "Delete", onClickHandler: removeCurrentInput, disabled: {isFirst}},
-        {name: "Move up", onClickHandler: removeCurrentInput, disabled: {isFirst}},
-        {name: "Move down", onClickHandler: removeCurrentInput, disabled: {isFirst}}
+        {name: "Delete", onClickHandler: removeCurrentInput, isClickable: !isFirst},
+        {name: "Move up", onClickHandler: removeCurrentInput, isClickable: !isFirst},
+        {name: "Move down", onClickHandler: removeCurrentInput, isClickable: !isFirst}
     ]
 
     const wrapperRef = useRef(null);
@@ -64,9 +61,10 @@ export const InlineContext = ({isFirst, setIsInlineContextVisibile, removeCurren
     return ( 
         <StyledInlineContext ref={wrapperRef}>
             { OPTIONS_HANDLER_LIST.map((option) => {
-                console.log(option.disabled)
                 return <StyledInlineContextOption 
-                            onClick={!option.disabled ? option.onClickHandler : null}
+                            key={option.name}
+                            isClickable = {option.isClickable}
+                            onClick={option.isClickable ? option.onClickHandler : undefined}
                         >
                     {option.name}
                 </StyledInlineContextOption>
