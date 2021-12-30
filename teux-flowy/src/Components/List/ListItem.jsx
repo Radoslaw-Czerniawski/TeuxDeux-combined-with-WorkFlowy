@@ -47,7 +47,7 @@ const ListItem = ({
                 });
             })
             .then(() => {
-                setChildrenAnimationAdd(true)
+                setChildrenAnimationAdd(true);
                 setCssAnimationState(true);
                 setOutOfSync(false);
             });
@@ -122,11 +122,11 @@ const ListItem = ({
 
                                     {/* sublist hidden/shown button */}
                                     <ToggleVisibilty
-                                        setChildrenAnimationAdd={setChildrenAnimationAdd}
+                                        isFirst={isFirst}
+                                        setLocalAnimationState={setLocalAnimationState}
                                         childrenVisible={childrenVisible}
                                         setChildrenVisible={setChildrenVisible}
                                         subList={listItemObject.subList}
-                                        setLocalAnimationState={setLocalAnimationState}
                                     ></ToggleVisibilty>
 
                                     {/* dot button */}
@@ -156,7 +156,6 @@ const ListItem = ({
                                         removeCurrentInput={removeCurrentInput}
                                         listItemObject={listItemObject}
                                         changeSyncStatus={changeSyncStatus}
-                                        setChildrenVisible={setChildrenVisible}
                                         setLocalAnimationState={setLocalAnimationState}
                                     />
                                     {/* <FontAwesomeIcon icon="fa-regular fa-circle-trash" /> */}
@@ -168,30 +167,24 @@ const ListItem = ({
                                     <S.ListContainer>
                                         {/* loop generating listItems */}
                                         {listItemObject.subList.map((id, index) => (
-
                                             <>
-
-                                                    <ListItem
-                                                        parentLocalAnimationState={
-                                                            localAnimationState
-                                                        }
-                                                        setParentLocalAnimationState={
-                                                            setLocalAnimationState
-                                                        }
-                                                        setCssAnimationState={setCssAnimationState}
-                                                        cssAnimationState={cssAnimationState}
-                                                        isFirst={false}
-                                                        id={id}
-                                                        key={id}
-                                                        parentSublist={listItemObject.subList}
-                                                        parentList={parentList}
-                                                        parentNameList={parentNameList}
-                                                        parentChangeSyncStatus={changeSyncStatus}
-                                                    />
+                                                <ListItem
+                                                    parentLocalAnimationState={localAnimationState}
+                                                    setParentLocalAnimationState={
+                                                        setLocalAnimationState
+                                                    }
+                                                    setCssAnimationState={setCssAnimationState}
+                                                    cssAnimationState={cssAnimationState}
+                                                    isFirst={false}
+                                                    id={id}
+                                                    key={id}
+                                                    parentSublist={listItemObject.subList}
+                                                    parentList={parentList}
+                                                    parentNameList={parentNameList}
+                                                    parentChangeSyncStatus={changeSyncStatus}
+                                                />
                                                 {!isFirst && <S.CoveringLine />}
                                             </>
-
-
                                         ))}
                                         {/* + button for adding listItem */}
                                     </S.ListContainer>
