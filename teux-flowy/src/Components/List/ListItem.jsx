@@ -84,15 +84,14 @@ const ListItem = ({
             return fetch(`http://localhost:3000/notes/${id}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log("==========new loop", data.subList);
                 data.subList.forEach(listItemId => {
-                    console.log(listItemId);
-                    const promiseCascadingDelete = new Promise((res, rej) => {
+                        const promiseCascadingDelete = new Promise((res, rej) => {
                         cascadingChildrenRemoval(listItemId);
                         res(null);
                     })
                     promiseCascadingDelete
                     .then(() => {
+                        console.log("Deleting", listItemId)
                         fetch(`http://localhost:3000/notes/${listItemId}`, {
                             method: "DELETE",
                             });
@@ -100,16 +99,11 @@ const ListItem = ({
                     
                     })            
             })
-            .then(() => {
-                console.log("Past loop", id)
-            })
+            
         }
         
         if (parentChangeSyncStatus !== null) {
-            
-           cascadingChildrenRemoval(id);
-
-             fetch(`http://localhost:3000/notes/${urlParent}`, {
+            fetch(`http://localhost:3000/notes/${urlParent}`, {
                 method: "PATCH",
                 headers: {
                     "Content-type": "application/json",
@@ -119,8 +113,11 @@ const ListItem = ({
                 }),
             })
                 .then(() => {
-                    fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
-                        method: "DELETE",
+                    cascadingChildrenRemoval(id)
+                })
+                .then(() => {
+                    fetch(`http://localhost:3000/notes/${id}`, {
+                                method: "DELETE",
                     });
                 })
                 .then(() => parentChangeSyncStatus()); 
@@ -249,7 +246,9 @@ const ListItem = ({
                             {/* popup menu */}
                             {!isInlineContextVisibile && 
                             <S.InlineContextButton
-                                 onClickCapture = {(e) => {
+                                isFirst={isFirst}
+                                isInlineContextVisibile={isInlineContextVisibile}
+                                onClickCapture = {(e) => {
                                         setIsInlineContextVisibile(!isInlineContextVisibile);
                                         setInlineContextClickCoordinates({
                                             x: e.nativeEvent.pageX,
@@ -262,7 +261,10 @@ const ListItem = ({
 
                             
                             {isInlineContextVisibile && 
-                            <S.InlineContextButton>
+                            <S.InlineContextButton 
+                                isFirst={isFirst}
+                                isInlineContextVisibile={isInlineContextVisibile}
+                                >
                                 <FontAwesomeIcon icon={faTimes} />
                             </S.InlineContextButton>}
 

@@ -22,8 +22,6 @@ function Header({ idPath, setGlobalState }) {
                     </S.NodeUrlLink>
                     
                 </S.BreadcrumbElement>
-                {console.log(idPath.currentPath)}
-                {console.log(idPath.names)}
                 {idPath.currentPath.map((parent, index) => {
                     return index != 0 ? (
                         <>

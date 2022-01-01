@@ -38,6 +38,8 @@ export const InlineContextButton = styled.div`
     align-items: center;
     justify-content: center;
     border-radius: 100%;
+    ${(props) => props.isFirst ? "margin-right: 2rem;" : null}
+    ${(props) => props.isInlineContextVisibile ? "visibility: visible; background: #ddd;" : null}
     cursor: pointer;
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
@@ -55,9 +57,6 @@ export const ListElementHeader = styled.div`
     padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
     padding-bottom: ${(props) => props.isFirst ? ".2rem" : "0"};
     transition: background-color 0.3s linear;
-    color: ${(props) => props.isMarkedAsDone ? "#ddd" : "inherit"};
-    text-decoration: ${(props) => props.isMarkedAsDone ? "line-through" : "none"};
-
 
     &:hover ${InlineContextButton} {
         visibility: visible;

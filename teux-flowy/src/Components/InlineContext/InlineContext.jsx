@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import React, { useRef, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle,  faStickyNote, } from '@fortawesome/fontawesome-free-regular'
+import { faCircle,  faPlusSquare, } from '@fortawesome/fontawesome-free-regular'
 import { faChevronUp, faChevronDown, faCheck, faTrash } from '@fortawesome/fontawesome-free-solid'
 
 const StyledInlineContext = styled.ul`
     position: absolute;
+    width: 18rem;
     ${(props) =>  (document.body.clientHeight - props.clickCords.y) > 200 ? "top: 0;": "bottom: 0;"};
     ${(props) => props.clickCords.x > 200 ? "right: 100% ": "left: 4rem"};
     background: white;
@@ -83,7 +84,7 @@ export const InlineContext = ({
     // isAvailable = flag that shows/hides element when needed
     const OPTIONS_HANDLER_LIST = [
         {name: "Create subnote", onClickHandler: addChildInputField, 
-        isClickable: true, isAvailable: true, icon: faStickyNote},
+        isClickable: true, isAvailable: true, icon: faPlusSquare},
         {name: "Move up", onClickHandler: moveUpCurrentInput, 
         isClickable: !isFirstInList, isAvailable: true, icon: faChevronUp},
         {name: "Move down", onClickHandler: moveDownCurrentInput, 
