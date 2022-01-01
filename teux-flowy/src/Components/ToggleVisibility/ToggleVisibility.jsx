@@ -17,12 +17,12 @@ const ToggleChildrenVisibiltyButton = styled.button`
 
 `
 
-export const ToggleVisibilty = ({childrenVisible, setChildrenVisible, subList}) => {
+export const ToggleVisibilty = ({childrenVisible, toggleChildrenVisible, subList}) => {
     return (
         <ToggleChildrenVisibiltyButton
             childrenVisible={childrenVisible}
             subList={subList}
-            onClick={ () => setChildrenVisible(!childrenVisible) }
+            onClick={ () => toggleChildrenVisible() }
         >
 
         </ToggleChildrenVisibiltyButton>

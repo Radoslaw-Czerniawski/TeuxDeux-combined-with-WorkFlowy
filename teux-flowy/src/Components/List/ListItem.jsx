@@ -5,6 +5,7 @@ import { AppContext } from "../../ContextApi";
 import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
 import { CSSTransition } from "react-transition-group"
 import InlineContext from "../InlineContext/InlineContext";
+import uniqid from "uniqid";
 
 
 
@@ -13,6 +14,8 @@ const ListItem = ({
     parentList,
     parentNameList,
     isFirst,
+    isFirstInList,
+    isLastInList,
     parentSublist,
     parentChangeSyncStatus,
     }) => {
@@ -25,6 +28,7 @@ const ListItem = ({
     const [childrenVisible, setChildrenVisible] = useState(false);
     const [inPort, setInPort] = useState(false);
     const [isInlineContextVisibile, setIsInlineContextVisibile] = useState(false);
+    const [isMarkedAsDone, setIsMarkedAsDone] = useState(false);
 
     // Extend forwarded parentList
     const listUrl = [...parentList, id];
@@ -43,6 +47,8 @@ const ListItem = ({
                     name: `${data.name}`,
                     subList: [...data.subList],
                 });
+                setChildrenVisible(data.expanded);
+                setIsMarkedAsDone(data.done);
             })
             .then(() => {
                 setOutOfSync(false);
@@ -66,11 +72,40 @@ const ListItem = ({
         }
     });
 
-    const removeCurrentInput = () => {
-        if (parentChangeSyncStatus !== null) {
-            let urlParent = parentList[parentList.length - 2];
+    let urlParent = parentList[parentList.length - 2];
 
-            fetch(`http://localhost:3000/notes/${urlParent}`, {
+    const removeCurrentInput = () => {
+
+        const cascadingChildrenRemoval = (id) => {
+            return fetch(`http://localhost:3000/notes/${id}`)
+            .then((response) => response.json())
+            .then((data) => {
+                console.log("==========new loop", data.subList);
+                data.subList.forEach(listItemId => {
+                    console.log(listItemId);
+                    const promiseCascadingDelete = new Promise((res, rej) => {
+                        cascadingChildrenRemoval(listItemId);
+                        res(null);
+                    })
+                    promiseCascadingDelete
+                    .then(() => {
+                        fetch(`http://localhost:3000/notes/${listItemId}`, {
+                            method: "DELETE",
+                            });
+                    })
+                    
+                    })            
+            })
+            .then(() => {
+                console.log("Past loop", id)
+            })
+        }
+        
+        if (parentChangeSyncStatus !== null) {
+            
+           cascadingChildrenRemoval(id);
+
+             fetch(`http://localhost:3000/notes/${urlParent}`, {
                 method: "PATCH",
                 headers: {
                     "Content-type": "application/json",
@@ -84,9 +119,111 @@ const ListItem = ({
                         method: "DELETE",
                     });
                 })
-                .then(() => parentChangeSyncStatus());
+                .then(() => parentChangeSyncStatus()); 
         }
     };
+
+    const addChildInputField = useCallback(() => {
+
+        const newID = uniqid();
+
+        return fetch(`http://localhost:3000/notes`, {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                id: newID,
+                name:"Pisz tutaj ...",
+                done: false,
+                expanded: false,
+                subList: [],
+            })
+        })
+        .then(() => {
+            fetch(`http://localhost:3000/notes/${id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    expanded: true,
+                    subList: [
+                        newID,
+                        ...listItemObject.subList,
+                    ]
+                })
+            });
+        })
+        .then(() => {
+            changeSyncStatus()
+        })
+    },[listItemObject])
+
+    const moveUpCurrentInput = () => {
+        const swappedIndex = parentSublist.indexOf(id);
+        if (!isFirstInList) {
+            const swapped = parentSublist[swappedIndex-1];
+            parentSublist[swappedIndex-1] = parentSublist[swappedIndex];
+            parentSublist[swappedIndex] = swapped;
+            fetch(`http://localhost:3000/notes/${urlParent}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    subList: parentSublist,
+                }),
+            }).then(() => parentChangeSyncStatus());
+        }
+    }
+
+    const moveDownCurrentInput = () => {
+        const swappedIndex = parentSublist.indexOf(id);
+        if (!isLastInList) {
+            const swapped = parentSublist[swappedIndex+1];
+            parentSublist[swappedIndex+1] = parentSublist[swappedIndex];
+            parentSublist[swappedIndex] = swapped;
+            fetch(`http://localhost:3000/notes/${urlParent}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    subList: parentSublist,
+                }),
+            }).then(() => parentChangeSyncStatus());
+        }    
+    }
+
+    const toggleIsMarkedAsDone = () => {
+        fetch(`http://localhost:3000/notes/${id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    done: !isMarkedAsDone,
+                }),
+            }).then(() => {
+                setIsMarkedAsDone(!isMarkedAsDone);
+            })
+    }
+
+    const toggleChildrenVisible = () => {
+        fetch(`http://localhost:3000/notes/${id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    expanded: !childrenVisible,
+                }),
+            }).then(() => {
+                setChildrenVisible(!childrenVisible);
+            })
+    }
+
 
     return (
         <AppContext.Consumer>
@@ -103,6 +240,7 @@ const ListItem = ({
                     >
                         <S.ListElementHeader
                             isFirst={isFirst}
+                            isMarkedAsDone={isMarkedAsDone}
                         >
                             {/* popup menu */}
                             {!isInlineContextVisibile && 
@@ -121,16 +259,23 @@ const ListItem = ({
 
                             {isInlineContextVisibile && <InlineContext
                                 isFirst={isFirst}
+                                isFirstInList={isFirstInList}
+                                isLastInList={isLastInList}
                                 setIsInlineContextVisibile={setIsInlineContextVisibile}
                                 removeCurrentInput = {removeCurrentInput}
+                                addChildInputField={addChildInputField}
+                                moveUpCurrentInput={moveUpCurrentInput}
+                                moveDownCurrentInput={moveDownCurrentInput}
+                                isMarkedAsDone={isMarkedAsDone}
+                                toggleIsMarkedAsDone={toggleIsMarkedAsDone}
                             />}
 
                             {/* sublist hidden/shown button */}
-                            <ToggleVisibilty
+                            {!isFirst && <ToggleVisibilty
                                 childrenVisible={childrenVisible}
-                                setChildrenVisible={setChildrenVisible}
+                                toggleChildrenVisible={toggleChildrenVisible}
                                 subList={listItemObject.subList}
-                            ></ToggleVisibilty>
+                            ></ToggleVisibilty>}
 
                             {/* dot button */}
                             {!isFirst && (
@@ -149,10 +294,10 @@ const ListItem = ({
                             {/* Item title = input with onchange attribute  */}
                             <NameInput
                                 isFirst={isFirst}
+                                addChildInputField={addChildInputField}
                                 removeCurrentInput={removeCurrentInput}
                                 listItemObject={listItemObject}
                                 changeSyncStatus={changeSyncStatus}
-                                setChildrenVisible={setChildrenVisible}
                             />
                             {/* <FontAwesomeIcon icon="fa-regular fa-circle-trash" /> */}
 
@@ -166,6 +311,8 @@ const ListItem = ({
                                     <>
                                         <ListItem
                                             isFirst={false}
+                                            isFirstInList={index == 0}
+                                            isLastInList={index == (listItemObject.subList.length -1)}
                                             id={id}
                                             key={id}
                                             parentSublist={listItemObject.subList}

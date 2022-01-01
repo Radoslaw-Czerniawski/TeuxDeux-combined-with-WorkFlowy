@@ -39,6 +39,13 @@ export const InlineContextButton = styled.div`
     justify-content: center;
     border-radius: 100%;
     cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 `;
 export const ListElementHeader = styled.div`
     position: relative;
@@ -48,6 +55,9 @@ export const ListElementHeader = styled.div`
     padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
     padding-bottom: ${(props) => props.isFirst ? ".2rem" : "0"};
     transition: background-color 0.3s linear;
+    color: ${(props) => props.isMarkedAsDone ? "#ddd" : "inherit"};
+    text-decoration: ${(props) => props.isMarkedAsDone ? "line-through" : "none"};
+
 
     &:hover ${InlineContextButton} {
         visibility: visible;
@@ -64,7 +74,7 @@ export const ListContainer = styled.ul`
 `;
 export const CoveringLine = styled.div`
     top: .5rem;
-    left: 2.3rem;
+    left: 4rem;
     position: absolute;
     width: .1rem;
     height: 100%;

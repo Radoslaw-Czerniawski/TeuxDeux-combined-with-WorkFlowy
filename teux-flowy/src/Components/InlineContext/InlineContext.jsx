@@ -13,7 +13,7 @@ const StyledInlineContext = styled.ul`
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: .5rem .5rem 1.5rem -1rem;
+    box-shadow: #222 .5rem .5rem 1.5rem -1rem;
 
 `
 
@@ -47,12 +47,31 @@ const useOutsideClickDetector = (ref, setIsInlineContextVisibile) => {
 
 
 
-export const InlineContext = ({isFirst, setIsInlineContextVisibile, removeCurrentInput}) => {
+export const InlineContext = ({
+    isFirst,
+    isFirstInList,
+    isLastInList,
+    setIsInlineContextVisibile, 
+    removeCurrentInput, 
+    addChildInputField,
+    moveUpCurrentInput, 
+    moveDownCurrentInput,
+    isMarkedAsDone, 
+    toggleIsMarkedAsDone}) => {
 
+
+    // List containg all menu options with parameters such as
+    // name = label of option
+    // onClickHandler = fcn executed on click
+    // isClickable = flag that enables/disables clickabilty
+    // isAvailable = flag that shows/hides element when needed
     const OPTIONS_HANDLER_LIST = [
-        {name: "Delete", onClickHandler: removeCurrentInput, isClickable: !isFirst},
-        {name: "Move up", onClickHandler: removeCurrentInput, isClickable: !isFirst},
-        {name: "Move down", onClickHandler: removeCurrentInput, isClickable: !isFirst}
+        {name: "Create subnote", onClickHandler: addChildInputField, isClickable: true, isAvailable: true},
+        {name: "Move up", onClickHandler: moveUpCurrentInput, isClickable: !isFirstInList, isAvailable: true},
+        {name: "Move down", onClickHandler: moveDownCurrentInput, isClickable: !isLastInList, isAvailable: true},
+        {name: "Mark as done", onClickHandler: toggleIsMarkedAsDone, isClickable: true, isAvailable: !isMarkedAsDone},
+        {name: "Mark as undone", onClickHandler: toggleIsMarkedAsDone, isClickable: true, isAvailable: isMarkedAsDone},
+        {name: "Delete", onClickHandler: removeCurrentInput, isClickable: !isFirst, isAvailable: true}
     ]
 
     const wrapperRef = useRef(null);
@@ -61,13 +80,13 @@ export const InlineContext = ({isFirst, setIsInlineContextVisibile, removeCurren
     return ( 
         <StyledInlineContext ref={wrapperRef}>
             { OPTIONS_HANDLER_LIST.map((option) => {
-                return <StyledInlineContextOption 
+                return option.isAvailable ? <StyledInlineContextOption 
                             key={option.name}
                             isClickable = {option.isClickable}
                             onClick={option.isClickable ? option.onClickHandler : undefined}
                         >
                     {option.name}
-                </StyledInlineContextOption>
+                </StyledInlineContextOption> : null
             })}
         </StyledInlineContext>
      );
