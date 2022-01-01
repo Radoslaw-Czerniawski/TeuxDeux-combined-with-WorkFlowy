@@ -2,14 +2,18 @@ import styled from "styled-components";
 
 export const HeaderContainer = styled.div`
     display: flex;
-    border-bottom: 1px solid black;
+    height: 5rem;
+    border-bottom: 1px solid #ddd;
     justify-content: flex-start;
-    align-items: center
-    padding: 10px;
+    align-items: center;
+    padding: 2rem;
+    box-shadow: #aaa 5px 0px 10px 1px;
 `;
 
 export const BreadcrumbsContainer = styled.ul`
     display: flex;
+    align-items: center;
+    flex-grow: 1;
 `;
 
 export const BreadcrumbDivider = styled.li`
@@ -40,3 +44,7 @@ export const BreadcrumbCurrentElement = styled.span`
     user-select:none;
 
 `;
+
+export const HamburgerMenuButton = styled.div`
+    height: auto;
+`

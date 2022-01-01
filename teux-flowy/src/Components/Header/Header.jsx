@@ -1,18 +1,38 @@
-import {  useEffect } from "react";
-import styled from "styled-components";
 import * as S from "./StylesHeader";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronRight, faHome, faBars } from '@fortawesome/fontawesome-free-solid'
+
 
 
 function Header({ idPath, setGlobalState }) {
     return (
         <S.HeaderContainer>
             <S.BreadcrumbsContainer>
+                <S.BreadcrumbElement key="home">
+                    <S.NodeUrlLink
+                        onClick = {() => {
+                            setGlobalState({
+                                names: ["HOME"],
+                                currentPath: ["HOME"],
+                                })
+                            }
+                        }
+                    >
+                        <FontAwesomeIcon icon={faHome} size="2x" />
+                    </S.NodeUrlLink>
+                    
+                </S.BreadcrumbElement>
+                {console.log(idPath.currentPath)}
+                {console.log(idPath.names)}
                 {idPath.currentPath.map((parent, index) => {
-                    return (
+                    return index != 0 ? (
                         <>
-                            {index !== idPath.currentPath.length - 1 && (
+                            {(
                                 <>
-                                    <S.BreadcrumbElement>
+                                    <S.BreadcrumbDivider key={`divider-${index}`} role="img" aria-label="Play Button">
+                                        <FontAwesomeIcon icon={faChevronRight} />
+                                    </S.BreadcrumbDivider>
+                                    <S.BreadcrumbElement key={index}>
                                         <S.NodeUrlLink
                                             onClick = {() => {
                                                 setGlobalState({
@@ -25,46 +45,18 @@ function Header({ idPath, setGlobalState }) {
                                             {idPath.names[index]}
                                         </S.NodeUrlLink>
                                     </S.BreadcrumbElement>
-                                    <S.BreadcrumbDivider role="img" aria-label="Play Button">
-                                        &#9654;&#65039;
-                                    </S.BreadcrumbDivider>
+                                    
                                 </>
                             )}
                         </>
-                    );
+                    ) : null ;
                 })}
-                <S.BreadcrumbCurrentElement>
-                    {idPath.names[idPath.names.length - 1]}
-                </S.BreadcrumbCurrentElement>
             </S.BreadcrumbsContainer>
+            <S.HamburgerMenuButton>
+                <FontAwesomeIcon icon={faBars} size="2x"/>
+            </S.HamburgerMenuButton>
         </S.HeaderContainer>
     );
 }
 
 export { Header };
-
-
-
-
-/*     console.log(parentList)
-    console.log(idPath.names)
- */
-/*     useEffect(() => {
-        const namesList = [];
-
-        if (idPath.currentPath.length >= 1) {
-            parentList.forEach((parent) => {
-                fetch(`http://localhost:3000/notes/${parent}`)
-                    .then((res) => res.json())
-                    .then((data) => {
-                        namesList.push(data.name);
-                    })
-                    .then(() => {
-                        setGlobalState({
-                            ...idPath,
-                            names: namesList,
-                        });
-                    });
-            })
-        }
-    }, [idPath.currentPath]); */

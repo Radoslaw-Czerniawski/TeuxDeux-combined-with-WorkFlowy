@@ -6,6 +6,9 @@ import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
 import { CSSTransition } from "react-transition-group"
 import InlineContext from "../InlineContext/InlineContext";
 import uniqid from "uniqid";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTimes, faEllipsisH } from '@fortawesome/fontawesome-free-solid'
+
 
 
 
@@ -29,6 +32,7 @@ const ListItem = ({
     const [inPort, setInPort] = useState(false);
     const [isInlineContextVisibile, setIsInlineContextVisibile] = useState(false);
     const [isMarkedAsDone, setIsMarkedAsDone] = useState(false);
+    const [inlineContextClickCoordinates, setInlineContextClickCoordinates] = useState({x: 0, y: 0})
 
     // Extend forwarded parentList
     const listUrl = [...parentList, id];
@@ -240,24 +244,31 @@ const ListItem = ({
                     >
                         <S.ListElementHeader
                             isFirst={isFirst}
-                            isMarkedAsDone={isMarkedAsDone}
+                            
                         >
                             {/* popup menu */}
                             {!isInlineContextVisibile && 
                             <S.InlineContextButton
                                  onClickCapture = {(e) => {
                                         setIsInlineContextVisibile(!isInlineContextVisibile);
+                                        setInlineContextClickCoordinates({
+                                            x: e.nativeEvent.pageX,
+                                            y: e.nativeEvent.pageY
+                                        })
                                     }}
                             >
-                            &#8943;
+                                <FontAwesomeIcon icon={faEllipsisH} />
                             </S.InlineContextButton>}
+
+                            
                             {isInlineContextVisibile && 
                             <S.InlineContextButton>
-                            X
+                                <FontAwesomeIcon icon={faTimes} />
                             </S.InlineContextButton>}
 
 
                             {isInlineContextVisibile && <InlineContext
+                                inlineContextClickCoordinates={inlineContextClickCoordinates}
                                 isFirst={isFirst}
                                 isFirstInList={isFirstInList}
                                 isLastInList={isLastInList}
@@ -298,10 +309,11 @@ const ListItem = ({
                                 removeCurrentInput={removeCurrentInput}
                                 listItemObject={listItemObject}
                                 changeSyncStatus={changeSyncStatus}
+                                isMarkedAsDone={isMarkedAsDone}
                             />
-                            {/* <FontAwesomeIcon icon="fa-regular fa-circle-trash" /> */}
 
                             {/* drag list item handle */}
+
                         </S.ListElementHeader>
                         {/* sublist */}
                         {childrenVisible && (

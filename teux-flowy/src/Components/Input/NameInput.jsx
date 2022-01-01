@@ -25,6 +25,8 @@ const NameInputField = styled.span`
     border: none;
     display: block;
     overflow: visible;
+    color: ${(props) => props.isMarkedAsDone ? "#ddd" : "inherit"};
+    text-decoration: ${(props) => props.isMarkedAsDone ? "line-through" : "none"};
     &:active, &:focus {
         border: none;
         outline: none;
@@ -32,7 +34,7 @@ const NameInputField = styled.span`
     }
 `;
 
-const NameInput = ({ listItemObject, addChildInputField, removeCurrentInput, isFirst, changeSyncStatus}) => {
+const NameInput = ({ listItemObject, addChildInputField, removeCurrentInput, isFirst, isMarkedAsDone}) => {
     const [dataValue, setDataValue] = useState(listItemObject.name);
 
     const putNewInputValue = useCallback(debounce((e) => {
@@ -49,6 +51,7 @@ const NameInput = ({ listItemObject, addChildInputField, removeCurrentInput, isF
 
     return (
         <NameInputField
+            isMarkedAsDone={isMarkedAsDone}
             type="text"
             contentEditable = {true}
             suppressContentEditableWarning={true}

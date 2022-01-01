@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import React, { useRef, useEffect } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle,  faStickyNote, } from '@fortawesome/fontawesome-free-regular'
+import { faChevronUp, faChevronDown, faCheck, faTrash } from '@fortawesome/fontawesome-free-solid'
 
 const StyledInlineContext = styled.ul`
     position: absolute;
-    top: 0px;
-    right: 100%;
+    ${(props) =>  (document.body.clientHeight - props.clickCords.y) > 200 ? "top: 0;": "bottom: 0;"};
+    ${(props) => props.clickCords.x > 200 ? "right: 100% ": "left: 4rem"};
     background: white;
     z-index:10;
     border-radius: 1rem;
@@ -18,6 +21,9 @@ const StyledInlineContext = styled.ul`
 `
 
 const StyledInlineContextOption = styled.li`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     color: ${(props) => props.isClickable ? "black" : "#ddd" };
     font-size: 1.2rem;
     padding: 1rem 2rem;
@@ -27,6 +33,15 @@ const StyledInlineContextOption = styled.li`
     &:hover {
         background: #ccf
     }
+`
+
+const StyledIconWrapperContextOption = styled.span`
+    text-align: left;
+    margin-right: 1.5rem;
+`
+
+const StyledTextWrapperContextOption = styled.span`
+    text-align: right;
 `
 
 const useOutsideClickDetector = (ref, setIsInlineContextVisibile) => {
@@ -48,6 +63,7 @@ const useOutsideClickDetector = (ref, setIsInlineContextVisibile) => {
 
 
 export const InlineContext = ({
+    inlineContextClickCoordinates,
     isFirst,
     isFirstInList,
     isLastInList,
@@ -66,26 +82,39 @@ export const InlineContext = ({
     // isClickable = flag that enables/disables clickabilty
     // isAvailable = flag that shows/hides element when needed
     const OPTIONS_HANDLER_LIST = [
-        {name: "Create subnote", onClickHandler: addChildInputField, isClickable: true, isAvailable: true},
-        {name: "Move up", onClickHandler: moveUpCurrentInput, isClickable: !isFirstInList, isAvailable: true},
-        {name: "Move down", onClickHandler: moveDownCurrentInput, isClickable: !isLastInList, isAvailable: true},
-        {name: "Mark as done", onClickHandler: toggleIsMarkedAsDone, isClickable: true, isAvailable: !isMarkedAsDone},
-        {name: "Mark as undone", onClickHandler: toggleIsMarkedAsDone, isClickable: true, isAvailable: isMarkedAsDone},
-        {name: "Delete", onClickHandler: removeCurrentInput, isClickable: !isFirst, isAvailable: true}
+        {name: "Create subnote", onClickHandler: addChildInputField, 
+        isClickable: true, isAvailable: true, icon: faStickyNote},
+        {name: "Move up", onClickHandler: moveUpCurrentInput, 
+        isClickable: !isFirstInList, isAvailable: true, icon: faChevronUp},
+        {name: "Move down", onClickHandler: moveDownCurrentInput, 
+        isClickable: !isLastInList, isAvailable: true, icon: faChevronDown},
+        {name: "Mark as done", onClickHandler: toggleIsMarkedAsDone, 
+        isClickable: true, isAvailable: !isMarkedAsDone, icon: faCheck},
+        {name: "Mark as undone", onClickHandler: toggleIsMarkedAsDone, 
+        isClickable: true, isAvailable: isMarkedAsDone, icon: faCircle},
+        {name: "Delete", onClickHandler: removeCurrentInput, 
+        isClickable: !isFirst, isAvailable: true, icon: faTrash}
     ]
 
     const wrapperRef = useRef(null);
     useOutsideClickDetector(wrapperRef, setIsInlineContextVisibile);
 
     return ( 
-        <StyledInlineContext ref={wrapperRef}>
+        <StyledInlineContext clickCords={inlineContextClickCoordinates} ref={wrapperRef}>
             { OPTIONS_HANDLER_LIST.map((option) => {
                 return option.isAvailable ? <StyledInlineContextOption 
                             key={option.name}
                             isClickable = {option.isClickable}
                             onClick={option.isClickable ? option.onClickHandler : undefined}
                         >
-                    {option.name}
+                    <StyledIconWrapperContextOption>
+                        <FontAwesomeIcon icon={option.icon} />
+                    </StyledIconWrapperContextOption>
+                    <StyledTextWrapperContextOption>
+                        {option.name}
+                    </StyledTextWrapperContextOption>
+                    
+                    
                 </StyledInlineContextOption> : null
             })}
         </StyledInlineContext>
