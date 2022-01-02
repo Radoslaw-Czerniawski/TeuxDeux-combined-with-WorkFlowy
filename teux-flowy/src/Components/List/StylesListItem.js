@@ -1,8 +1,17 @@
 import styled from "styled-components";
 
+export const ListElementDate = styled.div`
+    margin-left: ${(props) => props.isFirst ? "4rem" : "6.8rem"};
+    /* visibility: ${(props) => props.hasDate ? "visible" : "hidden"}; */
+    background: ${(props) => props.hasDate ? "black" : "red"};
+    font-size: 1.2rem;
+    opacity: 0.5;
+`
 export const ListElement = styled.li`
     font-size: 1.6rem;
     margin-left: 2rem;
+    padding-left: ${(props) => props.isFirst ? "2rem" : "1rem"};
+    padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
 `;
 
 export const DotButton = styled.div`
@@ -49,12 +58,11 @@ export const InlineContextButton = styled.div`
               user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 `;
+
 export const ListElementHeader = styled.div`
     position: relative;
     display: flex;
     align-items: center;
-    padding-left: ${(props) => props.isFirst ? "2rem" : "1rem"};
-    padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
     padding-bottom: ${(props) => props.isFirst ? ".2rem" : "0"};
     transition: background-color 0.3s linear;
 
@@ -73,7 +81,7 @@ export const ListContainer = styled.ul`
 `;
 export const CoveringLine = styled.div`
     top: .5rem;
-    left: 4rem;
+    left:3rem;
     position: absolute;
     width: .1rem;
     height: 100%;

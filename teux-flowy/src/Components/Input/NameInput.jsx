@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import styled, {  keyframes } from "styled-components";
 import debounce from "lodash/debounce"
-import uniqid from "uniqid";
+
 
 const activeTextPulse = keyframes`
     0% {

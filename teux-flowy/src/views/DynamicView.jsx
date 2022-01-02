@@ -24,7 +24,7 @@ function DynamicView({ setCurrentPath, currentNotes }) {
     const parentList = currentNotes.currentPath;
 
     return (
-        <StyledMainList>
+        <StyledMainList key={`main-list-${id}`}>
             {(
                 <ListItem
                     id={id}

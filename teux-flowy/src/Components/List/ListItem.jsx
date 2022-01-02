@@ -5,6 +5,7 @@ import { AppContext } from "../../ContextApi";
 import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
 import { CSSTransition } from "react-transition-group"
 import InlineContext from "../InlineContext/InlineContext";
+import ListElementDateComponent from "../ListElementDate/ListElementDate"
 import uniqid from "uniqid";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimes, faEllipsisH } from '@fortawesome/fontawesome-free-solid'
@@ -28,6 +29,10 @@ const ListItem = ({
         name: "",
         subList: [],
     });
+    const [listItemObjectDate, setListItemObjectDate] = useState({
+        hasDate: false,
+        date: "",
+    });
     const [childrenVisible, setChildrenVisible] = useState(false);
     const [inPort, setInPort] = useState(false);
     const [isInlineContextVisibile, setIsInlineContextVisibile] = useState(false);
@@ -50,6 +55,10 @@ const ListItem = ({
                     id: `${data.id}`,
                     name: `${data.name}`,
                     subList: [...data.subList],
+                });
+                setListItemObjectDate({
+                    hasDate: data.hasDate,
+                    date: `${data.date}`,
                 });
                 setChildrenVisible(data.expanded);
                 setIsMarkedAsDone(data.done);
@@ -135,10 +144,12 @@ const ListItem = ({
             },
             body: JSON.stringify({
                 id: newID,
-                name:"Pisz tutaj ...",
+                name:"Write here...",
                 done: false,
                 expanded: false,
                 subList: [],
+                hasDate: false,
+                date: "",
             })
         })
         .then(() => {
@@ -238,7 +249,14 @@ const ListItem = ({
                     >
                     <S.ListElement
                         key={listItemObject.id}
+                        isFirst={isFirst}
                     >
+                        <ListElementDateComponent 
+                            key={`date-el-${id}`}
+                            isFirst={isFirst}
+                            listItemObjectDate={listItemObjectDate}
+                        />
+
                         <S.ListElementHeader
                             isFirst={isFirst}
                             

@@ -2,139 +2,54 @@
   "notes": [
     {
       "id": "HOME",
-      "name": "HOME",
+      "name": "My list",
       "expanded": true,
       "done": false,
       "subList": [
-        "kxwc6rh0",
-        "kxwc6r6t",
-        "kxwc6qwd"
-      ]
+        "kxxflxje",
+        "kxxe3sm1"
+      ],
+      "hasDate": false,
+      "date": "32342"
     },
     {
-      "id": "kxwc6qwd",
-      "name": "3",
+      "id": "kxxe3sm1",
+      "name": "12",
       "done": false,
       "expanded": true,
       "subList": [
-        "kxwc6wfp",
-        "kxwc6wal"
-      ]
+        "kxxflwgk",
+        "kxxe5n69"
+      ],
+      "hasDate": true,
+      "date": "2020"
     },
     {
-      "id": "kxwc6r6t",
-      "name": "2",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxwc6vn1",
-        "kxwc6vi4"
-      ]
-    },
-    {
-      "id": "kxwc6rh0",
-      "name": "1",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxwc6tcl",
-        "kxwc6t7w"
-      ]
-    },
-    {
-      "id": "kxwc6t7w",
-      "name": "1.2",
+      "id": "kxxe5n69",
+      "name": "Write here...",
       "done": false,
       "expanded": false,
-      "subList": []
+      "subList": [],
+      "hasDate": false,
+      "date": ""
     },
     {
-      "id": "kxwc6tcl",
-      "name": "1.1",
+      "id": "kxxflwgk",
+      "name": "Write here...",
       "done": false,
       "expanded": false,
-      "subList": []
+      "subList": [],
+      "hasDate": false,
+      "date": ""
     },
     {
-      "id": "kxwc6vi4",
-      "name": "2.2",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxwc94s5"
-      ]
-    },
-    {
-      "id": "kxwc6vn1",
-      "name": "2.1",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxwc7s45"
-      ]
-    },
-    {
-      "id": "kxwc6wal",
-      "name": "3.2",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxwc8h6d"
-      ]
-    },
-    {
-      "id": "kxwc6wfp",
-      "name": "3.1",
+      "id": "kxxflxje",
+      "name": "Write here...",
       "done": false,
       "expanded": false,
-      "subList": []
-    },
-    {
-      "id": "kxwc7s45",
-      "name": "2.1.1",
-      "done": false,
-      "expanded": false,
-      "subList": []
-    },
-    {
-      "id": "kxwc8h6d",
-      "name": "3.2.1",
-      "done": false,
-      "expanded": false,
-      "subList": []
-    },
-    {
-      "id": "kxwc94s5",
-      "name": "2.2.1",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxwc9ael"
-      ]
-    },
-    {
-      "id": "kxwc9ael",
-      "name": "2.2.1.1",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxwc9k4c",
-        "kxwc9fa5"
-      ]
-    },
-    {
-      "id": "kxwc9fa5",
-      "name": "2.2.1.1.1",
-      "done": false,
-      "expanded": false,
-      "subList": []
-    },
-    {
-      "id": "kxwc9k4c",
-      "name": "2.2.1.1.0",
-      "done": false,
-      "expanded": false,
-      "subList": []
+      "subList": [],
+      "hasDate": false,
+      "date": ""
     }
   ]
 }

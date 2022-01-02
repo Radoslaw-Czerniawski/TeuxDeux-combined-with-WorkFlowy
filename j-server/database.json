@@ -2,71 +2,54 @@
   "notes": [
     {
       "id": "HOME",
-      "name": "HOME",
+      "name": "My list",
       "expanded": true,
       "done": false,
       "subList": [
-        "kxvzbf0a"
-      ]
+        "kxxflxje",
+        "kxxe3sm1"
+      ],
+      "hasDate": false,
+      "date": "32342"
     },
     {
-      "id": "kxvzbf0a",
-      "name": "Pisz tutaj ...",
+      "id": "kxxe3sm1",
+      "name": "12",
       "done": false,
       "expanded": true,
       "subList": [
-        "kxvzbgay"
-      ]
+        "kxxflwgk",
+        "kxxe5n69"
+      ],
+      "hasDate": true,
+      "date": "2020"
     },
     {
-      "id": "kxvzbgay",
-      "name": "Pisz tutaj ...",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxvzfpk3",
-        "kxvzfnj1"
-      ]
-    },
-    {
-      "id": "kxvzfnj1",
-      "name": "Pisz tutaj ...",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxvzfrk3",
-        "kxvzfqwi"
-      ]
-    },
-    {
-      "id": "kxvzfpk3",
-      "name": "Pisz tutaj ...",
-      "done": false,
-      "expanded": true,
-      "subList": [
-        "kxvzfsur"
-      ]
-    },
-    {
-      "id": "kxvzfqwi",
-      "name": "Pisz tutaj ...",
+      "id": "kxxe5n69",
+      "name": "Write here...",
       "done": false,
       "expanded": false,
-      "subList": []
+      "subList": [],
+      "hasDate": false,
+      "date": ""
     },
     {
-      "id": "kxvzfrk3",
-      "name": "Pisz tutaj ...",
+      "id": "kxxflwgk",
+      "name": "Write here...",
       "done": false,
       "expanded": false,
-      "subList": []
+      "subList": [],
+      "hasDate": false,
+      "date": ""
     },
     {
-      "id": "kxvzfsur",
-      "name": "Pisz tutaj ...",
+      "id": "kxxflxje",
+      "name": "Write here...",
       "done": false,
       "expanded": false,
-      "subList": []
+      "subList": [],
+      "hasDate": false,
+      "date": ""
     }
   ]
 }
