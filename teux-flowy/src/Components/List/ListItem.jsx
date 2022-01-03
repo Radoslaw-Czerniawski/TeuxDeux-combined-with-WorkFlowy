@@ -1,15 +1,25 @@
-import { useState, useCallback, useEffect } from "react";
+// COMPONENTS
+import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
+import ListElementDateComponent from "../ListElementDate/ListElementDate";
+import InlineContext from "../InlineContext/InlineContext";
 import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
+
+// React
+import { useState, useCallback, useEffect } from "react";
+
+// Context
 import { AppContext } from "../../ContextApi";
-import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
+
+//Animations
 import { CSSTransition } from "react-transition-group";
-import InlineContext from "../InlineContext/InlineContext";
-import ListElementDateComponent from "../ListElementDate/ListElementDate";
+
+// uniqid for random ids
 import uniqid from "uniqid";
+
+// Font-awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faEllipsisH } from "@fortawesome/fontawesome-free-solid";
-import { useTheme } from "styled-components";
 
 const ListItem = ({
     id,
@@ -25,8 +35,8 @@ const ListItem = ({
     parentLocalAnimationState,
     setParentLocalAnimationState,
 }) => {
-    // States
-    const [outOfSync, setOutOfSync] = useState(true);
+    // STATES
+    const [needComponentReload, setNeedComponentReload] = useState(true);
     const [listItemObject, setListItemObject] = useState({
         id: "",
         name: "",
@@ -49,11 +59,13 @@ const ListItem = ({
     // Extend forwarded parentList
     const listUrl = [...parentList, id];
 
+    //Extend parent name list
     if (parentList[parentList.length - 1] !== listItemObject.id) {
         parentNameList = [...parentNameList, listItemObject.name];
         parentList = [...parentList, id];
     }
 
+    // Fetch list item data on mount
     const fetchCurrentNestedNoteBasedOnParentsSublistId = useCallback(() => {
         return fetch(`http://localhost:3000/notes/${id}`)
             .then((response) => response.json())
@@ -73,19 +85,20 @@ const ListItem = ({
             .then(() => {
                 setChildrenAnimationAdd(true);
                 setCssAnimationState(true);
-                setOutOfSync(false);
+                setNeedComponentReload(false);
             });
     }, [id]);
 
-    const changeSyncStatus = useCallback(() => {
-        setOutOfSync(true);
-    }, [outOfSync]);
+    // Notify about out of sync state
+    const changeSyncStateToReloadComponentAfterNoteEdit = useCallback(() => {
+        setNeedComponentReload(true);
+    }, [needComponentReload]);
 
     useEffect(() => {
-        if (outOfSync) {
+        if (needComponentReload) {
             fetchCurrentNestedNoteBasedOnParentsSublistId();
         }
-    }, [changeSyncStatus]);
+    }, [changeSyncStateToReloadComponentAfterNoteEdit]);
 
     let filteredParentSublist =
         parentSublist &&
@@ -138,9 +151,9 @@ const ListItem = ({
                 .then(() => {
                     setLocalAnimationState(false);
 
-
+                    setTimeout(() => {
                         parentChangeSyncStatus();
-
+                    }, 300);
                 });
         }
     };
@@ -176,7 +189,7 @@ const ListItem = ({
                 });
             })
             .then(() => {
-                changeSyncStatus();
+                changeSyncStateToReloadComponentAfterNoteEdit();
             });
     }, [listItemObject]);
 
@@ -348,7 +361,6 @@ const ListItem = ({
                                         addChildInputField={addChildInputField}
                                         removeCurrentInput={removeCurrentInput}
                                         listItemObject={listItemObject}
-                                        changeSyncStatus={changeSyncStatus}
                                         isMarkedAsDone={isMarkedAsDone}
                                     />
 
@@ -368,16 +380,18 @@ const ListItem = ({
                                                     setCssAnimationState={setCssAnimationState}
                                                     cssAnimationState={cssAnimationState}
                                                     isFirst={false}
-                                                    isFirstInList={index == 0}
+                                                    isFirstInList={index === 0}
                                                     isLastInList={
-                                                        index == listItemObject.subList.length - 1
+                                                        index === listItemObject.subList.length - 1
                                                     }
                                                     id={id}
                                                     key={id}
                                                     parentSublist={listItemObject.subList}
                                                     parentList={parentList}
                                                     parentNameList={parentNameList}
-                                                    parentChangeSyncStatus={changeSyncStatus}
+                                                    parentChangeSyncStatus={
+                                                        changeSyncStateToReloadComponentAfterNoteEdit
+                                                    }
                                                 />
                                                 {!isFirst && <S.CoveringLine />}
                                             </>

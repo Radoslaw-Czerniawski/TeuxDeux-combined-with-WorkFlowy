@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
-import styled, {  keyframes } from "styled-components";
-import debounce from "lodash/debounce"
-
+import styled, { keyframes } from "styled-components";
+import debounce from "lodash/debounce";
 
 const activeTextPulse = keyframes`
     0% {
@@ -25,16 +24,23 @@ const NameInputField = styled.span`
     border: none;
     display: block;
     overflow: visible;
-    color: ${(props) => props.isMarkedAsDone ? "#ddd" : "inherit"};
-    text-decoration: ${(props) => props.isMarkedAsDone ? "line-through" : "none"};
-    &:active, &:focus {
+    color: ${(props) => (props.isMarkedAsDone ? "#ddd" : "inherit")};
+    text-decoration: ${(props) => (props.isMarkedAsDone ? "line-through" : "none")};
+    &:active,
+    &:focus {
         border: none;
         outline: none;
         animation: ${activeTextPulse} 1.6s infinite;
     }
 `;
 
-const NameInput = ({ listItemObject, addChildInputField, removeCurrentInput, isFirst, isMarkedAsDone}) => {
+const NameInput = ({
+    listItemObject,
+    addChildInputField,
+    removeCurrentInput,
+    isFirst,
+    isMarkedAsDone,
+}) => {
     const [dataValue, setDataValue] = useState(listItemObject.name);
 
     const putNewInputValue = useCallback(
@@ -56,12 +62,11 @@ const NameInput = ({ listItemObject, addChildInputField, removeCurrentInput, isF
         <NameInputField
             isMarkedAsDone={isMarkedAsDone}
             type="text"
-            contentEditable = {true}
+            contentEditable={true}
             suppressContentEditableWarning={true}
             isFirst={isFirst}
             onBlur={(e) => {
                 setDataValue(e.target.textContent);
-
             }}
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -71,11 +76,9 @@ const NameInput = ({ listItemObject, addChildInputField, removeCurrentInput, isF
             onKeyUp={(e) => {
                 putNewInputValue(e);
 
-                if(e.key === "Enter" && e.target.textContent !== "") {
+                if (e.key === "Enter" && e.target.textContent !== "") {
                     e.preventDefault();
-                    addChildInputField()
-
-
+                    addChildInputField();
                 }
 
                 if (e.key === "Backspace" && e.target.textContent === "" && !isFirst) {
