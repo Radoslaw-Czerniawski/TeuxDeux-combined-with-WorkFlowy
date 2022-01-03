@@ -77,9 +77,9 @@ const ListItem = ({
             });
     }, [id]);
 
-    const changeSyncStatus = () => {
+    const changeSyncStatus = useCallback(() => {
         setOutOfSync(true);
-    };
+    }, [outOfSync]);
 
     useEffect(() => {
         if (outOfSync) {
@@ -138,9 +138,9 @@ const ListItem = ({
                 .then(() => {
                     setLocalAnimationState(false);
 
-                    setTimeout(() => {
+
                         parentChangeSyncStatus();
-                    }, 100);
+
                 });
         }
     };

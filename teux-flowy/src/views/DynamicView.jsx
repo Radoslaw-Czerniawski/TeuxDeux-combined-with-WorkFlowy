@@ -19,7 +19,7 @@ function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState  })
     return (
         <CSSTransition
             in={cssAnimationState}
-            timeout={500}
+            timeout={300}
             classNames={"page"}
             unmountOnExit
         >
