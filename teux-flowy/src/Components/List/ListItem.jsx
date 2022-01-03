@@ -36,7 +36,7 @@ const ListItem = ({
         hasDate: false,
         date: "",
     });
-    const [childrenVisible, setChildrenVisible] = useState(false);
+    const [childrenVisible, setChildrenVisible] = useState(true);
     const [isInlineContextVisibile, setIsInlineContextVisibile] = useState(false);
     const [isMarkedAsDone, setIsMarkedAsDone] = useState(false);
     const [inlineContextClickCoordinates, setInlineContextClickCoordinates] = useState({
@@ -355,7 +355,7 @@ const ListItem = ({
                                     {/* drag list item handle */}
                                 </S.ListElementHeader>
                                 {/* sublist */}
-                                {childrenVisible && (
+                                {(childrenVisible || isFirst) && (
                                     <S.ListContainer>
                                         {/* loop generating listItems */}
                                         {listItemObject.subList.map((id, index) => (
