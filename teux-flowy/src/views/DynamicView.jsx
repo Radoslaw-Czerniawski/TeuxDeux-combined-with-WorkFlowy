@@ -1,32 +1,33 @@
 import { ListItem } from "../Components/List/ListItem";
 import styled from "styled-components";
+import { CSSTransition } from "react-transition-group"
+import { useEffect, useState } from "react";
 
-function DynamicView({ setCurrentPath, currentNotes }) {
-    // let { idPath } = useParams();
+const StyledMainList = styled.ul`
+    max-width:700px;
+    margin: 5rem auto;
+`
 
-    // const [givenIdPath, setGivenIdPath] = useState(idPath);
+function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState  }) {
 
-  /*   useEffect(() => {
-        setGivenIdPath(idPath);
-        setCurrentPath({
-            names: [...globalState.names],
-            currentPath: idPath.split(":"),
-        });
-        return;
-    }, [idPath]); */
 
-    const StyledMainList = styled.ul`
-        max-width:700px;
-        margin: 5rem auto;
-    `
 
     const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || "HOME";
     const parentList = currentNotes.currentPath;
 
+
     return (
-        <StyledMainList key={`main-list-${id}`}>
-            {(
+        <CSSTransition
+            in={cssAnimationState}
+            timeout={500}
+            classNames={"page"}
+            unmountOnExit
+        >
+            <StyledMainList key={`main-list-${id}`}>
                 <ListItem
+                    parentLocalAnimationState={undefined}
+                    setCssAnimationState={setCssAnimationState}
+                    cssAnimationState={cssAnimationState}
                     id={id}
                     isFirst={true}
                     isFirstInList={true}
@@ -37,8 +38,8 @@ function DynamicView({ setCurrentPath, currentNotes }) {
                     parentChangeSyncStatus={undefined}
                     key={id}
                 />
-            )}
-        </StyledMainList>
+            </StyledMainList>
+        </CSSTransition>
     );
 }
 

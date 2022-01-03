@@ -43,23 +43,46 @@
 }
 
 .page-enter {
-  opacity: 0;
-  transform: scale(1.1);
+  opacity: .5;
+  transform: translateX(-40rem);
 }
 
 .page-enter-active {
   opacity: 1;
-  transform: scale(1);
+  transform: translateX(0);
   transition: opacity 300ms, transform 300ms;
 }
 
 .page-exit {
-  opacity: 1;
-  transform: scale(1);
+  transform: translateX(0);
+  transition: transform 700ms;
 }
 
 .page-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 1s, transform 1s;
+  transform: translateX(-100rem);
+  transition: transform 700ms;
 }
+
+.pageMain-enter {
+  opacity: 1;
+  transform: translateX(0);
+  transform: rotate(0);
+}
+
+.pageMain-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.pageMain-exit {
+  opacity: 1;
+  transform: translateX(0) ;
+  transition:  transform 700ms;
+}
+
+.pageMain-exit-active {
+  transform: translate(200rem);
+  transition:  transform 700ms;
+}
+

@@ -13,15 +13,15 @@ const activeTextPulse = keyframes`
     100% {
         opacity: 100%;
     }
-`
+`;
 
 const NameInputField = styled.span`
     background: transparent;
     margin: 0;
     padding: 0;
     flex-grow: 1;
-    font-weight: ${({isFirst}) => isFirst ? "bold" : "regular"};
-    font-size: ${({isFirst}) => isFirst ? "1.9rem" : "1.6rem"};
+    font-weight: ${({ isFirst }) => (isFirst ? "bold" : "regular")};
+    font-size: ${({ isFirst }) => (isFirst ? "1.9rem" : "1.6rem")};
     border: none;
     display: block;
     overflow: visible;
@@ -37,17 +37,20 @@ const NameInputField = styled.span`
 const NameInput = ({ listItemObject, addChildInputField, removeCurrentInput, isFirst, isMarkedAsDone}) => {
     const [dataValue, setDataValue] = useState(listItemObject.name);
 
-    const putNewInputValue = useCallback(debounce((e) => {
-        fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({
-                name: e.target.textContent
-            })
-        })
-    }, 100), []);
+    const putNewInputValue = useCallback(
+        debounce((e) => {
+            fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: e.target.textContent,
+                }),
+            });
+        }, 200),
+        []
+    );
 
     return (
         <NameInputField
@@ -61,29 +64,28 @@ const NameInput = ({ listItemObject, addChildInputField, removeCurrentInput, isF
 
             }}
             onKeyDown={(e) => {
-                if(e.key === "Enter") {
+                if (e.key === "Enter") {
                     e.preventDefault();
                 }
             }}
-
             onKeyUp={(e) => {
                 putNewInputValue(e);
-                
+
                 if(e.key === "Enter" && e.target.textContent !== "") {
                     e.preventDefault();
                     addChildInputField()
-                    
+
 
                 }
 
-                if(e.key === "Backspace" && e.target.textContent === "") {
-                    removeCurrentInput()
+                if (e.key === "Backspace" && e.target.textContent === "" && !isFirst) {
+                    removeCurrentInput();
                 }
             }}
         >
             {dataValue}
         </NameInputField>
-    )
+    );
 };
 
 export { NameInput };

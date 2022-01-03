@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DynamicView } from "./views/DynamicView";
 import "./App.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "./Components/Header/Header";
 import { AppContext } from "./ContextApi";
 
@@ -18,6 +18,12 @@ function App() {
         });
     }
 
+    const [cssAnimationState, setCssAnimationState] = useState(true);
+
+    useEffect(() => {
+        setCssAnimationState(true);
+    }, [currentNotes.currentPath])
+
     const ContextElement = {
         ...currentNotes,
         setCurrentNotes
@@ -26,12 +32,19 @@ function App() {
     return (
         <BrowserRouter>
             <AppContext.Provider value={ContextElement}>
-                <Header idPath={currentNotes} setGlobalState={setCurrentNotes} />
+                <Header
+                    idPath={currentNotes}
+                    setGlobalState={setCurrentNotes}
+                    cssAnimationState={cssAnimationState}
+                    setCssAnimationState={setCssAnimationState}
+                />
                 <Routes>
                     <Route
                         path="/"
                         element={
                             <DynamicView
+                                setCssAnimationState={setCssAnimationState}
+                                cssAnimationState={cssAnimationState}
                                 setCurrentPath={setCurrentNotes}
                                 currentNotes={currentNotes}
                             />

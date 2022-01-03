@@ -4,7 +4,8 @@ import { faChevronRight, faHome, faBars } from '@fortawesome/fontawesome-free-so
 
 
 
-function Header({ idPath, setGlobalState }) {
+function Header({ idPath, setGlobalState, setCssAnimationState }) {
+
     return (
         <S.HeaderContainer>
             <S.BreadcrumbsContainer>
@@ -20,7 +21,7 @@ function Header({ idPath, setGlobalState }) {
                     >
                         <FontAwesomeIcon icon={faHome} size="2x" />
                     </S.NodeUrlLink>
-                    
+
                 </S.BreadcrumbElement>
                 {idPath.currentPath.map((parent, index) => {
                     return index != 0 ? (
@@ -33,17 +34,21 @@ function Header({ idPath, setGlobalState }) {
                                     <S.BreadcrumbElement key={index}>
                                         <S.NodeUrlLink
                                             onClick = {() => {
-                                                setGlobalState({
-                                                    names: idPath.names.slice(0,index+1),
-                                                    currentPath: idPath.currentPath.slice(0,index+1),
+                                                setCssAnimationState(false);
+
+                                                setTimeout(() => {
+                                                    setGlobalState({
+                                                        names: idPath.names.slice(0,index+1),
+                                                        currentPath: idPath.currentPath.slice(0,index+1),
                                                     })
-                                                }
-                                            }
+                                                }, 300);
+
+                                            }}
                                         >
                                             {idPath.names[index]}
                                         </S.NodeUrlLink>
                                     </S.BreadcrumbElement>
-                                    
+
                                 </>
                             )}
                         </>

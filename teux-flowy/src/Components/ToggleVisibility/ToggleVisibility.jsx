@@ -13,13 +13,14 @@ const ToggleChildrenVisibiltyButton = styled.button`
     cursor: pointer;
     transition: transform 0.3s;
     transform: ${(props) => props.childrenVisible ? "none" : "rotate(-90deg)"};
-    visibility:  ${(props) => props.subList[0] ? "visible" : "hidden"};
+    visibility:  ${(props) => props.subList[0] && !props.isFirst ? "visible" : "hidden"};
 
 `
 
-export const ToggleVisibilty = ({childrenVisible, toggleChildrenVisible, subList}) => {
+export const ToggleVisibilty = ({childrenVisible, toggleChildrenVisible, isFirst, subList}) => {
     return (
         <ToggleChildrenVisibiltyButton
+            isFirst={isFirst}
             childrenVisible={childrenVisible}
             subList={subList}
             onClick={ () => toggleChildrenVisible() }
