@@ -1,8 +1,17 @@
 import styled from "styled-components";
 
+export const ListElementDate = styled.div`
+    margin-left: ${(props) => props.isFirst ? "4rem" : "6.8rem"};
+    /* visibility: ${(props) => props.hasDate ? "visible" : "hidden"}; */
+    background: ${(props) => props.hasDate ? "black" : "red"};
+    font-size: 1.2rem;
+    opacity: 0.5;
+`
 export const ListElement = styled.li`
     font-size: 1.6rem;
     margin-left: 2rem;
+    padding-left: ${(props) => props.isFirst ? "2rem" : "1rem"};
+    padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
 `;
 
 export const DotButton = styled.div`
@@ -30,7 +39,7 @@ export const DotButton = styled.div`
         }
     }
 `;
-export const PopUpMenuButton = styled.div`
+export const InlineContextButton = styled.div`
     visibility: hidden;
     display: flex;
     width: 2rem;
@@ -38,18 +47,26 @@ export const PopUpMenuButton = styled.div`
     align-items: center;
     justify-content: center;
     border-radius: 100%;
+    ${(props) => props.isFirst ? "margin-right: 2rem;" : null}
+    ${(props) => props.isInlineContextVisibile ? "visibility: visible; background: #ddd;" : null}
     cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 `;
+
 export const ListElementHeader = styled.div`
     position: relative;
     display: flex;
     align-items: center;
-    padding-left: ${(props) => props.isFirst ? "2rem" : "1rem"};
-    padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
     padding-bottom: ${(props) => props.isFirst ? ".2rem" : "0"};
     transition: background-color 0.3s linear;
 
-    &:hover ${PopUpMenuButton} {
+    &:hover ${InlineContextButton} {
         visibility: visible;
         align-items: center;
         justify-content: center;
@@ -64,7 +81,7 @@ export const ListContainer = styled.ul`
 `;
 export const CoveringLine = styled.div`
     top: .5rem;
-    left: 2.3rem;
+    left:3rem;
     position: absolute;
     width: .1rem;
     height: 100%;

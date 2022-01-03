@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import styled, {  keyframes } from "styled-components";
 import debounce from "lodash/debounce"
-import uniqid from "uniqid";
+
 
 const activeTextPulse = keyframes`
     0% {
@@ -25,6 +25,8 @@ const NameInputField = styled.span`
     border: none;
     display: block;
     overflow: visible;
+    color: ${(props) => props.isMarkedAsDone ? "#ddd" : "inherit"};
+    text-decoration: ${(props) => props.isMarkedAsDone ? "line-through" : "none"};
     &:active, &:focus {
         border: none;
         outline: none;
@@ -32,7 +34,7 @@ const NameInputField = styled.span`
     }
 `;
 
-const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStatus, setChildrenVisible }) => {
+const NameInput = ({ listItemObject, addChildInputField, removeCurrentInput, isFirst, isMarkedAsDone}) => {
     const [dataValue, setDataValue] = useState(listItemObject.name);
 
     const putNewInputValue = useCallback(debounce((e) => {
@@ -47,44 +49,16 @@ const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStat
         })
     }, 100), []);
 
-    const addNewInputField = useCallback((e) => {
-        const newID = uniqid();
-        return fetch(`http://localhost:3000/notes`, {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify({
-                id: newID,
-                name:"Pisz tutaj ...",
-                subList: [],
-            })
-        })
-        .then(() => {
-            console.log(listItemObject.subList);
-            fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                body: JSON.stringify({
-                    subList: [
-                        newID,
-                        ...listItemObject.subList,
-                    ]
-                })
-            });
-        })
-    },[listItemObject])
-
     return (
         <NameInputField
+            isMarkedAsDone={isMarkedAsDone}
             type="text"
             contentEditable = {true}
+            suppressContentEditableWarning={true}
             isFirst={isFirst}
             onBlur={(e) => {
                 setDataValue(e.target.textContent);
-                console.log(e.target.textContent);
+
             }}
             onKeyDown={(e) => {
                 if(e.key === "Enter") {
@@ -95,14 +69,10 @@ const NameInput = ({ listItemObject, removeCurrentInput, isFirst, changeSyncStat
             onKeyUp={(e) => {
                 putNewInputValue(e);
                 
-
                 if(e.key === "Enter" && e.target.textContent !== "") {
                     e.preventDefault();
-                    addNewInputField(e)
-                    .then(() => {
-                        setChildrenVisible(true)
-                        changeSyncStatus()
-                    })
+                    addChildInputField()
+                    
 
                 }
 

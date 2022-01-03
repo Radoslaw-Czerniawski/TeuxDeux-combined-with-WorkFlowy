@@ -23,14 +23,14 @@ function DynamicView({ setCurrentPath, currentNotes }) {
     const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || "HOME";
     const parentList = currentNotes.currentPath;
 
-    console.log(currentNotes.currentPath)
-
     return (
-        <StyledMainList>
+        <StyledMainList key={`main-list-${id}`}>
             {(
                 <ListItem
                     id={id}
                     isFirst={true}
+                    isFirstInList={true}
+                    isLastInList={true}
                     parentSublist={null}
                     parentNameList={currentNotes.names}
                     parentList={parentList}

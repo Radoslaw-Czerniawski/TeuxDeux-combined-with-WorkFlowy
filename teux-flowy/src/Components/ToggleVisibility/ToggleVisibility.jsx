@@ -4,8 +4,8 @@ import styled from "styled-components";
 const ToggleChildrenVisibiltyButton = styled.button`
     width: 10px;
     height: 8px;
-    padding: 5px;
-    margin: 5px;
+    padding: 0.5rem;
+    margin: 0.5rem;
     border: none;
     clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
     background: #aaa;
@@ -17,12 +17,12 @@ const ToggleChildrenVisibiltyButton = styled.button`
 
 `
 
-export const ToggleVisibilty = ({childrenVisible, setChildrenVisible, subList}) => {
+export const ToggleVisibilty = ({childrenVisible, toggleChildrenVisible, subList}) => {
     return (
         <ToggleChildrenVisibiltyButton
             childrenVisible={childrenVisible}
             subList={subList}
-            onClick={ () => setChildrenVisible(!childrenVisible) }
+            onClick={ () => toggleChildrenVisible() }
         >
 
         </ToggleChildrenVisibiltyButton>

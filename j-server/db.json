@@ -2,108 +2,54 @@
   "notes": [
     {
       "id": "HOME",
-      "name": "HOME",
+      "name": "My list",
+      "expanded": true,
+      "done": false,
       "subList": [
-        "kxrk5nb5",
-        "kxrk4ic0"
-      ]
+        "kxxflxje",
+        "kxxe3sm1"
+      ],
+      "hasDate": false,
+      "date": "32342"
     },
     {
-      "id": "kxqjxd75",
-      "name": "Kurczę działa Przemekasdsdasdasdasd",
+      "id": "kxxe3sm1",
+      "name": "12",
+      "done": false,
+      "expanded": true,
       "subList": [
-        "kxrb09uo",
-        "kxra1jpw",
-        "kxra0x2d"
-      ]
+        "kxxflwgk",
+        "kxxe5n69"
+      ],
+      "hasDate": true,
+      "date": "2020"
     },
     {
-      "id": "kxqjy68u",
-      "name": "Tera chyba naprawdęssssss",
-      "subList": [
-        "kxr9it6e"
-      ]
+      "id": "kxxe5n69",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
     },
     {
-      "id": "kxrnqghw",
-      "name": "Pisz tutaj ...",
-      "subList": []
+      "id": "kxxflwgk",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
     },
     {
-      "id": "kxr9j6a7",
-      "name": "Pisz tutaj ...asssssssssssssasasd",
-      "subList": []
-    },
-    {
-      "id": "kxr9jaqt",
-      "name": "Pisz tutaj ...",
-      "subList": []
-    },
-    {
-      "id": "kxra0uuu",
-      "name": "Pisz tutaj ...",
-      "subList": []
-    },
-    {
-      "id": "kxra0x2d",
-      "name": "Pisz tutaj ...",
-      "subList": []
-    },
-    {
-      "id": "kxra1a5y",
-      "name": "Pisz tutaj ...",
-      "subList": []
-    },
-    {
-      "id": "kxra1jpw",
-      "name": "Pisz tutaj ...asasd",
-      "subList": [
-        "kxrb6j8g",
-        "kxrawh3s"
-      ]
-    },
-    {
-      "id": "kxrawh3s",
-      "name": "Pisz tutaj ...",
-      "subList": []
-    },
-    {
-      "id": "kxrb09uo",
-      "name": "Pisz tutaj ...",
-      "subList": [
-        "kxrnufmk",
-        "kxrnuf8k"
-      ]
-    },
-    {
-      "id": "kxrnuf8k",
-      "name": "Jest głęboko w chuj",
-      "subList": []
-    },
-    {
-      "id": "kxrb6j8g",
-      "name": "Pisz tutaj ...",
-      "subList": []
-    },
-    {
-      "id": "kxrbgoli",
-      "name": "Pisz tutaj ...",
-      "subList": []
-    },
-    {
-      "id": "kxrbho3r",
-      "name": "Pisz tutaj ...fghfghfgh",
-      "subList": []
-    },
-    {
-      "id": "kxrbhvpr",
-      "name": "Pisz tutaj ...",
-      "subList": []
-    },
-    {
-      "id": "kxrbnb27",
-      "name": "Pisz tutaj ...",
-      "subList": []
+      "id": "kxxflxje",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
     }
   ]
 }

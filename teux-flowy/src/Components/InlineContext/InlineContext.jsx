@@ -1,0 +1,128 @@
+import styled from "styled-components";
+import React, { useRef, useEffect } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCircle,  faPlusSquare, } from '@fortawesome/fontawesome-free-regular'
+import { faChevronUp, faChevronDown, faCheck, faTrash } from '@fortawesome/fontawesome-free-solid'
+
+const StyledInlineContext = styled.ul`
+    position: absolute;
+    width: 18rem;
+    ${(props) =>  (document.body.clientHeight - props.clickCords.y) > 200 ? "top: 0;": "bottom: 0;"};
+    ${(props) => props.clickCords.x > 200 ? "right: 100% ": "left: 4rem"};
+    background: white;
+    z-index:10;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: #222 .5rem .5rem 1.5rem -1rem;
+
+`
+
+const StyledInlineContextOption = styled.li`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: ${(props) => props.isClickable ? "black" : "#ddd" };
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    cursor: pointer;
+    white-space: nowrap;
+    width: 100%;
+    &:hover {
+        background: #ccf
+    }
+`
+
+const StyledIconWrapperContextOption = styled.span`
+    text-align: left;
+    margin-right: 1.5rem;
+`
+
+const StyledTextWrapperContextOption = styled.span`
+    text-align: right;
+`
+
+const useOutsideClickDetector = (ref, setIsInlineContextVisibile) => {
+    useEffect(() => {
+
+        const handleClickOutside = (e) => {
+            if (ref.current && !ref.current.contains(e.target)) {
+                setIsInlineContextVisibile(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside, true);
+        
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside, true)
+        }
+    })
+}
+
+
+
+export const InlineContext = ({
+    inlineContextClickCoordinates,
+    isFirst,
+    isFirstInList,
+    isLastInList,
+    setIsInlineContextVisibile, 
+    removeCurrentInput, 
+    addChildInputField,
+    moveUpCurrentInput, 
+    moveDownCurrentInput,
+    isMarkedAsDone, 
+    toggleIsMarkedAsDone}) => {
+
+
+    // List containg all menu options with parameters such as
+    // name = label of option
+    // onClickHandler = fcn executed on click
+    // isClickable = flag that enables/disables clickabilty
+    // isAvailable = flag that shows/hides element when needed
+    const OPTIONS_HANDLER_LIST = [
+        {name: "Create subnote", onClickHandler: addChildInputField, 
+        isClickable: true, isAvailable: true, icon: faPlusSquare},
+        {name: "Move up", onClickHandler: moveUpCurrentInput, 
+        isClickable: !isFirstInList, isAvailable: true, icon: faChevronUp},
+        {name: "Move down", onClickHandler: moveDownCurrentInput, 
+        isClickable: !isLastInList, isAvailable: true, icon: faChevronDown},
+        {name: "Mark as done", onClickHandler: toggleIsMarkedAsDone, 
+        isClickable: true, isAvailable: !isMarkedAsDone, icon: faCheck},
+        {name: "Mark as undone", onClickHandler: toggleIsMarkedAsDone, 
+        isClickable: true, isAvailable: isMarkedAsDone, icon: faCircle},
+        {name: "Delete", onClickHandler: removeCurrentInput, 
+        isClickable: !isFirst, isAvailable: true, icon: faTrash}
+    ]
+
+    const wrapperRef = useRef(null);
+    useOutsideClickDetector(wrapperRef, setIsInlineContextVisibile);
+
+    return ( 
+        <StyledInlineContext clickCords={inlineContextClickCoordinates} ref={wrapperRef}>
+            { OPTIONS_HANDLER_LIST.map((option) => {
+                return option.isAvailable ? <StyledInlineContextOption 
+                            key={option.name}
+                            isClickable = {option.isClickable}
+                            onClick={option.isClickable ? option.onClickHandler : undefined}
+                        >
+                    <StyledIconWrapperContextOption>
+                        <FontAwesomeIcon icon={option.icon} />
+                    </StyledIconWrapperContextOption>
+                    <StyledTextWrapperContextOption>
+                        {option.name}
+                    </StyledTextWrapperContextOption>
+                    
+                    
+                </StyledInlineContextOption> : null
+            })}
+        </StyledInlineContext>
+     );
+}
+ 
+export default InlineContext;
+
+// UseOutsideClickDetector: 
+// https://stackoverflow.com/questions/32553158/detect-click-outside-react-component

@@ -1,47 +1,55 @@
 {
-    "notes": [
-      {
-        "id": "HOME",
-        "name": "HOME",
-        "subList": [
-          "ooaa",
-          "nueQ7VK"
-        ]
-      },
-      {
-        "id": "ooaa",
-        "name": "Lista zakupów",
-        "subList": ["kkdasds1", "wwwkkk2"]
-      },
-      {
-        "id": "kkdasds1",
-        "name": "W Media Expert",
-        "subList": ["ooooaaa", "bulbull"]
-      },
-      {
-        "id": "ooooaaa",
-        "name": "Myszkaasdasaasdas",
-        "subList": []
-      },
-      {
-        "id": "bulbull",
-        "name": "Komputorasdaa6dfs9622",
-        "subList": []
-      },
-      {
-        "id": "wwwkkk2",
-        "name": "W Biedrze",
-        "subList": ["1234567"]
-      },
-      {
-        "id": "1234567",
-        "name": "Piwoasdaasasda",
-        "subList": []
-      },
-      {
-        "id": "nueQ7VK",
-        "name": "",
-        "subList": []
-      }
-    ]
-  }
+  "notes": [
+    {
+      "id": "HOME",
+      "name": "My list",
+      "expanded": true,
+      "done": false,
+      "subList": [
+        "kxxflxje",
+        "kxxe3sm1"
+      ],
+      "hasDate": false,
+      "date": "32342"
+    },
+    {
+      "id": "kxxe3sm1",
+      "name": "12",
+      "done": false,
+      "expanded": true,
+      "subList": [
+        "kxxflwgk",
+        "kxxe5n69"
+      ],
+      "hasDate": true,
+      "date": "2020"
+    },
+    {
+      "id": "kxxe5n69",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "kxxflwgk",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "kxxflxje",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    }
+  ]
+}
