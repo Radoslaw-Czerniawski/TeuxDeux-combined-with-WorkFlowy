@@ -1,22 +1,23 @@
 import styled from "styled-components";
 
-export const ListElementDate = styled.div`
-    margin-left: ${(props) => props.isFirst ? "4rem" : "6.8rem"};
-    /* visibility: ${(props) => props.hasDate ? "visible" : "hidden"}; */
-    background: ${(props) => props.hasDate ? "black" : "red"};
-    font-size: 1.2rem;
-    opacity: 0.5;
-`
 export const ListElement = styled.li`
     font-size: 1.6rem;
     margin-left: 2rem;
     padding-left: ${(props) => props.isFirst ? "2rem" : "1rem"};
     padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
 `;
-
+export const ListElementButtonContainer = styled.div`
+    margin-top: 1.4rem;
+    display: flex;
+    align-items: end;
+`
+export const ListElementDateAndTitleContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`
 export const DotButton = styled.div`
-    display: block;
-    margin: 0 1rem;
+    display: flex;
+    margin: 0 1.2rem 0 0.8rem;
     width: .8rem;
     height: .8rem;
     background: black;
@@ -42,14 +43,27 @@ export const DotButton = styled.div`
 export const InlineContextButton = styled.div`
     visibility: hidden;
     display: flex;
-    width: 2rem;
-    height: 2rem;
+    width: 0.8rem;
+    height: .8rem;
+    margin: 0 1rem;
     align-items: center;
     justify-content: center;
     border-radius: 100%;
     ${(props) => props.isFirst ? "margin-right: 2rem;" : null}
     ${(props) => props.isInlineContextVisibile ? "visibility: visible; background: #ddd;" : null}
     cursor: pointer;
+    &:hover {
+        &:after {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 100%;
+            opacity: .2;
+            background: black;
+        }
+    }
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
        -khtml-user-select: none; /* Konqueror HTML */
@@ -68,11 +82,6 @@ export const ListElementHeader = styled.div`
 
     &:hover ${InlineContextButton} {
         visibility: visible;
-        align-items: center;
-        justify-content: center;
-        &:hover {
-            background: #ccc;
-        }
     }
 `;
 export const ListContainer = styled.ul`
@@ -81,7 +90,7 @@ export const ListContainer = styled.ul`
 `;
 export const CoveringLine = styled.div`
     top: .5rem;
-    left:3rem;
+    left: 4.2rem;
     position: absolute;
     width: .1rem;
     height: 100%;

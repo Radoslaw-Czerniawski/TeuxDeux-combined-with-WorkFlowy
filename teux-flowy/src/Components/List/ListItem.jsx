@@ -274,13 +274,10 @@ const ListItem = ({
                             unmountOnExit
                         >
                             <S.ListElement key={listItemObject.id} isFirst={isFirst}>
-                                <ListElementDateComponent
-                                    key={`date-el-${id}`}
-                                    isFirst={isFirst}
-                                    listItemObjectDate={listItemObjectDate}
-                                />
-
                                 <S.ListElementHeader isFirst={isFirst}>
+                                    <S.ListElementButtonContainer>
+
+                                    
                                     {/* popup menu */}
                                     {!isInlineContextVisibile && (
                                         <S.InlineContextButton
@@ -354,15 +351,23 @@ const ListItem = ({
                                             }}
                                         ></S.DotButton>
                                     )}
-
-                                    {/* Item title = input with onchange attribute  */}
-                                    <NameInput
+                                    </S.ListElementButtonContainer>
+                                    <S.ListElementDateAndTitleContainer>
+                                        <ListElementDateComponent
+                                        key={`date-el-${id}`}
                                         isFirst={isFirst}
-                                        addChildInputField={addChildInputField}
-                                        removeCurrentInput={removeCurrentInput}
-                                        listItemObject={listItemObject}
-                                        isMarkedAsDone={isMarkedAsDone}
-                                    />
+                                        listItemObjectDate={listItemObjectDate}
+                                        />
+                                        <NameInput
+                                            isFirst={isFirst}
+                                            addChildInputField={addChildInputField}
+                                            removeCurrentInput={removeCurrentInput}
+                                            listItemObject={listItemObject}
+                                            isMarkedAsDone={isMarkedAsDone}
+                                        />
+                                    </S.ListElementDateAndTitleContainer>
+                                    {/* Item title = input with onchange attribute  */}
+                                    
 
                                     {/* drag list item handle */}
                                 </S.ListElementHeader>
