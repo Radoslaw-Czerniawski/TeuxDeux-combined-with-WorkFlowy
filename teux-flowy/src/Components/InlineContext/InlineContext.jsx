@@ -1,8 +1,9 @@
 import styled from "styled-components";
 import React, { useRef, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle,  faPlusSquare, } from '@fortawesome/fontawesome-free-regular'
+import { faCircle,  faPlusSquare, faCalendar } from '@fortawesome/fontawesome-free-regular'
 import { faChevronUp, faChevronDown, faCheck, faTrash } from '@fortawesome/fontawesome-free-solid'
+import { DialogContext } from "../../ContextApi";
 
 const StyledInlineContext = styled.ul`
     position: absolute;
@@ -64,6 +65,7 @@ const useOutsideClickDetector = (ref, setIsInlineContextVisibile) => {
 
 
 export const InlineContext = ({
+    id,
     inlineContextClickCoordinates,
     isFirst,
     isFirstInList,
@@ -101,24 +103,47 @@ export const InlineContext = ({
     useOutsideClickDetector(wrapperRef, setIsInlineContextVisibile);
 
     return ( 
-        <StyledInlineContext clickCords={inlineContextClickCoordinates} ref={wrapperRef}>
-            { OPTIONS_HANDLER_LIST.map((option) => {
-                return option.isAvailable ? <StyledInlineContextOption 
-                            key={option.name}
-                            isClickable = {option.isClickable}
-                            onClick={option.isClickable ? option.onClickHandler : undefined}
-                        >
-                    <StyledIconWrapperContextOption>
-                        <FontAwesomeIcon icon={option.icon} />
-                    </StyledIconWrapperContextOption>
-                    <StyledTextWrapperContextOption>
-                        {option.name}
-                    </StyledTextWrapperContextOption>
-                    
-                    
-                </StyledInlineContextOption> : null
-            })}
-        </StyledInlineContext>
+        
+            
+            <StyledInlineContext clickCords={inlineContextClickCoordinates} ref={wrapperRef}>
+                { OPTIONS_HANDLER_LIST.map((option) => {
+                    return option.isAvailable ? <StyledInlineContextOption 
+                                key={option.name}
+                                isClickable = {option.isClickable}
+                                onClick={option.isClickable ? option.onClickHandler : undefined}
+                            >
+                        <StyledIconWrapperContextOption>
+                            <FontAwesomeIcon icon={option.icon} />
+                        </StyledIconWrapperContextOption>
+                        <StyledTextWrapperContextOption>
+                            {option.name}
+                        </StyledTextWrapperContextOption>
+                        
+                        
+                    </StyledInlineContextOption> : null
+                })}
+                <DialogContext.Consumer>
+                {ContextDialog =>
+                    <StyledInlineContextOption 
+                        key="set-date"
+                        isClickable = {true}
+                        onClick={() => {
+                            ContextDialog.setDialogParams({id: id, isOn: true});
+                            setIsInlineContextVisibile(false);
+                        }}
+                    >
+                        <StyledIconWrapperContextOption>
+                            <FontAwesomeIcon icon={faCalendar} />
+                        </StyledIconWrapperContextOption>
+                        <StyledTextWrapperContextOption>
+                            Set date
+                        </StyledTextWrapperContextOption>
+                    </StyledInlineContextOption>
+                }
+                </DialogContext.Consumer>
+            </StyledInlineContext>
+        
+        
      );
 }
  

@@ -308,6 +308,7 @@ const ListItem = ({
 
                                     {isInlineContextVisibile && (
                                         <InlineContext
+                                            id={id}
                                             inlineContextClickCoordinates={
                                                 inlineContextClickCoordinates
                                             }
@@ -355,6 +356,7 @@ const ListItem = ({
                                     <S.ListElementDateAndTitleContainer>
                                         <ListElementDateComponent
                                         key={`date-el-${id}`}
+                                        id={id}
                                         isFirst={isFirst}
                                         listItemObjectDate={listItemObjectDate}
                                         />
