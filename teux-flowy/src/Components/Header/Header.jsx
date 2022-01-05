@@ -1,7 +1,8 @@
 import * as S from "./StylesHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight, faHome, faBars } from "@fortawesome/fontawesome-free-solid";
+import { faChevronRight, faHome, faBars, faList } from "@fortawesome/fontawesome-free-solid";
 import { Link } from "react-router-dom";
+import { faCalendar }  from "@fortawesome/fontawesome-free-regular";
 
 function Header({ idPath, setGlobalState, setCssAnimationState }) {
     return (
@@ -63,11 +64,15 @@ function Header({ idPath, setGlobalState, setCssAnimationState }) {
                     );
                 })}
             </S.BreadcrumbsContainer>
-            <Link to="/calendar">Calendar</Link>
-            <Link to="/">Dynamic View</Link>
-            <S.HamburgerMenuButton>
+            <S.MenuIconButton>
+            <Link to="/calendar"> <FontAwesomeIcon icon={faCalendar} size="2x" /></Link>
+            </S.MenuIconButton>
+            <S.MenuIconButton>
+            <Link to="/"><FontAwesomeIcon icon={faList} size="2x" /></Link>
+            </S.MenuIconButton>
+            <S.MenuIconButton>
                 <FontAwesomeIcon icon={faBars} size="2x" />
-            </S.HamburgerMenuButton>
+            </S.MenuIconButton>
         </S.HeaderContainer>
     );
 }

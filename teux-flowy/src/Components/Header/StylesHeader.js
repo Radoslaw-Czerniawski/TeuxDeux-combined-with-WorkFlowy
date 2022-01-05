@@ -44,6 +44,7 @@ export const BreadcrumbCurrentElement = styled.span`
 
 `;
 
-export const HamburgerMenuButton = styled.div`
+export const MenuIconButton = styled.div`
     height: auto;
+    margin: 0 2rem;
 `

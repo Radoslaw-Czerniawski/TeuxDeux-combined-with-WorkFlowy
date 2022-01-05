@@ -1,12 +1,13 @@
+import { getDay, format, previousDay, addDays } from "date-fns";
 import * as S from "./StylesCalendarCard";
 
-const CalendarCard = ({mainHeading, headingContent}) => {
+const CalendarCard = ({date}) => {
 
     return (
         <S.CardWrapper>
             <S.CardHeader>
-                <S.MainHeadingDay>{mainHeading}</S.MainHeadingDay>
-                <S.HeadingFullDate>{headingContent}</S.HeadingFullDate>
+                <S.MainHeadingDay>{(format(date, "eeee")).toUpperCase()}</S.MainHeadingDay>
+                <S.HeadingFullDate>{(format(date, "MMMM do yyyy")).toUpperCase()}</S.HeadingFullDate>
             </S.CardHeader>
 
             <S.CardNotesArea>

@@ -18,7 +18,7 @@ export const CardHeader = styled.header`
 `;
 
 export const MainHeadingDay = styled.h2`
-    font-size: 3rem;
+    font-size: 2.2rem;
     font-weight: bold;
 `;
 
