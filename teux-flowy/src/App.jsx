@@ -4,17 +4,12 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { Header } from "./Components/Header/Header";
 import { AppContext, DialogContext } from "./ContextApi";
-import DialogComponent from "./Components/Dialog/DialogComponent"
+
 
 function App() {
     const [currentNotes, setCurrentNotes] = useState({
         names: [],
         currentPath: []
-    });
-
-    const [dialogParams, setDialogParams] = useState({
-        isOn: false,
-        id: 0,
     });
 
     if (currentNotes.currentPath.length === 1) {
@@ -35,40 +30,28 @@ function App() {
         setCurrentNotes
     }
 
-    const ContextDialog = {
-        dialogParams,
-        setDialogParams
-    }
-
     return (
         <BrowserRouter>
-            <AppContext.Provider value={ContextElement}>
-                <DialogContext.Provider value={ContextDialog}>
-                    {dialogParams.isOn && <DialogComponent 
-                        dialogParams={dialogParams}
-                        setDialogParams={setDialogParams}> 
-
-                    </DialogComponent>}
-                    <Header
-                        idPath={currentNotes}
-                        setGlobalState={setCurrentNotes}
-                        cssAnimationState={cssAnimationState}
-                        setCssAnimationState={setCssAnimationState}
+            <AppContext.Provider value={ContextElement}>     
+                <Header
+                    idPath={currentNotes}
+                    setGlobalState={setCurrentNotes}
+                    cssAnimationState={cssAnimationState}
+                    setCssAnimationState={setCssAnimationState}
+                />
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <DynamicView
+                                setCssAnimationState={setCssAnimationState}
+                                cssAnimationState={cssAnimationState}
+                                setCurrentPath={setCurrentNotes}
+                                currentNotes={currentNotes}
+                            />
+                        }
                     />
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <DynamicView
-                                    setCssAnimationState={setCssAnimationState}
-                                    cssAnimationState={cssAnimationState}
-                                    setCurrentPath={setCurrentNotes}
-                                    currentNotes={currentNotes}
-                                />
-                            }
-                        />
-                    </Routes>
-                </DialogContext.Provider>
+                </Routes>
             </AppContext.Provider>
         </BrowserRouter>
     );

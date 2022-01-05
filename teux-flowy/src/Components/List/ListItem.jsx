@@ -4,6 +4,7 @@ import ListElementDateComponent from "../ListElementDate/ListElementDate";
 import InlineContext from "../InlineContext/InlineContext";
 import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
+import DialogComponent from "../Dialog/DialogComponent"
 
 // React
 import { useState, useCallback, useEffect } from "react";
@@ -55,7 +56,8 @@ const ListItem = ({
     });
     const [localAnimationState, setLocalAnimationState] = useState(true);
     const [childrenAnimationAdd, setChildrenAnimationAdd] = useState(false);
-
+    const [isDialogOn, setIsDialogOn] = useState(false);
+    
     // Extend forwarded parentList
     const listUrl = [...parentList, id];
 
@@ -120,7 +122,8 @@ const ListItem = ({
                             cascadingChildrenRemoval(listItemId);
                             res(null);
                         });
-                        promiseCascadingDelete.then(() => {
+                        promiseCascadingDelete
+                        .then(() => {
                             console.log("Deleting", listItemId);
                             fetch(`http://localhost:3000/notes/${listItemId}`, {
                                 method: "DELETE",
@@ -274,10 +277,13 @@ const ListItem = ({
                             unmountOnExit
                         >
                             <S.ListElement key={listItemObject.id} isFirst={isFirst}>
+                                {isDialogOn && <DialogComponent 
+                                    setIsDialogOn={setIsDialogOn}
+                                    setNeedComponentReload={setNeedComponentReload}
+                                    id={id}> 
+                                </DialogComponent>}
                                 <S.ListElementHeader isFirst={isFirst}>
-                                    <S.ListElementButtonContainer>
-
-                                    
+                                    <S.ListElementButtonContainer>                                    
                                     {/* popup menu */}
                                     {!isInlineContextVisibile && (
                                         <S.InlineContextButton
@@ -288,8 +294,8 @@ const ListItem = ({
                                                     !isInlineContextVisibile
                                                 );
                                                 setInlineContextClickCoordinates({
-                                                    x: e.nativeEvent.pageX,
-                                                    y: e.nativeEvent.pageY,
+                                                    x: e.nativeEvent.clientX,
+                                                    y: e.nativeEvent.clientY,
                                                 });
                                             }}
                                         >
@@ -322,6 +328,7 @@ const ListItem = ({
                                             moveDownCurrentInput={moveDownCurrentInput}
                                             isMarkedAsDone={isMarkedAsDone}
                                             toggleIsMarkedAsDone={toggleIsMarkedAsDone}
+                                            setIsDialogOn={setIsDialogOn}
                                         />
                                     )}
 
@@ -355,10 +362,11 @@ const ListItem = ({
                                     </S.ListElementButtonContainer>
                                     <S.ListElementDateAndTitleContainer>
                                         <ListElementDateComponent
-                                        key={`date-el-${id}`}
-                                        id={id}
-                                        isFirst={isFirst}
-                                        listItemObjectDate={listItemObjectDate}
+                                            key={`date-el-${id}`}
+                                            setIsDialogOn={setIsDialogOn}
+                                            id={id}
+                                            isFirst={isFirst}
+                                            listItemObjectDate={listItemObjectDate}
                                         />
                                         <NameInput
                                             isFirst={isFirst}
@@ -368,9 +376,6 @@ const ListItem = ({
                                             isMarkedAsDone={isMarkedAsDone}
                                         />
                                     </S.ListElementDateAndTitleContainer>
-                                    {/* Item title = input with onchange attribute  */}
-                                    
-
                                     {/* drag list item handle */}
                                 </S.ListElementHeader>
                                 {/* sublist */}

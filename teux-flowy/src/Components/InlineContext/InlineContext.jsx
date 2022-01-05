@@ -8,7 +8,7 @@ import { DialogContext } from "../../ContextApi";
 const StyledInlineContext = styled.ul`
     position: absolute;
     width: 18rem;
-    ${(props) =>  (document.body.clientHeight - props.clickCords.y) > 200 ? "top: 0;": "bottom: 0;"};
+    ${(props) =>  props.clickCords.y < 200 ? "top: 0;": "bottom: 0;"};
     ${(props) => props.clickCords.x > 200 ? "right: 100% ": "left: 4rem"};
     background: white;
     z-index:10;
@@ -76,7 +76,14 @@ export const InlineContext = ({
     moveUpCurrentInput, 
     moveDownCurrentInput,
     isMarkedAsDone, 
-    toggleIsMarkedAsDone}) => {
+    toggleIsMarkedAsDone,
+    setIsDialogOn
+    }) => {
+
+        const turnDialogOn = () => {
+            setIsDialogOn(true);
+            
+        }
 
 
     // List containg all menu options with parameters such as
@@ -96,7 +103,9 @@ export const InlineContext = ({
         {name: "Mark as undone", onClickHandler: toggleIsMarkedAsDone, 
         isClickable: true, isAvailable: isMarkedAsDone, icon: faCircle},
         {name: "Delete", onClickHandler: removeCurrentInput, 
-        isClickable: !isFirst, isAvailable: true, icon: faTrash}
+        isClickable: !isFirst, isAvailable: true, icon: faTrash},
+        {name: "Set date", onClickHandler: turnDialogOn, 
+        isClickable: true, isAvailable: true, icon: faCalendar}
     ]
 
     const wrapperRef = useRef(null);
@@ -105,12 +114,13 @@ export const InlineContext = ({
     return ( 
         
             
-            <StyledInlineContext clickCords={inlineContextClickCoordinates} ref={wrapperRef}>
+            <StyledInlineContext onClick={()=>setIsInlineContextVisibile(false)} clickCords={inlineContextClickCoordinates} ref={wrapperRef}>
                 { OPTIONS_HANDLER_LIST.map((option) => {
                     return option.isAvailable ? <StyledInlineContextOption 
                                 key={option.name}
                                 isClickable = {option.isClickable}
                                 onClick={option.isClickable ? option.onClickHandler : undefined}
+
                             >
                         <StyledIconWrapperContextOption>
                             <FontAwesomeIcon icon={option.icon} />
@@ -122,25 +132,6 @@ export const InlineContext = ({
                         
                     </StyledInlineContextOption> : null
                 })}
-                <DialogContext.Consumer>
-                {ContextDialog =>
-                    <StyledInlineContextOption 
-                        key="set-date"
-                        isClickable = {true}
-                        onClick={() => {
-                            ContextDialog.setDialogParams({id: id, isOn: true});
-                            setIsInlineContextVisibile(false);
-                        }}
-                    >
-                        <StyledIconWrapperContextOption>
-                            <FontAwesomeIcon icon={faCalendar} />
-                        </StyledIconWrapperContextOption>
-                        <StyledTextWrapperContextOption>
-                            Set date
-                        </StyledTextWrapperContextOption>
-                    </StyledInlineContextOption>
-                }
-                </DialogContext.Consumer>
             </StyledInlineContext>
         
         
