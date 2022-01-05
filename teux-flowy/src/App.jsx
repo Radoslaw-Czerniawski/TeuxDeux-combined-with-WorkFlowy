@@ -4,11 +4,12 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { Header } from "./Components/Header/Header";
 import { AppContext } from "./ContextApi";
+import {CalendarView} from "./views/CalendarView";
 
 function App() {
     const [currentNotes, setCurrentNotes] = useState({
         names: [],
-        currentPath: []
+        currentPath: [],
     });
 
     if (currentNotes.currentPath.length === 1) {
@@ -22,12 +23,12 @@ function App() {
 
     useEffect(() => {
         setCssAnimationState(true);
-    }, [currentNotes.currentPath])
+    }, [currentNotes.currentPath]);
 
     const ContextElement = {
         ...currentNotes,
-        setCurrentNotes
-    }
+        setCurrentNotes,
+    };
 
     return (
         <BrowserRouter>
@@ -50,6 +51,7 @@ function App() {
                             />
                         }
                     />
+                    <Route path="calendar" element={<CalendarView />} />
                 </Routes>
             </AppContext.Provider>
         </BrowserRouter>
