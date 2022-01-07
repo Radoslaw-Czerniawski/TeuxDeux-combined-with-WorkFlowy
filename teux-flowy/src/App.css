@@ -86,3 +86,28 @@
   transition:  transform 700ms;
 }
 
+
+.scrollLeft-exit {
+  opacity: 1;
+  transform: translateX(0);
+  transform: rotate(0);
+}
+
+.scrollLeft-exit-active {
+  opacity: 1;
+  transform: translateX(-20vw);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.scrollRight-exit {
+  opacity: 1;
+  transform: translateX(0);
+  transform: rotate(0);
+}
+
+.scrollRight-exit-active {
+  opacity: 1;
+  transform: translateX(20vw);
+  transition: opacity 300ms, transform 300ms;
+}
+
