@@ -65,10 +65,10 @@ function Header({ idPath, setGlobalState, setCssAnimationState }) {
                 })}
             </S.BreadcrumbsContainer>
             <S.MenuIconButton>
-            <Link to="/calendar"> <FontAwesomeIcon icon={faCalendar} size="2x" /></Link>
+                <Link to="/calendar"> <FontAwesomeIcon icon={faCalendar} size="2x" /></Link>
             </S.MenuIconButton>
             <S.MenuIconButton>
-            <Link to="/"><FontAwesomeIcon icon={faList} size="2x" /></Link>
+                <Link to="/"><FontAwesomeIcon icon={faList} size="2x" /></Link>
             </S.MenuIconButton>
             <S.MenuIconButton>
                 <FontAwesomeIcon icon={faBars} size="2x" />

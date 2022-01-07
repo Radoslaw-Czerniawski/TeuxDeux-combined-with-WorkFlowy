@@ -1,12 +1,23 @@
 import styled from "styled-components";
+import {isBefore, isPast, isToday, isYesterday} from "date-fns";
+import { PALLETE } from "../../Colors/colors";
+
+
+
+const isItTodayOrYesterday = (date) => {
+    if(isToday(date)) {
+        return PALLETE.primary
+    } else if(isBefore(date, Date.now())) {
+        return PALLETE.greyOpacity
+    }
+    return PALLETE.black
+}
 
 export const CardWrapper = styled.div`
     display: flex;
-    width: 20vw;
     flex-direction: column;
-    margin-top: 5rem;
-    border-right: .05rem solid #DCDCDC;
     flex-shrink: 0;
+    color: ${(props) => isItTodayOrYesterday(props.date)};
 `;
 
 export const CardHeader = styled.header`
@@ -30,6 +41,9 @@ export const HeadingFullDate = styled.p`
 export const CardNotesArea = styled.div`
     padding: 1rem;
     height: 100%;
+    text-align:left;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
 `;
 
 

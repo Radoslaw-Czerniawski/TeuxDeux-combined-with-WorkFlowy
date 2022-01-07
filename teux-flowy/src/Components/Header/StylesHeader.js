@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import { PALLETE } from "../../Colors/colors";
+
 export const HeaderContainer = styled.div`
     display: flex;
     height: 5rem;
@@ -19,6 +21,7 @@ export const BreadcrumbDivider = styled.li`
     display: flex;
     align-items: center;
     user-select:none;
+    color: PALLETE.greyOpacity;
 `;
 
 export const BreadcrumbElement = styled(BreadcrumbDivider)`
@@ -47,4 +50,5 @@ export const BreadcrumbCurrentElement = styled.span`
 export const MenuIconButton = styled.div`
     height: auto;
     margin: 0 2rem;
+    color: PALLETE.secondary;
 `

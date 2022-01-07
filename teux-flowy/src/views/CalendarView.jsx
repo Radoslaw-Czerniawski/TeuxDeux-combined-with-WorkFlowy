@@ -1,131 +1,162 @@
-import styled from "styled-components";
 import { CalendarCard } from "../Components/CalendarCard/CalendarCard";
-import { getDay, format, previousDay, addDays } from "date-fns";
-import { useEffect, useState } from "react";
-import { CSSTransition } from "react-transition-group";
+import { format, addDays, previousDay } from "date-fns";
+import { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronCircleLeft, faChevronCircleRight } from "@fortawesome/fontawesome-free-solid";
+import { faChevronLeft, faChevronRight } from "@fortawesome/fontawesome-free-solid";
 
-const StyledCarouselContainer = styled.div`
-    overflow: hidden;
-    position: relative;
+import { PALLETE } from "../Colors/colors";
+
+// Config values
+
+
+const slidingWindowsSize = 5;
+const baseOffset = 7;
+const totalSize = slidingWindowsSize + baseOffset * 2;
+
+const CalendarCarouselWrapper = styled.div`
+    display: grid;
+    grid-template-columns: .3fr 9fr .3fr;
+    margin-top: 4rem;
+`
+
+const CalendarSideContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
+const DaysViewport = styled.div`
+    --baseOffset: ${baseOffset};
+    --offset: 0;
+    --totalOffset: calc(var(--offset) + var(--baseOffset));
+    --totalSize: ${totalSize};
+    --slidingWindowSize: ${slidingWindowsSize};
+    box-sizing: border-box;
+    width: 100%;
+    border: none;
+    margin: 5rem auto;
     height: 60vh;
+    overflow: hidden;
+    border: 1px ${PALLETE.greyOpacity} solid;
+    border-top: none;
+    border-bottom: none;
+`;
+
+const DaysContainer = styled.section`
+    box-sizing: border-box;
+    height: 100%;
+    display:flex;
+    transform: translateX(calc(-1 * 100% * var(--totalOffset) / var(--totalSize)));
+    width: calc(100% * var(--totalSize) / var(--slidingWindowSize));
+`;
+
+const DayContainer = styled.section`
+    flex-basis: calc(100% / var(--slidingWindowSize));
+    border-right: .05rem solid #DCDCDC;
+    box-sizing: border-box;
 `;
 
 const StyledArrow = styled.button`
-    --margin: 2rem;
-    position: absolute;
-    top: 45%;
-    z-index: 5;
-    background: transparent;
     border: none;
-    opacity: 0.6;
+    opacity: 1;
     cursor: pointer;
-    &:hover{
-        opacity: 0.9;
+    width: 100%;
+    height: 100%;
+    color: ${PALLETE.primary};
+    background: transparent;
+    &:hover {
+        opacity: 0.8;
+        background-color: ${PALLETE.secondaryST};
     }
 `;
 
 const StyledLeftArrow = styled(StyledArrow)`
-    left: var(--margin);
 `;
 
 const StyledRightArrow = styled(StyledArrow)`
-    right: var(--margin);
 `;
-
-const StyledCardsWrapper = styled.div`
-    display: flex;
-    position: absolute;
-    --translation: ${(props) => {
-        return props.position + "vw";
-    }};
-    left: var(--translation);
-    flex-wrap: nowrap;
-    height: 100%;
-`;
-
-// arrows left and right - position sticky left and right
-//
 
 const CalendarView = () => {
-    const [carouselState, setCarouselState] = useState({
-        currentPosition: -1,
-        leftEndPosition: -10,
-        dates: Array.from({ length: 21 }, (_, i) => addDays(Date.now(), -10 + i)),
-    });
+    const [activeDay, setActiveDay] = useState(new Date());
+    const [targetOffset, setTargetOffset] = useState(0);
 
-    const [scrollAnimationLeft, setScrollAnimationLeft] = useState(true);
-    const [scrollAnimationRight, setScrollAnimationRight] = useState(true);
-
-    // console.log(addDays(Date.now(), -10));
-    // console.log(format(addDays(Date.now(), -10), "eeee"));
-    // console.log(format(addDays(Date.now(), -10), "MMMM do yyyy"));
-
-    const changeCarouselPosition = (delta) => {
-        if(delta > 0) {
-            setScrollAnimationLeft(false);
-
-            setTimeout(() => {
-                setCarouselState({
-                    ...carouselState,
-                    currentPosition: carouselState.currentPosition + delta,
-                });
-                setScrollAnimationLeft(true);
-            }, 300);
-        } else {
-            setScrollAnimationRight(false);
-
-            setTimeout(() => {
-                setCarouselState({
-                    ...carouselState,
-                    currentPosition: carouselState.currentPosition + delta,
-                });
-                setScrollAnimationRight(true);
-            }, 300);
-        }
-    };
+    const containerRef = useRef(null);
+    const currentOffset = useRef(0);
 
     useEffect(() => {
-        setScrollAnimationLeft(true);
-    }, []);
+        let id;
+        const updateIncrementallyCarouselPositionAfterAnimationStart = () => {
+            const currentCardsContainer = containerRef.current;
 
-    const position = (carouselState.currentPosition - carouselState.leftEndPosition) * -20;
-    console.log(position);
+            currentOffset.current =
+                currentOffset.current > targetOffset
+                    ? Math.max(currentOffset.current - 0.06, targetOffset)
+                    : Math.min(currentOffset.current + 0.06, targetOffset);
+
+            if (currentCardsContainer) {
+                currentCardsContainer.style.setProperty("--offset", currentOffset.current);
+            }
+
+            if (currentOffset.current === targetOffset) {
+                setActiveDay((prevState) => addDays(prevState, targetOffset));
+                setTargetOffset(0);
+                currentOffset.current = 0;
+                currentCardsContainer.style.setProperty("--offset", currentOffset.current);
+
+                return;
+            }
+
+            id = requestAnimationFrame(updateIncrementallyCarouselPositionAfterAnimationStart);
+        };
+
+        updateIncrementallyCarouselPositionAfterAnimationStart();
+
+        return () => {
+            cancelAnimationFrame(id);
+        };
+    }, [targetOffset]);
+
+    const carouselForward = () => {
+        setTargetOffset((prevState) => prevState + 1);
+    };
+
+    const carouselBackward = () => {
+        setTargetOffset((prevState) => prevState - 1);
+    };
+
+    const days = Array.from({ length: totalSize }, (_, i) => {
+        return addDays(activeDay, i - 8);
+    });
 
     return (
-        // ogólny wrapper, w którym beda tez strzalki: position: relative
-        // strzałki
-
-        <StyledCarouselContainer>
-            <StyledLeftArrow onClick={() => changeCarouselPosition(-1)}>
-                <FontAwesomeIcon icon={faChevronCircleLeft} size="8x" />
+        <CalendarCarouselWrapper>
+            <CalendarSideContainer>
+                <StyledLeftArrow onClick={carouselBackward}>
+                <FontAwesomeIcon icon={faChevronLeft} size="3x" />
             </StyledLeftArrow>
-            <StyledRightArrow onClick={() => changeCarouselPosition(1)}>
-                <FontAwesomeIcon icon={faChevronCircleRight} size="8x" />
-            </StyledRightArrow>
-            <CSSTransition
-                in={scrollAnimationLeft}
-                timeout={300}
-                classNames={"scrollLeft"}
-                unmountOnExit
-            >
-                <CSSTransition
-                in={scrollAnimationRight}
-                timeout={300}
-                classNames={"scrollRight"}
-                unmountOnExit
-            >
-                <StyledCardsWrapper position={position}>
-                    {carouselState.dates.map((date) => (
-                        <>
-                            <CalendarCard date={date} />
-                        </>
-                    ))}
-                </StyledCardsWrapper>
-            </CSSTransition>
-            </CSSTransition>
-        </StyledCarouselContainer>
+            </CalendarSideContainer>
+
+            <DaysViewport ref={containerRef}>
+                <DaysContainer>
+                    {days.map((day) => {
+                        return (
+                            <DayContainer
+                                key={day.toString()}>
+                                <CalendarCard
+                                    date={day}
+                                    key={`${day.toString()}card`}/>
+                            </DayContainer>
+                        );
+                    })}
+                </DaysContainer>
+            </DaysViewport>
+            <CalendarSideContainer>
+                <StyledRightArrow onClick={carouselForward}>
+                    <FontAwesomeIcon icon={faChevronRight} size="3x" />
+                </StyledRightArrow>
+            </CalendarSideContainer>
+        </CalendarCarouselWrapper>
     );
 };
 
