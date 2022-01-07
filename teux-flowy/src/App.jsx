@@ -3,7 +3,8 @@ import { DynamicView } from "./views/DynamicView";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { Header } from "./Components/Header/Header";
-import { AppContext } from "./ContextApi";
+import { AppContext, DialogContext } from "./ContextApi";
+
 
 function App() {
     const [currentNotes, setCurrentNotes] = useState({
@@ -31,7 +32,7 @@ function App() {
 
     return (
         <BrowserRouter>
-            <AppContext.Provider value={ContextElement}>
+            <AppContext.Provider value={ContextElement}>     
                 <Header
                     idPath={currentNotes}
                     setGlobalState={setCurrentNotes}
