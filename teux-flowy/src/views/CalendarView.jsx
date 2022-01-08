@@ -130,30 +130,35 @@ const CalendarView = () => {
     });
 
     return (
-        <CalendarCarouselWrapper>
-            <CalendarSideContainer>
-                <StyledLeftArrow onClick={carouselBackward}>
+        <div> {/* //CALENDAR VIEW WRAPPER */}
+            <CalendarCarouselWrapper>
+                <CalendarSideContainer>
+                    <StyledLeftArrow onClick={carouselBackward}>
                     <FontAwesomeIcon icon={faChevronLeft} size="3x" />
                 </StyledLeftArrow>
-            </CalendarSideContainer>
+                </CalendarSideContainer>
 
-            <DaysViewport ref={containerRef}>
-                <DaysContainer>
-                    {days.map((day) => {
-                        return (
-                            <DayContainer key={day.toString()}>
-                                <CalendarCard date={day} key={`${day.toString()}card`} />
-                            </DayContainer>
-                        );
-                    })}
-                </DaysContainer>
-            </DaysViewport>
-            <CalendarSideContainer>
-                <StyledRightArrow onClick={carouselForward}>
-                    <FontAwesomeIcon icon={faChevronRight} size="3x" />
-                </StyledRightArrow>
-            </CalendarSideContainer>
-        </CalendarCarouselWrapper>
+                <DaysViewport ref={containerRef}>
+                    <DaysContainer>
+                        {days.map((day) => {
+                            return (
+                                <DayContainer
+                                    key={day.toString()}>
+                                    <CalendarCard
+                                        date={day}
+                                        key={`${day.toString()}card`}/>
+                                </DayContainer>
+                            );
+                        })}
+                    </DaysContainer>
+                </DaysViewport>
+                <CalendarSideContainer>
+                    <StyledRightArrow onClick={carouselForward}>
+                        <FontAwesomeIcon icon={faChevronRight} size="3x" />
+                    </StyledRightArrow>
+                </CalendarSideContainer>
+            </CalendarCarouselWrapper>
+        </div>
     );
 };
 
