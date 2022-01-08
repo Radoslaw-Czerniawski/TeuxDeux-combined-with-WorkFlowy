@@ -4,14 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/fontawesome-free-solid";
-
+import SlidingCalendar from "../Components/SlidingCalendar/SlidingCalendar";
 import { PALLETE } from "../Colors/colors";
 
 // Config values
 
 const slidingWindowsSize = 5;
-const baseOffset = 7;
+const baseOffset = 3;
 const totalSize = slidingWindowsSize + baseOffset * 2;
+
+const CalendarViewWrapper = styled.div`
+    
+`
 
 const CalendarCarouselWrapper = styled.div`
     display: grid;
@@ -104,9 +108,6 @@ const CalendarView = () => {
 
                 return;
             }
-
-            console.log(currentOffset.current);
-
             id = requestAnimationFrame(updateIncrementallyCarouselPositionAfterAnimationStart);
         };
 
@@ -126,39 +127,39 @@ const CalendarView = () => {
     };
 
     const days = Array.from({ length: totalSize }, (_, i) => {
-        return addDays(activeDay, i - 8);
+        return addDays(activeDay, i - 4);
     });
 
     return (
-        <div> {/* //CALENDAR VIEW WRAPPER */}
-            <CalendarCarouselWrapper>
-                <CalendarSideContainer>
-                    <StyledLeftArrow onClick={carouselBackward}>
-                    <FontAwesomeIcon icon={faChevronLeft} size="3x" />
-                </StyledLeftArrow>
-                </CalendarSideContainer>
+            <CalendarViewWrapper>
+                <CalendarCarouselWrapper>
+                    <CalendarSideContainer>
+                        <StyledLeftArrow onClick={carouselBackward}>
+                        <FontAwesomeIcon icon={faChevronLeft} size="3x" />
+                    </StyledLeftArrow>
+                    </CalendarSideContainer>
 
-                <DaysViewport ref={containerRef}>
-                    <DaysContainer>
-                        {days.map((day) => {
-                            return (
-                                <DayContainer
-                                    key={day.toString()}>
-                                    <CalendarCard
-                                        date={day}
-                                        key={`${day.toString()}card`}/>
-                                </DayContainer>
-                            );
-                        })}
-                    </DaysContainer>
-                </DaysViewport>
-                <CalendarSideContainer>
-                    <StyledRightArrow onClick={carouselForward}>
-                        <FontAwesomeIcon icon={faChevronRight} size="3x" />
-                    </StyledRightArrow>
-                </CalendarSideContainer>
-            </CalendarCarouselWrapper>
-        </div>
+                    <DaysViewport ref={containerRef}>
+                        <DaysContainer>
+                            {days.map((day) => {
+                                return (
+                                    <DayContainer
+                                        key={day.toString()}>
+                                        <CalendarCard
+                                            date={day}
+                                            key={`${day.toString()}card`}/>
+                                    </DayContainer>
+                                );
+                            })}
+                        </DaysContainer>
+                    </DaysViewport>
+                    <CalendarSideContainer>
+                        <StyledRightArrow onClick={carouselForward}>
+                            <FontAwesomeIcon icon={faChevronRight} size="3x" />
+                        </StyledRightArrow>
+                    </CalendarSideContainer>
+                </CalendarCarouselWrapper>
+            </CalendarViewWrapper>
     );
 };
 

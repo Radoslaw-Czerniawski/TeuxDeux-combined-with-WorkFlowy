@@ -3,7 +3,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { useState } from "react";
 import { parseJSON } from "date-fns";
-import { pick } from "lodash";
+import { PALLETE } from "../../Colors/colors";
 
 const StyledDialog = styled.div`
     position: fixed;
@@ -29,18 +29,24 @@ const StyledConfirmButton = styled.button`
     display: block;
     margin: 2rem auto 0 auto;
     padding: 1rem 3rem;
-    background: #47bf53;
+    background: ${PALLETE.secondary};
+    color: ${PALLETE.white};
     border-radius: 1rem;
     border: none;
-    box-shadow: #416b46 0.3rem 0.3rem 2rem -0.1rem;
+    box-shadow: ${PALLETE.black} 0.3rem 0.3rem 1.5rem -0.3rem;
     &:hover {
         opacity: 0.9;
         box-shadow: #416b46 0.5rem 0.5rem 2rem -0.1rem;
     }
 `;
-const StyledTitle = styled.h1`
+const StyledTitle = styled.div`
     font-size: 2rem;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    text-align: center;
+    text-transform: uppercase;
 `;
+
 const patchDate = (id, pickedDate) => {
     return fetch(`http://localhost:3000/notes/${id}`, {
         method: "PATCH",

@@ -4,7 +4,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { Header } from "./Components/Header/Header";
 import { AppContext } from "./ContextApi";
-import {CalendarView} from "./views/CalendarView";
+import { CalendarView } from "./views/CalendarView";
 import { Footer } from "./Components/Footer/Footer";
 import styled from "styled-components";
 
@@ -32,41 +32,37 @@ function App() {
         setCurrentNotes,
     };
 
-    const AppContainer = styled.div`
-        display: grid;
-        min-height: 100vh;
-        overflow: hidden;
-        grid-template-rows: auto 1fr auto;
+
+
+
+    const ViewsContainer = styled.div`
+        width: 100%;
     `
 
     return (
         <BrowserRouter>
             <AppContext.Provider value={ContextElement}>
-                <AppContainer>
                     <Header
                         idPath={currentNotes}
                         setGlobalState={setCurrentNotes}
                         cssAnimationState={cssAnimationState}
                         setCssAnimationState={setCssAnimationState}
                     />
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <DynamicView
-                                    setCssAnimationState={setCssAnimationState}
-                                    cssAnimationState={cssAnimationState}
-                                    setCurrentPath={setCurrentNotes}
-                                    currentNotes={currentNotes}
-                                />
-                            }
-                        />
-                        <Route path="calendar" element={<CalendarView />} />
-                    </Routes>
-                    <Footer>
-
-                    </Footer>
-                </AppContainer>
+                        <Routes>
+                            <Route
+                                path="/"
+                                element={
+                                    <DynamicView
+                                        setCssAnimationState={setCssAnimationState}
+                                        cssAnimationState={cssAnimationState}
+                                        setCurrentPath={setCurrentNotes}
+                                        currentNotes={currentNotes}
+                                    />
+                                }
+                            />
+                            <Route path="calendar" element={<CalendarView />} />
+                        </Routes>
+                    <Footer />
             </AppContext.Provider>
         </BrowserRouter>
     );

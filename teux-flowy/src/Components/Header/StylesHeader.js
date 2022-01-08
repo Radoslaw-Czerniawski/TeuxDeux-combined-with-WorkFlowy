@@ -67,16 +67,18 @@ export const StyledNavLink = styled(NavLink)`
     color: ${PALLETE.secondary};
     background: ${PALLETE.greyST};
     box-shadow: inset 5px 5px 5px -3px ${PALLETE.grey};
-    transition: background-color 0.5s, color 0.5s;
+    transition: background-color 0.2s, color 0.2s;
     cursor: pointer;
     &:hover{
-        opacity:0.8;
+        opacity:0.7;
     }
 
     &.active {
         color: ${PALLETE.white};
         background: ${PALLETE.secondary};
-
+        box-shadow: none;
+        cursor: default;
+        opacity:1;
     }
   `
 

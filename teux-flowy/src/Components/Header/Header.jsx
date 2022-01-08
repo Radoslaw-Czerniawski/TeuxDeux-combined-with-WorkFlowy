@@ -2,7 +2,7 @@ import * as S from "./StylesHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faHome, faBars, faList } from "@fortawesome/fontawesome-free-solid";
 
-import { faCalendar }  from "@fortawesome/fontawesome-free-regular";
+import { faCalendar } from "@fortawesome/fontawesome-free-regular";
 
 
 
@@ -18,8 +18,8 @@ function Header({ idPath, setGlobalState, setCssAnimationState }) {
 
                             setTimeout(() => {
                                 setGlobalState({
-                                    names: ["HOME"],
-                                    currentPath: ["HOME"],
+                                    names: [],
+                                    currentPath: [],
                                 });
                             }, 300);
                         }}
@@ -67,7 +67,13 @@ function Header({ idPath, setGlobalState, setCssAnimationState }) {
                 })}
             </S.BreadcrumbsContainer>
             <S.DisplayModeToggleContainer>
-                <S.StyledNavLinkLeft activeClassName="active"  to="/calendar"> 
+                <S.StyledNavLinkLeft activeClassName="active" onClick={() => {
+                    setGlobalState({
+                        names: [],
+                        currentPath: [],
+                    });
+                }} 
+                to="/calendar">
                     <FontAwesomeIcon icon={faCalendar} size="2x" />
                 </S.StyledNavLinkLeft>
 
@@ -75,7 +81,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState }) {
                 <S.StyledNavLinkRight activeClassName="active" to="/">
                     <FontAwesomeIcon icon={faList} size="2x" />
                 </S.StyledNavLinkRight>
-            </S.DisplayModeToggleContainer>    
+            </S.DisplayModeToggleContainer>
         </S.HeaderContainer>
     );
 }

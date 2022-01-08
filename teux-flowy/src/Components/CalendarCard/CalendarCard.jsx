@@ -2,6 +2,7 @@ import { getDay, format, previousDay, addDays, isToday, parseJSON } from "date-f
 import { useEffect, useRef, useState } from "react";
 import * as S from "./StylesCalendarCard";
 
+
 const CalendarCard = ({ date }) => {
     const [fetchedData, setFetchedData] = useState([]);
     const [allNotesFetched, setAllNotesFetched] = useState(false);

@@ -6,6 +6,7 @@ const StyledFooter = styled.div`
     display: flex;
     padding: 2rem;
     justify-content: center;
+    color: ${PALLETE.grey};
 `
 
 export const Footer = () => {

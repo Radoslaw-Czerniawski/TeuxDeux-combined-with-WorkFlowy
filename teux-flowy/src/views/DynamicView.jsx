@@ -3,9 +3,12 @@ import styled from "styled-components";
 import { CSSTransition } from "react-transition-group"
 
 const StyledMainList = styled.ul`
+    width: 100%;
     max-width:700px;
     margin: 5rem auto;
+    min-height: 50vh;
 `
+
 
 function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState  }) {
 
@@ -14,7 +17,6 @@ function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState  })
 
 
     return (
-        <div> {/* DYNAMIC CONTAINER */}
             <CSSTransition
                 in={cssAnimationState}
                 timeout={300}
@@ -38,7 +40,6 @@ function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState  })
                     />
                 </StyledMainList>
             </CSSTransition>
-        </div>
     );
 }
 
