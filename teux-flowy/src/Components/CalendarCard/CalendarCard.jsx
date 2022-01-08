@@ -43,12 +43,28 @@ const CalendarCard = ({ date }) => {
                         </S.HeadingFullDate>
                     </S.CardHeader>
                     <S.CardNotesArea>
-                        <ul style={{
-                            "margin-top": ".3rem",
-                        }}>
-                        {fetchedData.map((note) => (
-                            <S.NoteRow>{note}</S.NoteRow>
-                        ))}
+                        <ul
+                            style={{
+                                "margin-top": ".3rem",
+                            }}
+                        >
+                            {fetchedData.map((note) => (
+                                <>
+                                    <S.NoteRow>
+                                        <span
+                                            style={{
+                                                "position": "absolute",
+                                                "top": "-.5rem",
+                                                "left": "-.1rem",
+                                                "font-size": "1.8rem"
+                                            }}
+                                        >
+                                            •
+                                        </span>
+                                        {note}
+                                    </S.NoteRow>
+                                </>
+                            ))}
                         </ul>
                     </S.CardNotesArea>
                 </S.CardWrapper>

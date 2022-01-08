@@ -6,11 +6,45 @@
       "expanded": true,
       "done": false,
       "subList": [
+        "ky60uzcs"
       ],
-      "hasDate": false,
-      "date": ""
+      "hasDate": true,
+      "date": "2022-01-08T23:00:00.000Z"
+    },
+    {
+      "id": "ky60uzcs",
+      "name": "Write here...",
+      "done": false,
+      "expanded": true,
+      "subList": [
+        "ky60v42g"
+      ],
+      "hasDate": true,
+      "date": "2022-01-11T23:00:00.000Z"
+    },
+    {
+      "id": "ky60v42g",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-01-08T23:00:00.000Z"
     }
   ],
   "dates": [
+    {
+      "id": "2022-01-08T23:00:00.000Z",
+      "notes": [
+        "HOME",
+        "ky60v42g"
+      ]
+    },
+    {
+      "id": "2022-01-11T23:00:00.000Z",
+      "notes": [
+        "ky60uzcs"
+      ]
+    }
   ]
 }

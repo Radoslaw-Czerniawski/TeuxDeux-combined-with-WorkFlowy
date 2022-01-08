@@ -74,6 +74,7 @@ export const CardNotesArea = styled.div`
 `;
 
 export const NoteRow = styled.li`
+    position: relative;
     font-size: 1.4rem;
     padding: 0 1rem;
     line-height: 2.28;

@@ -14,29 +14,31 @@ function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState  })
 
 
     return (
-        <CSSTransition
-            in={cssAnimationState}
-            timeout={300}
-            classNames={"page"}
-            unmountOnExit
-        >
-            <StyledMainList key={`main-list-${id}`}>
-                <ListItem
-                    parentLocalAnimationState={undefined}
-                    setCssAnimationState={setCssAnimationState}
-                    cssAnimationState={cssAnimationState}
-                    id={id}
-                    isFirst={true}
-                    isFirstInList={true}
-                    isLastInList={true}
-                    parentSublist={null}
-                    parentNameList={currentNotes.names}
-                    parentList={parentList}
-                    parentChangeSyncStatus={undefined}
-                    key={id}
-                />
-            </StyledMainList>
-        </CSSTransition>
+        <div> {/* DYNAMIC CONTAINER */}
+            <CSSTransition
+                in={cssAnimationState}
+                timeout={300}
+                classNames={"page"}
+                unmountOnExit
+            >
+                <StyledMainList key={`main-list-${id}`}>
+                    <ListItem
+                        parentLocalAnimationState={undefined}
+                        setCssAnimationState={setCssAnimationState}
+                        cssAnimationState={cssAnimationState}
+                        id={id}
+                        isFirst={true}
+                        isFirstInList={true}
+                        isLastInList={true}
+                        parentSublist={null}
+                        parentNameList={currentNotes.names}
+                        parentList={parentList}
+                        parentChangeSyncStatus={undefined}
+                        key={id}
+                    />
+                </StyledMainList>
+            </CSSTransition>
+        </div>
     );
 }
 
