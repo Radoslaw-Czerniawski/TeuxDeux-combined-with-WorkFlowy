@@ -9,22 +9,21 @@ import { PALLETE } from "../Colors/colors";
 
 // Config values
 
-
 const slidingWindowsSize = 5;
 const baseOffset = 7;
 const totalSize = slidingWindowsSize + baseOffset * 2;
 
 const CalendarCarouselWrapper = styled.div`
     display: grid;
-    grid-template-columns: .3fr 9fr .3fr;
+    grid-template-columns: 0.3fr 9fr 0.3fr;
     margin-top: 4rem;
-`
+`;
 
 const CalendarSideContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-`
+`;
 
 const DaysViewport = styled.div`
     --baseOffset: ${baseOffset};
@@ -45,14 +44,14 @@ const DaysViewport = styled.div`
 const DaysContainer = styled.section`
     box-sizing: border-box;
     height: 100%;
-    display:flex;
+    display: flex;
     transform: translateX(calc(-1 * 100% * var(--totalOffset) / var(--totalSize)));
     width: calc(100% * var(--totalSize) / var(--slidingWindowSize));
 `;
 
 const DayContainer = styled.section`
     flex-basis: calc(100% / var(--slidingWindowSize));
-    border-right: .05rem ${PALLETE.greyST} solid;
+    border-right: 0.05rem ${PALLETE.greyST} solid;
     box-sizing: border-box;
 `;
 
@@ -70,18 +69,18 @@ const StyledArrow = styled.button`
     }
 `;
 
-const StyledLeftArrow = styled(StyledArrow)`
-`;
+const StyledLeftArrow = styled(StyledArrow)``;
 
-const StyledRightArrow = styled(StyledArrow)`
-`;
+const StyledRightArrow = styled(StyledArrow)``;
 
 const CalendarView = () => {
-    const [activeDay, setActiveDay] = useState(new Date());
+    const [activeDay, setActiveDay] = useState(new Date(new Date().setHours(0, 0, 0, 0)));
     const [targetOffset, setTargetOffset] = useState(0);
 
     const containerRef = useRef(null);
     const currentOffset = useRef(0);
+
+
 
     useEffect(() => {
         let id;
@@ -134,19 +133,16 @@ const CalendarView = () => {
         <CalendarCarouselWrapper>
             <CalendarSideContainer>
                 <StyledLeftArrow onClick={carouselBackward}>
-                <FontAwesomeIcon icon={faChevronLeft} size="3x" />
-            </StyledLeftArrow>
+                    <FontAwesomeIcon icon={faChevronLeft} size="3x" />
+                </StyledLeftArrow>
             </CalendarSideContainer>
 
             <DaysViewport ref={containerRef}>
                 <DaysContainer>
                     {days.map((day) => {
                         return (
-                            <DayContainer
-                                key={day.toString()}>
-                                <CalendarCard
-                                    date={day}
-                                    key={`${day.toString()}card`}/>
+                            <DayContainer key={day.toString()}>
+                                <CalendarCard date={day} key={`${day.toString()}card`} />
                             </DayContainer>
                         );
                     })}

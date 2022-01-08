@@ -1,23 +1,60 @@
-import { getDay, format, previousDay, addDays, isToday } from "date-fns";
+import { getDay, format, previousDay, addDays, isToday, parseJSON } from "date-fns";
+import { useEffect, useRef, useState } from "react";
 import * as S from "./StylesCalendarCard";
 
-const CalendarCard = ({date}) => {
+const CalendarCard = ({ date }) => {
+    const [fetchedData, setFetchedData] = useState([]);
+    const [allNotesFetched, setAllNotesFetched] = useState(false);
+
+    useEffect(() => {
+        Promise.resolve(
+            fetch(`http://localhost:3000/dates/${JSON.stringify(date).replace(/"/g, "")}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    let accumulator = [];
+                    Promise.resolve(data.notes.forEach((note) => {
+                        fetch(`http://localhost:3000/notes/${note}`)
+                            .then((res) => res.json())
+                            .then((data) => {
+                                accumulator = [...accumulator, data.name]
+                            })
+                            .then(() => setFetchedData([
+                                ...accumulator,
+                            ]))
+                    }))
+
+                })
+        )
+        .finally(() => {
+            setAllNotesFetched(true)
+        })
+    }, [])
 
     const notesRowsNumber = new Array(25).fill(0);
 
     return (
-        <S.CardWrapper date={date}>
-            <S.CardHeader>
-                <S.MainHeadingDay>{(format(date, "eeee")).toUpperCase()}</S.MainHeadingDay>
-                <S.HeadingFullDate>{(format(date, "MMMM do yyyy")).toUpperCase()}</S.HeadingFullDate>
-            </S.CardHeader>
-            <S.CardNotesArea>
-                {isToday(date) && notesRowsNumber.map(note => (
-                    <S.NoteRow>wow</S.NoteRow>
-                ))}
-            </S.CardNotesArea>
-        </S.CardWrapper>
-    )
-}
+        <>
+            {allNotesFetched && (
+                <S.CardWrapper date={date}>
+                    <S.CardHeader>
+                        <S.MainHeadingDay>{format(date, "eeee").toUpperCase()}</S.MainHeadingDay>
+                        <S.HeadingFullDate>
+                            {format(date, "MMMM do yyyy").toUpperCase()}
+                        </S.HeadingFullDate>
+                    </S.CardHeader>
+                    <S.CardNotesArea>
+                        <ul style={{
+                            "margin-top": ".3rem",
+                        }}>
+                        {fetchedData.map((note) => (
+                            <S.NoteRow>{note}</S.NoteRow>
+                        ))}
+                        </ul>
+                    </S.CardNotesArea>
+                </S.CardWrapper>
+            )}
+        </>
+    );
+};
 
-export {CalendarCard};
+export { CalendarCard };

@@ -73,8 +73,10 @@ export const CardNotesArea = styled.div`
 }
 `;
 
-export const NoteRow = styled.div`
+export const NoteRow = styled.li`
     font-size: 1.4rem;
-    padding: .9rem;
+    padding: 0 1rem;
+    line-height: 2.28;
+    list-style-type: circle;
 `
 

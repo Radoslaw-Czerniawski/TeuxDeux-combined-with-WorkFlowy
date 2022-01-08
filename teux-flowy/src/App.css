@@ -1,113 +1,119 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+ul {
+    list-style-type: circle;
+}
+
+li {
+    list-style-type: circle;
 }
 
 .page {
-  left: 15px;
-  right: 15px;
+    left: 15px;
+    right: 15px;
 }
 
 .page-enter {
-  opacity: .5;
-  transform: translateX(-40rem);
+    opacity: 0.5;
+    transform: translateX(-40rem);
 }
 
 .page-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 300ms, transform 300ms;
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 300ms, transform 300ms;
 }
 
 .page-exit {
-  transform: translateX(0);
-  transition: transform 700ms;
+    transform: translateX(0);
+    transition: transform 700ms;
 }
 
 .page-exit-active {
-  transform: translateX(-100rem);
-  transition: transform 700ms;
+    transform: translateX(-100rem);
+    transition: transform 700ms;
 }
 
 .pageMain-enter {
-  opacity: 1;
-  transform: translateX(0);
-  transform: rotate(0);
+    opacity: 1;
+    transform: translateX(0);
+    transform: rotate(0);
 }
 
 .pageMain-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 300ms, transform 300ms;
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 300ms, transform 300ms;
 }
 
 .pageMain-exit {
-  opacity: 1;
-  transform: translateX(0) ;
-  transition:  transform 700ms;
+    opacity: 1;
+    transform: translateX(0);
+    transition: transform 700ms;
 }
 
 .pageMain-exit-active {
-  transform: translate(200rem);
-  transition:  transform 700ms;
+    transform: translate(200rem);
+    transition: transform 700ms;
 }
 
-
 .scrollLeft-exit {
-  opacity: 1;
-  transform: translateX(0);
-  transform: rotate(0);
+    opacity: 1;
+    transform: translateX(0);
+    transform: rotate(0);
 }
 
 .scrollLeft-exit-active {
-  opacity: 1;
-  transform: translateX(-20vw);
-  transition: opacity 300ms, transform 300ms;
+    opacity: 1;
+    transform: translateX(-20vw);
+    transition: opacity 300ms, transform 300ms;
 }
 
 .scrollRight-exit {
-  opacity: 1;
-  transform: translateX(0);
-  transform: rotate(0);
+    opacity: 1;
+    transform: translateX(0);
+    transform: rotate(0);
 }
 
 .scrollRight-exit-active {
-  opacity: 1;
-  transform: translateX(20vw);
-  transition: opacity 300ms, transform 300ms;
+    opacity: 1;
+    transform: translateX(20vw);
+    transition: opacity 300ms, transform 300ms;
 }
-

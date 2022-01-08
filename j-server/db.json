@@ -6,37 +6,132 @@
       "expanded": true,
       "done": false,
       "subList": [
-        "ky4ccekj",
-        "ky4cceej"
+        "ky5wtzxh"
       ],
       "hasDate": false,
       "date": ""
     },
     {
-      "id": "ky4cceej",
-      "name": "Fryzjer",
+      "id": "ky5wtzxh",
+      "name": "Tyłek",
       "done": false,
       "expanded": true,
-      "subList": [],
+      "subList": [
+        "ky5z97dp",
+        "ky5z97ad",
+        "ky5z9773"
+      ],
       "hasDate": true,
-      "date": "2022-01-08T23:00:00.000Z"
+      "date": "2022-01-07T23:00:00.000Z"
     },
     {
-      "id": "ky4ccekj",
-      "name": "Zakupy",
+      "id": "ky5z9773",
+      "name": "Zupa",
+      "done": false,
+      "expanded": true,
+      "subList": [
+        "ky5ztji6",
+        "ky5ztjby",
+        "ky5ztj6u",
+        "ky5ztixa",
+        "ky5ztise",
+        "ky5ztiev"
+      ],
+      "hasDate": true,
+      "date": "2022-01-07T23:00:00.000Z"
+    },
+    {
+      "id": "ky5z97ad",
+      "name": "Dupsko",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-01-07T23:00:00.000Z"
+    },
+    {
+      "id": "ky5z97dp",
+      "name": "Wwowo O co chodzi kurde bonk riufyhiure3fuierhfuiheriherigh dasuh AAAAA wehjdhhwihowehuew JEzuSSSergiuoherhreiuoh oerhgiuoerhg iuheriughe iurhgiuerhiuhieruhigu heiurghiue iu hreiughieuhihehgh eriugh iuerhgiuehruigh erghe riuhgiuer guieh iuehg uehgehrguiheig eriugherhg iuerhgiugegihig",
       "done": false,
       "expanded": false,
       "subList": [],
       "hasDate": true,
       "date": "2022-01-08T23:00:00.000Z"
+    },
+    {
+      "id": "ky5ztiev",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-01-07T23:00:00.000Z"
+    },
+    {
+      "id": "ky5ztise",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-01-07T23:00:00.000Z"
+    },
+    {
+      "id": "ky5ztixa",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-01-07T23:00:00.000Z"
+    },
+    {
+      "id": "ky5ztj6u",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-01-07T23:00:00.000Z"
+    },
+    {
+      "id": "ky5ztjby",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-01-07T23:00:00.000Z"
+    },
+    {
+      "id": "ky5ztji6",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-01-07T23:00:00.000Z"
     }
   ],
   "dates": [
     {
+      "id": "2022-01-07T23:00:00.000Z",
+      "notes": [
+        "ky5wtzxh",
+        "ky5z97ad",
+        "ky5z9773",
+        "ky5ztji6",
+        "ky5ztjby",
+        "ky5ztj6u",
+        "ky5ztixa",
+        "ky5ztise",
+        "ky5ztiev"
+      ]
+    },
+    {
       "id": "2022-01-08T23:00:00.000Z",
       "notes": [
-        "ky4ccekj",
-        "ky4cceej"
+        "ky5z97dp"
       ]
     }
   ]
