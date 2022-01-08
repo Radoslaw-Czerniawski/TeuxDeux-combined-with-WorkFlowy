@@ -4,7 +4,7 @@ import ListElementDateComponent from "../ListElementDate/ListElementDate";
 import InlineContext from "../InlineContext/InlineContext";
 import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
-import DialogComponent from "../Dialog/DialogComponent"
+import DialogComponent from "../Dialog/DialogComponent";
 
 // React
 import { useState, useCallback, useEffect } from "react";
@@ -57,7 +57,7 @@ const ListItem = ({
     const [localAnimationState, setLocalAnimationState] = useState(true);
     const [childrenAnimationAdd, setChildrenAnimationAdd] = useState(false);
     const [isDialogOn, setIsDialogOn] = useState(false);
-    
+
     // Extend forwarded parentList
     const listUrl = [...parentList, id];
 
@@ -117,14 +117,29 @@ const ListItem = ({
             return fetch(`http://localhost:3000/notes/${id}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    data.subList.forEach((listItemId) => {
-                        const promiseCascadingDelete = new Promise((res, rej) => {
-                            cascadingChildrenRemoval(listItemId);
-                            res(null);
+                    const dateAdress = JSON.stringify(data.date).replace(/"/g, "");
+                    fetch(`http://localhost:3000/dates/${dateAdress}`)
+                        .then((res) => res.json())
+                        .then((insideData) => {
+                            if (insideData.notes.length === 1) {
+                                fetch(`http://localhost:3000/dates/${dateAdress}`, {
+                                    method: "DELETE",
+                                });
+                            } else {
+                                fetch(`http://localhost:3000/dates/${dateAdress}`, {
+                                    method: "PATCH",
+                                    headers: {
+                                        "Content-type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                        notes:  insideData.notes.filter((value) => value !== id && value)
+                                    }),
+                                });
+                            }
                         });
-                        promiseCascadingDelete
-                        .then(() => {
-                            console.log("Deleting", listItemId);
+
+                    data.subList.forEach((listItemId) => {
+                        Promise.resolve(cascadingChildrenRemoval(listItemId)).then(() => {
                             fetch(`http://localhost:3000/notes/${listItemId}`, {
                                 method: "DELETE",
                             });
@@ -277,88 +292,92 @@ const ListItem = ({
                             unmountOnExit
                         >
                             <S.ListElement key={listItemObject.id} isFirst={isFirst}>
-                                {isDialogOn && <DialogComponent 
-                                    setIsDialogOn={setIsDialogOn}
-                                    setNeedComponentReload={setNeedComponentReload}
-                                    id={id}> 
-                                </DialogComponent>}
+                                {isDialogOn && (
+                                    <DialogComponent
+                                        setIsDialogOn={setIsDialogOn}
+                                        setNeedComponentReload={setNeedComponentReload}
+                                        id={id}
+                                    ></DialogComponent>
+                                )}
                                 <S.ListElementHeader isFirst={isFirst}>
-                                    <S.ListElementButtonContainer>                                    
-                                    {/* popup menu */}
-                                    {!isInlineContextVisibile && (
-                                        <S.InlineContextButton
-                                            isFirst={isFirst}
-                                            isInlineContextVisibile={isInlineContextVisibile}
-                                            onClickCapture={(e) => {
-                                                setIsInlineContextVisibile(
-                                                    !isInlineContextVisibile
-                                                );
-                                                setInlineContextClickCoordinates({
-                                                    x: e.nativeEvent.clientX,
-                                                    y: e.nativeEvent.clientY,
-                                                });
-                                            }}
-                                        >
-                                            <FontAwesomeIcon icon={faEllipsisH} />
-                                        </S.InlineContextButton>
-                                    )}
-
-                                    {isInlineContextVisibile && (
-                                        <S.InlineContextButton
-                                            isFirst={isFirst}
-                                            isInlineContextVisibile={isInlineContextVisibile}
-                                        >
-                                            <FontAwesomeIcon icon={faTimes} />
-                                        </S.InlineContextButton>
-                                    )}
-
-                                    {isInlineContextVisibile && (
-                                        <InlineContext
-                                            id={id}
-                                            inlineContextClickCoordinates={
-                                                inlineContextClickCoordinates
-                                            }
-                                            isFirst={isFirst}
-                                            isFirstInList={isFirstInList}
-                                            isLastInList={isLastInList}
-                                            setIsInlineContextVisibile={setIsInlineContextVisibile}
-                                            removeCurrentInput={removeCurrentInput}
-                                            addChildInputField={addChildInputField}
-                                            moveUpCurrentInput={moveUpCurrentInput}
-                                            moveDownCurrentInput={moveDownCurrentInput}
-                                            isMarkedAsDone={isMarkedAsDone}
-                                            toggleIsMarkedAsDone={toggleIsMarkedAsDone}
-                                            setIsDialogOn={setIsDialogOn}
-                                        />
-                                    )}
-
-                                    {/* sublist hidden/shown button */}
-                                    {!isFirst && (
-                                        <ToggleVisibilty
-                                            childrenVisible={childrenVisible}
-                                            toggleChildrenVisible={toggleChildrenVisible}
-                                            subList={listItemObject.subList}
-                                        ></ToggleVisibilty>
-                                    )}
-
-                                    {/* dot button */}
-                                    {!isFirst && (
-                                        <S.DotButton
-                                            /* to={`/${nodeUrl}`} */
-                                            key={listItemObject.id}
-                                            onClick={() => {
-                                                setCssAnimationState(false);
-                                                setLocalAnimationState(false);
-
-                                                setTimeout(() => {
-                                                    context.setCurrentNotes({
-                                                        names: parentNameList,
-                                                        currentPath: listUrl,
+                                    <S.ListElementButtonContainer>
+                                        {/* popup menu */}
+                                        {!isInlineContextVisibile && (
+                                            <S.InlineContextButton
+                                                isFirst={isFirst}
+                                                isInlineContextVisibile={isInlineContextVisibile}
+                                                onClickCapture={(e) => {
+                                                    setIsInlineContextVisibile(
+                                                        !isInlineContextVisibile
+                                                    );
+                                                    setInlineContextClickCoordinates({
+                                                        x: e.nativeEvent.clientX,
+                                                        y: e.nativeEvent.clientY,
                                                     });
-                                                }, 300);
-                                            }}
-                                        ></S.DotButton>
-                                    )}
+                                                }}
+                                            >
+                                                <FontAwesomeIcon icon={faEllipsisH} />
+                                            </S.InlineContextButton>
+                                        )}
+
+                                        {isInlineContextVisibile && (
+                                            <S.InlineContextButton
+                                                isFirst={isFirst}
+                                                isInlineContextVisibile={isInlineContextVisibile}
+                                            >
+                                                <FontAwesomeIcon icon={faTimes} />
+                                            </S.InlineContextButton>
+                                        )}
+
+                                        {isInlineContextVisibile && (
+                                            <InlineContext
+                                                id={id}
+                                                inlineContextClickCoordinates={
+                                                    inlineContextClickCoordinates
+                                                }
+                                                isFirst={isFirst}
+                                                isFirstInList={isFirstInList}
+                                                isLastInList={isLastInList}
+                                                setIsInlineContextVisibile={
+                                                    setIsInlineContextVisibile
+                                                }
+                                                removeCurrentInput={removeCurrentInput}
+                                                addChildInputField={addChildInputField}
+                                                moveUpCurrentInput={moveUpCurrentInput}
+                                                moveDownCurrentInput={moveDownCurrentInput}
+                                                isMarkedAsDone={isMarkedAsDone}
+                                                toggleIsMarkedAsDone={toggleIsMarkedAsDone}
+                                                setIsDialogOn={setIsDialogOn}
+                                            />
+                                        )}
+
+                                        {/* sublist hidden/shown button */}
+                                        {!isFirst && (
+                                            <ToggleVisibilty
+                                                childrenVisible={childrenVisible}
+                                                toggleChildrenVisible={toggleChildrenVisible}
+                                                subList={listItemObject.subList}
+                                            ></ToggleVisibilty>
+                                        )}
+
+                                        {/* dot button */}
+                                        {!isFirst && (
+                                            <S.DotButton
+                                                /* to={`/${nodeUrl}`} */
+                                                key={listItemObject.id}
+                                                onClick={() => {
+                                                    setCssAnimationState(false);
+                                                    setLocalAnimationState(false);
+
+                                                    setTimeout(() => {
+                                                        context.setCurrentNotes({
+                                                            names: parentNameList,
+                                                            currentPath: listUrl,
+                                                        });
+                                                    }, 300);
+                                                }}
+                                            ></S.DotButton>
+                                        )}
                                     </S.ListElementButtonContainer>
                                     <S.ListElementDateAndTitleContainer>
                                         <ListElementDateComponent

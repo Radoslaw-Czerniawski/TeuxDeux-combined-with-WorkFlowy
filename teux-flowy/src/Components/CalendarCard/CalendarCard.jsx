@@ -1,9 +1,9 @@
-import { getDay, format, previousDay, addDays } from "date-fns";
+import { getDay, format, previousDay, addDays, isToday } from "date-fns";
 import * as S from "./StylesCalendarCard";
 
 const CalendarCard = ({date}) => {
 
-    const notesRowsNumber = new Array(10).fill(0);
+    const notesRowsNumber = new Array(25).fill(0);
 
     return (
         <S.CardWrapper date={date}>
@@ -11,10 +11,9 @@ const CalendarCard = ({date}) => {
                 <S.MainHeadingDay>{(format(date, "eeee")).toUpperCase()}</S.MainHeadingDay>
                 <S.HeadingFullDate>{(format(date, "MMMM do yyyy")).toUpperCase()}</S.HeadingFullDate>
             </S.CardHeader>
-
             <S.CardNotesArea>
-                {notesRowsNumber.map(note => (
-                    <span>wow</span>
+                {isToday(date) && notesRowsNumber.map(note => (
+                    <S.NoteRow>wow</S.NoteRow>
                 ))}
             </S.CardNotesArea>
         </S.CardWrapper>

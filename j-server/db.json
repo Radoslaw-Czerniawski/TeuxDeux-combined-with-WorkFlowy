@@ -6,39 +6,38 @@
       "expanded": true,
       "done": false,
       "subList": [
-        "ky1cvtul"
+        "ky4ccekj",
+        "ky4cceej"
       ],
-      "hasDate": true,
-      "date": "2022-01-04T23:00:00.000Z"
+      "hasDate": false,
+      "date": ""
     },
     {
-      "id": "ky1cvtul",
-      "name": "Write here...",
+      "id": "ky4cceej",
+      "name": "Fryzjer",
       "done": false,
       "expanded": true,
-      "subList": [
-        "ky1cvx2d"
-      ],
+      "subList": [],
       "hasDate": true,
       "date": "2022-01-08T23:00:00.000Z"
     },
     {
-      "id": "ky1cvvgk",
-      "name": "Write here...",
+      "id": "ky4ccekj",
+      "name": "Zakupy",
       "done": false,
       "expanded": false,
       "subList": [],
-      "hasDate": false,
-      "date": ""
-    },
+      "hasDate": true,
+      "date": "2022-01-08T23:00:00.000Z"
+    }
+  ],
+  "dates": [
     {
-      "id": "ky1cvx2d",
-      "name": "Write here...",
-      "done": false,
-      "expanded": false,
-      "subList": [],
-      "hasDate": false,
-      "date": ""
+      "id": "2022-01-08T23:00:00.000Z",
+      "notes": [
+        "ky4ccekj",
+        "ky4cceej"
+      ]
     }
   ]
 }

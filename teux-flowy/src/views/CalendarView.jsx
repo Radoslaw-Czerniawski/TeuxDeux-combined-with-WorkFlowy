@@ -36,9 +36,8 @@ const DaysViewport = styled.div`
     width: 100%;
     border: none;
     margin: 5rem auto;
-    height: 60vh;
     overflow: hidden;
-    border: 1px ${PALLETE.greyOpacity} solid;
+    border: 1px ${PALLETE.greyST} solid;
     border-top: none;
     border-bottom: none;
 `;
@@ -53,7 +52,7 @@ const DaysContainer = styled.section`
 
 const DayContainer = styled.section`
     flex-basis: calc(100% / var(--slidingWindowSize));
-    border-right: .05rem solid #DCDCDC;
+    border-right: .05rem ${PALLETE.greyST} solid;
     box-sizing: border-box;
 `;
 
@@ -106,6 +105,8 @@ const CalendarView = () => {
 
                 return;
             }
+
+            console.log(currentOffset.current);
 
             id = requestAnimationFrame(updateIncrementallyCarouselPositionAfterAnimationStart);
         };

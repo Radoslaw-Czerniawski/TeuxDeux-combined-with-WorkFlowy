@@ -21,10 +21,12 @@ export const BreadcrumbDivider = styled.li`
     display: flex;
     align-items: center;
     user-select:none;
-    color: PALLETE.greyOpacity;
+    color: ${PALLETE.greyOpacity};
 `;
 
 export const BreadcrumbElement = styled(BreadcrumbDivider)`
+
+    color: ${PALLETE.secondary};
 
     &:hover {
         cursor: pointer;
@@ -43,12 +45,12 @@ export const BreadcrumbCurrentElement = styled.span`
     display: flex;
     align-items: center;
     padding: 0 1rem;
-    user-select:none;
+    user-select: none;
 
 `;
 
 export const MenuIconButton = styled.div`
     height: auto;
     margin: 0 2rem;
-    color: PALLETE.secondary;
+    color: ${PALLETE.secondary};
 `

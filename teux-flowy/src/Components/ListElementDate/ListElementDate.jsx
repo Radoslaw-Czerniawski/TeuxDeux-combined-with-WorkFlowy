@@ -21,12 +21,12 @@ export const ListElementDateComponent = ({isFirst, listItemObjectDate, setIsDial
                         onClick={() => {
                         setIsDialogOn(true);
                     }}>
-                <FontAwesomeIcon icon={faCalendar} />
-            {format(parseJSON(listItemObjectDate.date), "yyyy-MM-dd")} 
+
+            {format(parseJSON(listItemObjectDate.date), "yyyy-MM-dd")}
             </StyledClickableDate>
-        }   
+        }
         </ListElementDate>
-      
+
 }
- 
+
 export default ListElementDateComponent;
