@@ -1,10 +1,10 @@
 import styled from "styled-components";
-
+import { NavLink } from "react-router-dom";
 import { PALLETE } from "../../Colors/colors";
 
 export const HeaderContainer = styled.div`
     display: flex;
-    height: 5rem;
+    height: 7rem;
     justify-content: flex-start;
     align-items: center;
     padding: 2rem;
@@ -36,6 +36,7 @@ export const BreadcrumbElement = styled(BreadcrumbDivider)`
 
 export const NodeUrlLink = styled.a`
     padding: 2rem;
+    font-size: 1.4rem;
     text-decoration: none;
     color: inherit;
     font-weight: 700;
@@ -49,8 +50,41 @@ export const BreadcrumbCurrentElement = styled.span`
 
 `;
 
-export const MenuIconButton = styled.div`
-    height: auto;
-    margin: 0 2rem;
+export const DisplayModeToggleContainer = styled.div`
+   margin: 0 2rem;
+   display: flex;
+`
+
+export const StyledNavLink = styled(NavLink)`
+    --border-radius: 2rem;
+    height: 4rem;
+    width: 4.6rem;
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    
+    
     color: ${PALLETE.secondary};
+    background: ${PALLETE.greyST};
+    box-shadow: inset 5px 5px 5px -3px ${PALLETE.grey};
+    transition: background-color 0.5s, color 0.5s;
+    cursor: pointer;
+    &:hover{
+        opacity:0.8;
+    }
+
+    &.active {
+        color: ${PALLETE.white};
+        background: ${PALLETE.secondary};
+
+    }
+  `
+
+export const StyledNavLinkLeft = styled(StyledNavLink)`
+    border-radius: var(--border-radius)  0 0 var(--border-radius);
+    justify-content: right;
+`
+
+export const StyledNavLinkRight = styled(StyledNavLink)`
+    border-radius: 0 var(--border-radius) var(--border-radius)  0;
 `
