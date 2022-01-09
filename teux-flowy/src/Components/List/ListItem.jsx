@@ -112,31 +112,36 @@ const ListItem = ({
 
     let urlParent = parentList[parentList.length - 2];
 
+    const removeOrEditGivenDateFromDatabse = (date) => {
+        const dateAdress = JSON.stringify(date).replace(/"/g, "");
+        fetch(`http://localhost:3000/dates/${dateAdress}`)
+            .then((res) => res.json())
+            .then((insideData) => {
+                if (insideData.notes.length === 1) {
+                    fetch(`http://localhost:3000/dates/${dateAdress}`, {
+                        method: "DELETE",
+                    });
+                } else {
+                    fetch(`http://localhost:3000/dates/${dateAdress}`, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            notes: insideData.notes.filter((value) => value !== id && value)
+                        }),
+                    });
+                }
+            });
+    }
+
     const removeCurrentInput = () => {
         const cascadingChildrenRemoval = (id) => {
             return fetch(`http://localhost:3000/notes/${id}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    const dateAdress = JSON.stringify(data.date).replace(/"/g, "");
-                    fetch(`http://localhost:3000/dates/${dateAdress}`)
-                        .then((res) => res.json())
-                        .then((insideData) => {
-                            if (insideData.notes.length === 1) {
-                                fetch(`http://localhost:3000/dates/${dateAdress}`, {
-                                    method: "DELETE",
-                                });
-                            } else {
-                                fetch(`http://localhost:3000/dates/${dateAdress}`, {
-                                    method: "PATCH",
-                                    headers: {
-                                        "Content-type": "application/json",
-                                    },
-                                    body: JSON.stringify({
-                                        notes:  insideData.notes.filter((value) => value !== id && value)
-                                    }),
-                                });
-                            }
-                        });
+                    
+                    removeOrEditGivenDateFromDatabse(data.date);
 
                     data.subList.forEach((listItemId) => {
                         Promise.resolve(cascadingChildrenRemoval(listItemId)).then(() => {
@@ -275,6 +280,23 @@ const ListItem = ({
         });
     };
 
+    const removeDate = () => {
+        fetch(`http://localhost:3000/notes/${id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-type": "application/json",
+            },
+            body: JSON.stringify({
+                hasDate: false,
+                date: "",
+            }),
+        }).then(() => {
+            removeOrEditGivenDateFromDatabse(listItemObjectDate.date);
+        }).then(() => {
+            changeSyncStateToReloadComponentAfterNoteEdit();
+        });
+    };
+
     return (
         <AppContext.Consumer>
             {(context) =>
@@ -348,6 +370,8 @@ const ListItem = ({
                                                 isMarkedAsDone={isMarkedAsDone}
                                                 toggleIsMarkedAsDone={toggleIsMarkedAsDone}
                                                 setIsDialogOn={setIsDialogOn}
+                                                removeDate={removeDate}
+                                                listItemObjectDate={listItemObjectDate}
                                             />
                                         )}
 
@@ -380,19 +404,19 @@ const ListItem = ({
                                         )}
                                     </S.ListElementButtonContainer>
                                     <S.ListElementDateAndTitleContainer>
-                                        <ListElementDateComponent
-                                            key={`date-el-${id}`}
-                                            setIsDialogOn={setIsDialogOn}
-                                            id={id}
-                                            isFirst={isFirst}
-                                            listItemObjectDate={listItemObjectDate}
-                                        />
                                         <NameInput
                                             isFirst={isFirst}
                                             addChildInputField={addChildInputField}
                                             removeCurrentInput={removeCurrentInput}
                                             listItemObject={listItemObject}
                                             isMarkedAsDone={isMarkedAsDone}
+                                        />
+                                        <ListElementDateComponent
+                                            key={`date-el-${id}`}
+                                            setIsDialogOn={setIsDialogOn}
+                                            id={id}
+                                            isFirst={isFirst}
+                                            listItemObjectDate={listItemObjectDate}
                                         />
                                     </S.ListElementDateAndTitleContainer>
                                     {/* drag list item handle */}

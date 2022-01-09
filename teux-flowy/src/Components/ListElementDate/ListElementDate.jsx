@@ -8,6 +8,7 @@ import {parseJSON} from "date-fns"
 const ListElementDate = styled.div`
     font-size: 1.2rem;
     opacity: 0.5;
+    margin-top: 0.5rem;
     min-height: 1.2rem;
 `
 const StyledClickableDate = styled.div`

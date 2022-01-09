@@ -4,15 +4,15 @@ export const ListElement = styled.li`
     font-size: 1.6rem;
     margin-left: 2rem;
     padding-left: ${(props) => props.isFirst ? "2rem" : "1rem"};
-    padding-top: ${(props) => props.isFirst ? "2rem" : "1.5rem"};
+    padding-top: ${(props) => props.isFirst ? "1.3rem" : "0"};
 `;
 export const ListElementButtonContainer = styled.div`
-    margin-top: 1.4rem;
     display: flex;
-    align-items: end;
+    align-items: start;
 `
 export const ListElementDateAndTitleContainer = styled.div`
     display: flex;
+    margin-top: 1.5rem;
     flex-direction: column;
 `
 export const DotButton = styled.div`

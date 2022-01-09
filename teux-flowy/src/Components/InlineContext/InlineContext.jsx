@@ -1,9 +1,9 @@
 import styled from "styled-components";
 import React, { useRef, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircle,  faPlusSquare, faCalendar } from '@fortawesome/fontawesome-free-regular'
+import { faCircle,  faPlusSquare, faCalendar, faCalendarTimes, faCalendarCheck } from '@fortawesome/fontawesome-free-regular'
 import { faChevronUp, faChevronDown, faCheck, faTrash } from '@fortawesome/fontawesome-free-solid'
-import { DialogContext } from "../../ContextApi";
+
 
 const StyledInlineContext = styled.ul`
     position: absolute;
@@ -77,7 +77,10 @@ export const InlineContext = ({
     moveDownCurrentInput,
     isMarkedAsDone, 
     toggleIsMarkedAsDone,
-    setIsDialogOn
+    setIsDialogOn,
+    removeDate,
+    listItemObjectDate,
+
     }) => {
 
         const turnDialogOn = () => {
@@ -85,6 +88,12 @@ export const InlineContext = ({
             
         }
 
+        const hasDate = listItemObjectDate.hasDate;
+
+        const changeDateAndRemovePrevious = () => {
+            removeDate();
+            turnDialogOn();
+        }
 
     // List containg all menu options with parameters such as
     // name = label of option
@@ -105,15 +114,17 @@ export const InlineContext = ({
         {name: "Delete", onClickHandler: removeCurrentInput, 
         isClickable: !isFirst, isAvailable: true, icon: faTrash},
         {name: "Set date", onClickHandler: turnDialogOn, 
-        isClickable: true, isAvailable: true, icon: faCalendar}
+        isClickable: true, isAvailable: !hasDate, icon: faCalendar},
+        {name: "Change date", onClickHandler: changeDateAndRemovePrevious, 
+        isClickable: true, isAvailable: hasDate, icon: faCalendarCheck},
+        {name: "Remove date", onClickHandler: removeDate, 
+        isClickable: true, isAvailable: hasDate, icon: faCalendarTimes}
     ]
 
     const wrapperRef = useRef(null);
     useOutsideClickDetector(wrapperRef, setIsInlineContextVisibile);
 
     return ( 
-        
-            
             <StyledInlineContext onClick={()=>setIsInlineContextVisibile(false)} clickCords={inlineContextClickCoordinates} ref={wrapperRef}>
                 { OPTIONS_HANDLER_LIST.map((option) => {
                     return option.isAvailable ? <StyledInlineContextOption 

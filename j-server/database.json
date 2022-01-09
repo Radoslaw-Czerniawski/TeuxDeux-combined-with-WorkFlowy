@@ -6,27 +6,51 @@
       "expanded": true,
       "done": false,
       "subList": [
-        "kxxflxje",
-        "kxxe3sm1"
+        "ky7k163y",
+        "ky7jymbr"
       ],
       "hasDate": false,
-      "date": "32342"
+      "date": ""
     },
     {
-      "id": "kxxe3sm1",
-      "name": "12",
+      "id": "ky7jymbr",
+      "name": "Shopping List",
       "done": false,
       "expanded": true,
       "subList": [
-        "kxxflwgk",
-        "kxxe5n69"
+        "ky7kw4no",
+        "ky7jzcpp",
+        "ky7jzc5x"
       ],
-      "hasDate": true,
-      "date": "2020"
+      "hasDate": false,
+      "date": ""
     },
     {
-      "id": "kxxe5n69",
-      "name": "Write here...",
+      "id": "ky7jzc5x",
+      "name": "Tech Shopping List",
+      "done": false,
+      "expanded": true,
+      "subList": [
+        "ky7k38of"
+      ],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7jzcpp",
+      "name": "Clothes",
+      "done": false,
+      "expanded": true,
+      "subList": [
+        "ky7k151y",
+        "ky7k14c6"
+      ],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7k14c6",
+      "name": "New cool pants",
       "done": false,
       "expanded": false,
       "subList": [],
@@ -34,8 +58,8 @@
       "date": ""
     },
     {
-      "id": "kxxflwgk",
-      "name": "Write here...",
+      "id": "ky7k151y",
+      "name": "Cool new hat",
       "done": false,
       "expanded": false,
       "subList": [],
@@ -43,13 +67,96 @@
       "date": ""
     },
     {
-      "id": "kxxflxje",
-      "name": "Write here...",
+      "id": "ky7k163y",
+      "name": "Life goals",
+      "done": false,
+      "expanded": true,
+      "subList": [
+        "ky7k1uct",
+        "ky7k2987",
+        "ky7k3l0p"
+      ],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7k1uct",
+      "name": "Move to New Zealand",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7k2987",
+      "name": "Get a rescue dog",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7k38of",
+      "name": "Macbook 16 Pro",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7k3l0p",
+      "name": "Go buy a donut",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7kw4no",
+      "name": "Groceries",
+      "done": false,
+      "expanded": true,
+      "subList": [
+        "ky7kwd7e",
+        "ky7kwcu2",
+        "ky7kwbo3"
+      ],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7kwbo3",
+      "name": "Fruits",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7kwcu2",
+      "name": "ChickenSome",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "ky7kwd7e",
+      "name": "Orange juice",
       "done": false,
       "expanded": false,
       "subList": [],
       "hasDate": false,
       "date": ""
     }
+  ],
+  "dates": [
+  
   ]
 }

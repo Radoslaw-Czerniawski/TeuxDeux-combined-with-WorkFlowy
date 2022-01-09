@@ -14,7 +14,7 @@ const activeTextPulse = keyframes`
     }
 `;
 
-const NameInputField = styled.span`
+const StyledNameInputField = styled.span`
     background: transparent;
     margin: 0;
     padding: 0;
@@ -59,12 +59,13 @@ const NameInput = ({
     );
 
     return (
-        <NameInputField
+        <StyledNameInputField
             isMarkedAsDone={isMarkedAsDone}
             type="text"
             contentEditable={true}
             suppressContentEditableWarning={true}
             isFirst={isFirst}
+            spellCheck="false"
             onBlur={(e) => {
                 setDataValue(e.target.textContent);
             }}
@@ -87,7 +88,7 @@ const NameInput = ({
             }}
         >
             {dataValue}
-        </NameInputField>
+        </StyledNameInputField>
     );
 };
 
