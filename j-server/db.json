@@ -16,7 +16,7 @@
       "id": "ky7jymbr",
       "name": "Shopping List",
       "done": false,
-      "expanded": true,
+      "expanded": false,
       "subList": [
         "ky7kw4no",
         "ky7jzcpp",
@@ -94,6 +94,8 @@
       "done": false,
       "expanded": true,
       "subList": [
+        "kz8be61r",
+        "kz8be5nb",
         "kz89g6a9"
       ],
       "hasDate": false,
@@ -112,7 +114,7 @@
       "id": "ky7k3l0p",
       "name": "Go buy a donut",
       "done": false,
-      "expanded": false,
+      "expanded": true,
       "subList": [],
       "hasDate": true,
       "date": "2022-01-25T23:00:00.000Z"
@@ -159,6 +161,64 @@
     },
     {
       "id": "kz89g6a9",
+      "name": "Wow nowa notatka dzisiaj ",
+      "done": false,
+      "expanded": true,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-02-03T23:00:00.000Z"
+    },
+    {
+      "id": "kz8be5nb",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "kz8be61r",
+      "name": "Write here...",
+      "done": false,
+      "expanded": true,
+      "subList": [
+        "kz8bftwu",
+        "kz8bftdz",
+        "kz8bft0f"
+      ],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "kz8bft0f",
+      "name": "pergkpoerkgoperg",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "kz8bftdz",
+      "name": "Write here...",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "kz8bftwu",
+      "name": "oiureogieroigjoierjoijerg",
+      "done": false,
+      "expanded": true,
+      "subList": [],
+      "hasDate": true,
+      "date": "2022-02-03T23:00:00.000Z"
+    },
+    {
+      "id": "kz8bfuuf",
       "name": "Write here...",
       "done": false,
       "expanded": false,
@@ -184,6 +244,13 @@
       "id": "2022-01-10T23:00:00.000Z",
       "notes": [
         "ky7jymbr"
+      ]
+    },
+    {
+      "id": "2022-02-03T23:00:00.000Z",
+      "notes": [
+        "kz89g6a9",
+        "kz8bftwu"
       ]
     }
   ]

@@ -85,7 +85,7 @@ const ListItem = ({
             })
             .then(() => {
                 setCssAnimationState(true);
-                setLocalAnimationState(true)
+                setLocalAnimationState(true);
                 setNeedComponentReload(false);
             });
     }, [id]);

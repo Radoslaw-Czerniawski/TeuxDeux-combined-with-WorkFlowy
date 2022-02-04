@@ -4,6 +4,8 @@ import { faChevronRight, faHome, faBars, faList } from "@fortawesome/fontawesome
 
 import { faCalendar } from "@fortawesome/fontawesome-free-regular";
 
+import uniqid from "uniqid";
+
 
 
 function Header({ idPath, setGlobalState, setCssAnimationState }) {
@@ -40,7 +42,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState }) {
                                         >
                                             <FontAwesomeIcon icon={faChevronRight} />
                                         </S.BreadcrumbDivider>
-                                        <S.BreadcrumbElement key={index}>
+                                        <S.BreadcrumbElement key={uniqid()}>
                                             <S.NodeUrlLink
                                                 onClick={() => {
                                                     setCssAnimationState(false);
@@ -72,7 +74,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState }) {
                         names: [],
                         currentPath: [],
                     });
-                }} 
+                }}
                 to="/calendar">
                     <FontAwesomeIcon icon={faCalendar} size="2x" />
                 </S.StyledNavLinkLeft>
