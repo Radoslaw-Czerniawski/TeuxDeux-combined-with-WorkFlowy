@@ -421,7 +421,6 @@ const ListItem = ({
 
                                         {listItemObject.subList.map((id, index) => (
                                             <CSSTransition
-                                                in={localAnimationState}
                                                 timeout={300}
                                                 classNames={"pageMain"}
                                                 unmountOnExit
