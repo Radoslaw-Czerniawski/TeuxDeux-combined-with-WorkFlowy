@@ -13,7 +13,7 @@ import { useState, useCallback, useEffect } from "react";
 import { AppContext } from "../../ContextApi";
 
 //Animations
-import { CSSTransition } from "react-transition-group";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 // uniqid for random ids
 import uniqid from "uniqid";
@@ -54,8 +54,7 @@ const ListItem = ({
         x: 0,
         y: 0,
     });
-    const [localAnimationState, setLocalAnimationState] = useState(true);
-    const [childrenAnimationAdd, setChildrenAnimationAdd] = useState(false);
+    const [localAnimationState, setLocalAnimationState] = useState(false);
     const [isDialogOn, setIsDialogOn] = useState(false);
 
     // Extend forwarded parentList
@@ -85,8 +84,8 @@ const ListItem = ({
                 setIsMarkedAsDone(data.done);
             })
             .then(() => {
-                setChildrenAnimationAdd(true);
                 setCssAnimationState(true);
+                setLocalAnimationState(true)
                 setNeedComponentReload(false);
             });
     }, [id]);
@@ -128,19 +127,18 @@ const ListItem = ({
                             "Content-type": "application/json",
                         },
                         body: JSON.stringify({
-                            notes: insideData.notes.filter((value) => value !== id && value)
+                            notes: insideData.notes.filter((value) => value !== id && value),
                         }),
                     });
                 }
             });
-    }
+    };
 
     const removeCurrentInput = () => {
         const cascadingChildrenRemoval = (id) => {
             return fetch(`http://localhost:3000/notes/${id}`)
                 .then((response) => response.json())
                 .then((data) => {
-                    
                     removeOrEditGivenDateFromDatabse(data.date);
 
                     data.subList.forEach((listItemId) => {
@@ -290,11 +288,13 @@ const ListItem = ({
                 hasDate: false,
                 date: "",
             }),
-        }).then(() => {
-            removeOrEditGivenDateFromDatabse(listItemObjectDate.date);
-        }).then(() => {
-            changeSyncStateToReloadComponentAfterNoteEdit();
-        });
+        })
+            .then(() => {
+                removeOrEditGivenDateFromDatabse(listItemObjectDate.date);
+            })
+            .then(() => {
+                changeSyncStateToReloadComponentAfterNoteEdit();
+            });
     };
 
     return (
@@ -302,161 +302,165 @@ const ListItem = ({
             {(context) =>
                 listItemObject.id !== "" && (
                     <CSSTransition
-                        in={childrenAnimationAdd}
+                        in={localAnimationState}
                         timeout={300}
-                        classNames={"page"}
+                        classNames={"pageMain"}
                         unmountOnExit
                     >
-                        <CSSTransition
-                            in={localAnimationState}
-                            timeout={300}
-                            classNames={"pageMain"}
-                            unmountOnExit
-                        >
-                            <S.ListElement key={listItemObject.id} isFirst={isFirst}>
-                                {isDialogOn && (
-                                    <DialogComponent
-                                        setIsDialogOn={setIsDialogOn}
-                                        setNeedComponentReload={setNeedComponentReload}
-                                        id={id}
-                                    ></DialogComponent>
-                                )}
-                                <S.ListElementHeader isFirst={isFirst}>
-                                    <S.ListElementButtonContainer>
-                                        {/* popup menu */}
-                                        {!isInlineContextVisibile && (
-                                            <S.InlineContextButton
-                                                isFirst={isFirst}
-                                                isInlineContextVisibile={isInlineContextVisibile}
-                                                onClickCapture={(e) => {
-                                                    setIsInlineContextVisibile(
-                                                        !isInlineContextVisibile
-                                                    );
-                                                    setInlineContextClickCoordinates({
-                                                        x: e.nativeEvent.clientX,
-                                                        y: e.nativeEvent.clientY,
-                                                    });
-                                                }}
-                                            >
-                                                <FontAwesomeIcon icon={faEllipsisH} />
-                                            </S.InlineContextButton>
-                                        )}
-
-                                        {isInlineContextVisibile && (
-                                            <S.InlineContextButton
-                                                isFirst={isFirst}
-                                                isInlineContextVisibile={isInlineContextVisibile}
-                                            >
-                                                <FontAwesomeIcon icon={faTimes} />
-                                            </S.InlineContextButton>
-                                        )}
-
-                                        {isInlineContextVisibile && (
-                                            <InlineContext
-                                                id={id}
-                                                inlineContextClickCoordinates={
-                                                    inlineContextClickCoordinates
-                                                }
-                                                isFirst={isFirst}
-                                                isFirstInList={isFirstInList}
-                                                isLastInList={isLastInList}
-                                                setIsInlineContextVisibile={
-                                                    setIsInlineContextVisibile
-                                                }
-                                                removeCurrentInput={removeCurrentInput}
-                                                addChildInputField={addChildInputField}
-                                                moveUpCurrentInput={moveUpCurrentInput}
-                                                moveDownCurrentInput={moveDownCurrentInput}
-                                                isMarkedAsDone={isMarkedAsDone}
-                                                toggleIsMarkedAsDone={toggleIsMarkedAsDone}
-                                                setIsDialogOn={setIsDialogOn}
-                                                removeDate={removeDate}
-                                                listItemObjectDate={listItemObjectDate}
-                                            />
-                                        )}
-
-                                        {/* sublist hidden/shown button */}
-                                        {!isFirst && (
-                                            <ToggleVisibilty
-                                                childrenVisible={childrenVisible}
-                                                toggleChildrenVisible={toggleChildrenVisible}
-                                                subList={listItemObject.subList}
-                                            ></ToggleVisibilty>
-                                        )}
-
-                                        {/* dot button */}
-                                        {!isFirst && (
-                                            <S.DotButton
-                                                /* to={`/${nodeUrl}`} */
-                                                key={listItemObject.id}
-                                                onClick={() => {
-                                                    setCssAnimationState(false);
-                                                    setLocalAnimationState(false);
-
-                                                    setTimeout(() => {
-                                                        context.setCurrentNotes({
-                                                            names: parentNameList,
-                                                            currentPath: listUrl,
-                                                        });
-                                                    }, 300);
-                                                }}
-                                            ></S.DotButton>
-                                        )}
-                                    </S.ListElementButtonContainer>
-                                    <S.ListElementDateAndTitleContainer>
-                                        <NameInput
+                        <S.ListElement key={listItemObject.id} isFirst={isFirst}>
+                            {isDialogOn && (
+                                <DialogComponent
+                                    setIsDialogOn={setIsDialogOn}
+                                    setNeedComponentReload={setNeedComponentReload}
+                                    id={id}
+                                ></DialogComponent>
+                            )}
+                            <S.ListElementHeader isFirst={isFirst}>
+                                <S.ListElementButtonContainer>
+                                    {/* popup menu */}
+                                    {!isInlineContextVisibile && (
+                                        <S.InlineContextButton
                                             isFirst={isFirst}
-                                            addChildInputField={addChildInputField}
-                                            removeCurrentInput={removeCurrentInput}
-                                            listItemObject={listItemObject}
-                                            isMarkedAsDone={isMarkedAsDone}
-                                        />
-                                        <ListElementDateComponent
-                                            key={`date-el-${id}`}
-                                            setIsDialogOn={setIsDialogOn}
+                                            isInlineContextVisibile={isInlineContextVisibile}
+                                            onClickCapture={(e) => {
+                                                setIsInlineContextVisibile(
+                                                    !isInlineContextVisibile
+                                                );
+                                                setInlineContextClickCoordinates({
+                                                    x: e.nativeEvent.clientX,
+                                                    y: e.nativeEvent.clientY,
+                                                });
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faEllipsisH} />
+                                        </S.InlineContextButton>
+                                    )}
+
+                                    {isInlineContextVisibile && (
+                                        <S.InlineContextButton
+                                            isFirst={isFirst}
+                                            isInlineContextVisibile={isInlineContextVisibile}
+                                        >
+                                            <FontAwesomeIcon icon={faTimes} />
+                                        </S.InlineContextButton>
+                                    )}
+
+                                    {isInlineContextVisibile && (
+                                        <InlineContext
                                             id={id}
+                                            inlineContextClickCoordinates={
+                                                inlineContextClickCoordinates
+                                            }
                                             isFirst={isFirst}
+                                            isFirstInList={isFirstInList}
+                                            isLastInList={isLastInList}
+                                            setIsInlineContextVisibile={setIsInlineContextVisibile}
+                                            removeCurrentInput={removeCurrentInput}
+                                            addChildInputField={addChildInputField}
+                                            moveUpCurrentInput={moveUpCurrentInput}
+                                            moveDownCurrentInput={moveDownCurrentInput}
+                                            isMarkedAsDone={isMarkedAsDone}
+                                            toggleIsMarkedAsDone={toggleIsMarkedAsDone}
+                                            setIsDialogOn={setIsDialogOn}
+                                            removeDate={removeDate}
                                             listItemObjectDate={listItemObjectDate}
                                         />
-                                    </S.ListElementDateAndTitleContainer>
-                                    {/* drag list item handle */}
-                                </S.ListElementHeader>
-                                {/* sublist */}
-                                {(childrenVisible || isFirst) && (
-                                    <S.ListContainer>
-                                        {/* loop generating listItems */}
-                                        {listItemObject.subList.map((id, index) => (
-                                            <>
-                                                <ListItem
-                                                    parentLocalAnimationState={localAnimationState}
-                                                    setParentLocalAnimationState={
-                                                        setLocalAnimationState
-                                                    }
-                                                    setCssAnimationState={setCssAnimationState}
-                                                    cssAnimationState={cssAnimationState}
-                                                    isFirst={false}
-                                                    isFirstInList={index === 0}
-                                                    isLastInList={
-                                                        index === listItemObject.subList.length - 1
-                                                    }
-                                                    id={id}
-                                                    key={id}
-                                                    parentSublist={listItemObject.subList}
-                                                    parentList={parentList}
-                                                    parentNameList={parentNameList}
-                                                    parentChangeSyncStatus={
-                                                        changeSyncStateToReloadComponentAfterNoteEdit
-                                                    }
-                                                />
-                                                {!isFirst && <S.CoveringLine />}
-                                            </>
-                                        ))}
+                                    )}
 
-                                        {/* + button for adding listItem */}
-                                    </S.ListContainer>
-                                )}
-                            </S.ListElement>
-                        </CSSTransition>
+                                    {/* sublist hidden/shown button */}
+                                    {!isFirst && (
+                                        <ToggleVisibilty
+                                            childrenVisible={childrenVisible}
+                                            toggleChildrenVisible={toggleChildrenVisible}
+                                            subList={listItemObject.subList}
+                                        ></ToggleVisibilty>
+                                    )}
+
+                                    {/* dot button */}
+                                    {!isFirst && (
+                                        <S.DotButton
+                                            /* to={`/${nodeUrl}`} */
+                                            key={"dButton" + listItemObject.id}
+                                            onClick={() => {
+                                                setCssAnimationState(false);
+                                                setLocalAnimationState(false);
+
+                                                setTimeout(() => {
+                                                    context.setCurrentNotes({
+                                                        names: parentNameList,
+                                                        currentPath: listUrl,
+                                                    });
+                                                }, 300);
+                                            }}
+                                        ></S.DotButton>
+                                    )}
+                                </S.ListElementButtonContainer>
+                                <S.ListElementDateAndTitleContainer>
+                                    <NameInput
+                                        isFirst={isFirst}
+                                        addChildInputField={addChildInputField}
+                                        removeCurrentInput={removeCurrentInput}
+                                        listItemObject={listItemObject}
+                                        isMarkedAsDone={isMarkedAsDone}
+                                    />
+                                    <ListElementDateComponent
+                                        key={`date-el-${id}`}
+                                        setIsDialogOn={setIsDialogOn}
+                                        id={id}
+                                        isFirst={isFirst}
+                                        listItemObjectDate={listItemObjectDate}
+                                    />
+                                </S.ListElementDateAndTitleContainer>
+                                {/* drag list item handle */}
+                            </S.ListElementHeader>
+                            {/* sublist */}
+                            {(childrenVisible || isFirst) && (
+                                <S.ListContainer>
+                                    <TransitionGroup>
+                                        {/* loop generating listItems */}
+
+                                        {listItemObject.subList.map((id, index) => (
+                                            <CSSTransition
+                                                in={localAnimationState}
+                                                timeout={300}
+                                                classNames={"pageMain"}
+                                                unmountOnExit
+                                                key={id}
+                                            >
+                                                <>
+                                                    <ListItem
+                                                        parentLocalAnimationState={
+                                                            localAnimationState
+                                                        }
+                                                        setParentLocalAnimationState={
+                                                            setLocalAnimationState
+                                                        }
+                                                        setCssAnimationState={setCssAnimationState}
+                                                        cssAnimationState={cssAnimationState}
+                                                        isFirst={false}
+                                                        isFirstInList={index === 0}
+                                                        isLastInList={
+                                                            index ===
+                                                            listItemObject.subList.length - 1
+                                                        }
+                                                        id={id}
+                                                        key={id}
+                                                        parentSublist={listItemObject.subList}
+                                                        parentList={parentList}
+                                                        parentNameList={parentNameList}
+                                                        parentChangeSyncStatus={
+                                                            changeSyncStateToReloadComponentAfterNoteEdit
+                                                        }
+                                                    />
+                                                    {!isFirst && <S.CoveringLine />}
+                                                </>
+                                            </CSSTransition>
+                                        ))}
+                                    </TransitionGroup>
+                                    {/* + button for adding listItem */}
+                                </S.ListContainer>
+                            )}
+                        </S.ListElement>
                     </CSSTransition>
                 )
             }

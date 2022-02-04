@@ -92,8 +92,10 @@
       "id": "ky7k2987",
       "name": "Get a rescue dog",
       "done": false,
-      "expanded": false,
-      "subList": [],
+      "expanded": true,
+      "subList": [
+        "kz89g6a9"
+      ],
       "hasDate": false,
       "date": ""
     },
@@ -149,6 +151,15 @@
     {
       "id": "ky7kwd7e",
       "name": "Orange juice",
+      "done": false,
+      "expanded": false,
+      "subList": [],
+      "hasDate": false,
+      "date": ""
+    },
+    {
+      "id": "kz89g6a9",
+      "name": "Write here...",
       "done": false,
       "expanded": false,
       "subList": [],

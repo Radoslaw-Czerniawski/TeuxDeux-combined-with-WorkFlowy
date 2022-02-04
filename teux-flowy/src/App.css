@@ -64,15 +64,12 @@
 }
 
 .pageMain-enter {
-    opacity: 1;
-    transform: translateX(0);
-    transform: rotate(0);
+    transform: translateX(-40rem);
 }
 
 .pageMain-enter-active {
-    opacity: 1;
     transform: translateX(0);
-    transition: opacity 300ms, transform 300ms;
+    transition:  transform 300ms;
 }
 
 .pageMain-exit {
