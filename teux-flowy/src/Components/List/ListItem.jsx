@@ -6,6 +6,7 @@ import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
 import DialogComponent from "../Dialog/DialogComponent";
 
+
 // React
 import { useState, useCallback, useEffect } from "react";
 
@@ -22,7 +23,7 @@ import uniqid from "uniqid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faEllipsisH } from "@fortawesome/fontawesome-free-solid";
 
-const ListItem = ({
+export const ListItem = ({
     id,
     parentList,
     parentNameList,
@@ -467,4 +468,3 @@ const ListItem = ({
     );
 };
 
-export { ListItem };
