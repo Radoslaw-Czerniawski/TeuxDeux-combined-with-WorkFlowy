@@ -55,7 +55,7 @@ const useOutsideClickDetector = (ref, setIsInlineContextVisibile) => {
             }
         }
         document.addEventListener("mousedown", handleClickOutside, true);
-        
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutside, true)
         }
@@ -70,12 +70,12 @@ export const InlineContext = ({
     isFirst,
     isFirstInList,
     isLastInList,
-    setIsInlineContextVisibile, 
-    removeCurrentInput, 
-    addChildInputField,
-    moveUpCurrentInput, 
+    setIsInlineContextVisibile,
+    removeCurrentInput,
+    createNewNote,
+    moveUpCurrentInput,
     moveDownCurrentInput,
-    isMarkedAsDone, 
+    isMarkedAsDone,
     toggleIsMarkedAsDone,
     setIsDialogOn,
     removeDate,
@@ -85,7 +85,7 @@ export const InlineContext = ({
 
         const turnDialogOn = () => {
             setIsDialogOn(true);
-            
+
         }
 
         const hasDate = listItemObjectDate.hasDate;
@@ -101,33 +101,33 @@ export const InlineContext = ({
     // isClickable = flag that enables/disables clickabilty
     // isAvailable = flag that shows/hides element when needed
     const OPTIONS_HANDLER_LIST = [
-        {name: "Create subnote", onClickHandler: addChildInputField, 
+        {name: "Create subnote", onClickHandler: createNewNote,
         isClickable: true, isAvailable: true, icon: faPlusSquare},
-        {name: "Move up", onClickHandler: moveUpCurrentInput, 
+        {name: "Move up", onClickHandler: moveUpCurrentInput,
         isClickable: !isFirstInList, isAvailable: true, icon: faChevronUp},
-        {name: "Move down", onClickHandler: moveDownCurrentInput, 
+        {name: "Move down", onClickHandler: moveDownCurrentInput,
         isClickable: !isLastInList, isAvailable: true, icon: faChevronDown},
-        {name: "Mark as done", onClickHandler: toggleIsMarkedAsDone, 
+        {name: "Mark as done", onClickHandler: toggleIsMarkedAsDone,
         isClickable: true, isAvailable: !isMarkedAsDone, icon: faCheck},
-        {name: "Mark as undone", onClickHandler: toggleIsMarkedAsDone, 
+        {name: "Mark as undone", onClickHandler: toggleIsMarkedAsDone,
         isClickable: true, isAvailable: isMarkedAsDone, icon: faCircle},
-        {name: "Delete", onClickHandler: removeCurrentInput, 
+        {name: "Delete", onClickHandler: removeCurrentInput,
         isClickable: !isFirst, isAvailable: true, icon: faTrash},
-        {name: "Set date", onClickHandler: turnDialogOn, 
+        {name: "Set date", onClickHandler: turnDialogOn,
         isClickable: true, isAvailable: !hasDate, icon: faCalendar},
-        {name: "Change date", onClickHandler: changeDateAndRemovePrevious, 
+        {name: "Change date", onClickHandler: changeDateAndRemovePrevious,
         isClickable: true, isAvailable: hasDate, icon: faCalendarCheck},
-        {name: "Remove date", onClickHandler: removeDate, 
+        {name: "Remove date", onClickHandler: removeDate,
         isClickable: true, isAvailable: hasDate, icon: faCalendarTimes}
     ]
 
     const wrapperRef = useRef(null);
     useOutsideClickDetector(wrapperRef, setIsInlineContextVisibile);
 
-    return ( 
+    return (
             <StyledInlineContext onClick={()=>setIsInlineContextVisibile(false)} clickCords={inlineContextClickCoordinates} ref={wrapperRef}>
                 { OPTIONS_HANDLER_LIST.map((option) => {
-                    return option.isAvailable ? <StyledInlineContextOption 
+                    return option.isAvailable ? <StyledInlineContextOption
                                 key={option.name}
                                 isClickable = {option.isClickable}
                                 onClick={option.isClickable ? option.onClickHandler : undefined}
@@ -139,17 +139,17 @@ export const InlineContext = ({
                         <StyledTextWrapperContextOption>
                             {option.name}
                         </StyledTextWrapperContextOption>
-                        
-                        
+
+
                     </StyledInlineContextOption> : null
                 })}
             </StyledInlineContext>
-        
-        
+
+
      );
 }
- 
+
 export default InlineContext;
 
-// UseOutsideClickDetector: 
+// UseOutsideClickDetector:
 // https://stackoverflow.com/questions/32553158/detect-click-outside-react-component

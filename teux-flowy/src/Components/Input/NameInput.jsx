@@ -2,6 +2,11 @@ import { useCallback, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import debounce from "lodash/debounce";
 
+// Firebase
+import { getDatabase, ref, onValue, set, push, update } from "firebase/database";
+import { db as fireData } from "../../DB/DB";
+import { updateFirebaseProperty } from "../List/ListItem";
+
 const activeTextPulse = keyframes`
     0% {
         opacity: 100%;
@@ -40,23 +45,22 @@ const NameInput = ({
     removeCurrentInput,
     isFirst,
     isMarkedAsDone,
+    createNewNote,
 }) => {
     const [dataValue, setDataValue] = useState(listItemObject.name);
 
-    const putNewInputValue = useCallback(
-        debounce((e) => {
-            fetch(`http://localhost:3000/notes/${listItemObject.id}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    name: e.target.textContent,
-                }),
-            });
-        }, 200),
-        []
-    );
+    const putNewInputValue = debounce((e) => {
+        updateFirebaseProperty(listItemObject.id, "name", e.target.textContent);
+        let range = new Range();
+
+        range.setStart(e.target.childNodes[0], e.target.textContent.length);
+        range.collapse(true);
+
+        const sel = window.getSelection();
+
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }, 250);
 
     return (
         <StyledNameInputField
@@ -75,11 +79,12 @@ const NameInput = ({
                 }
             }}
             onKeyUp={(e) => {
-                putNewInputValue(e);
+                if(e.key !== "Backspace" && e.target.textContent !== "" ) putNewInputValue(e);
+
 
                 if (e.key === "Enter" && e.target.textContent !== "") {
                     e.preventDefault();
-                    addChildInputField();
+                    createNewNote();
                 }
 
                 if (e.key === "Backspace" && e.target.textContent === "" && !isFirst) {
@@ -87,7 +92,7 @@ const NameInput = ({
                 }
             }}
         >
-            {dataValue}
+            {listItemObject.name}
         </StyledNameInputField>
     );
 };

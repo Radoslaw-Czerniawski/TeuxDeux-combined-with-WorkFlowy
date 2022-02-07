@@ -6,6 +6,19 @@ import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
 import DialogComponent from "../Dialog/DialogComponent";
 
+// Firebase
+import {
+    getDatabase,
+    ref,
+    onValue,
+    set,
+    push,
+    update,
+    remove,
+    get,
+    child,
+} from "firebase/database";
+import { db as fireData } from "../../DB/DB";
 
 // React
 import { useState, useCallback, useEffect } from "react";
@@ -22,6 +35,11 @@ import uniqid from "uniqid";
 // Font-awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes, faEllipsisH } from "@fortawesome/fontawesome-free-solid";
+import { async } from "@firebase/util";
+
+export const updateFirebaseProperty = (noteId, property, value) => {
+    return update(ref(fireData, `notes/${noteId}/`), { [property]: value });
+};
 
 export const ListItem = ({
     id,
@@ -67,50 +85,68 @@ export const ListItem = ({
         parentList = [...parentList, id];
     }
 
-    // Fetch list item data on mount
-    const fetchCurrentNestedNoteBasedOnParentsSublistId = useCallback(() => {
-        return fetch(`http://localhost:3000/notes/${id}`)
-            .then((response) => response.json())
-            .then((data) => {
-                setListItemObject({
-                    id: `${data.id}`,
-                    name: `${data.name}`,
-                    subList: [...data.subList],
-                });
-                setListItemObjectDate({
-                    hasDate: data.hasDate,
-                    date: `${data.date}`,
-                });
-                setChildrenVisible(data.expanded);
-                setIsMarkedAsDone(data.done);
-            })
-            .then(() => {
-                setCssAnimationState(true);
-                setLocalAnimationState(true);
-                setNeedComponentReload(false);
-            });
-    }, [id]);
-
-    // Notify about out of sync state
     const changeSyncStateToReloadComponentAfterNoteEdit = useCallback(() => {
         setNeedComponentReload(true);
     }, [needComponentReload]);
 
-    useEffect(() => {
-        if (needComponentReload) {
-            fetchCurrentNestedNoteBasedOnParentsSublistId();
-        }
-    }, [changeSyncStateToReloadComponentAfterNoteEdit]);
+    /////////////////////////////////////////////////////////////////////////////
+    // FIREBASE FUNCTIONS
+    /////////////////////
 
-    let filteredParentSublist =
-        parentSublist &&
-        parentSublist.filter((value) => {
-            if (value !== listItemObject.id) {
-                return value;
+    const fbData = ref(fireData, "notes/" + id);
+
+    // Fetch list item data on mount
+    useEffect(() => {
+        onValue(fbData, (snapshot) => {
+            const data = snapshot.val();
+            console.log(`${data.name}: ${data.subList}`);
+            setListItemObject({
+                id: `${id}`,
+                name: `${data.name}`,
+                subList: data.subList ? data.subList : [],
+            });
+            setListItemObjectDate({
+                hasDate: data.hasDate,
+                date: `${data.date}`,
+            });
+
+            setChildrenVisible(data.expanded);
+            setIsMarkedAsDone(data.done);
+
+            if (isFirst) {
+                setCssAnimationState(true);
+                setLocalAnimationState(true);
+                setNeedComponentReload(false);
+                changeSyncStateToReloadComponentAfterNoteEdit();
+            } else {
+                setTimeout(() => {
+                    setCssAnimationState(true);
+                    setLocalAnimationState(true);
+                    setNeedComponentReload(false);
+                    changeSyncStateToReloadComponentAfterNoteEdit();
+                }, 0);
             }
         });
+    }, []);
 
-    let urlParent = parentList[parentList.length - 2];
+    function createNewNote() {
+        const currentSublist = listItemObject.subList || [];
+        const newID = uniqid("note-");
+        set(ref(fireData, `notes/${newID}`), {
+            date: "",
+            done: false,
+            expanded: true,
+            hasDate: false,
+            name: "New note...",
+            subList: [],
+        });
+
+        updateFirebaseProperty(id, "subList", [...currentSublist, newID]);
+    }
+
+    const toggleChildrenVisible = () => {
+        updateFirebaseProperty(id, "expanded", !childrenVisible);
+    };
 
     const removeOrEditGivenDateFromDatabse = (date) => {
         const dateAdress = JSON.stringify(date).replace(/"/g, "");
@@ -136,84 +172,49 @@ export const ListItem = ({
     };
 
     const removeCurrentInput = () => {
-        const cascadingChildrenRemoval = (id) => {
-            return fetch(`http://localhost:3000/notes/${id}`)
-                .then((response) => response.json())
-                .then((data) => {
-                    removeOrEditGivenDateFromDatabse(data.date);
+        const cascadingChildrenRemoval = async (noteId) => {
+            const response = await get(child(ref(fireData), `notes/${noteId}`));
+            const data = response.val().subList;
 
-                    data.subList.forEach((listItemId) => {
-                        Promise.resolve(cascadingChildrenRemoval(listItemId)).then(() => {
-                            fetch(`http://localhost:3000/notes/${listItemId}`, {
-                                method: "DELETE",
-                            });
-                        });
-                    });
+            if (data !== [] && data) {
+                return data.forEach((listItemId) => {
+                    cascadingChildrenRemoval(listItemId);
+                    remove(ref(fireData, `notes/${listItemId}`));
                 });
+            }
+            return remove(ref(fireData, `notes/${noteId}`));
         };
 
-        if (parentChangeSyncStatus !== null) {
-            fetch(`http://localhost:3000/notes/${urlParent}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    subList: filteredParentSublist === [] ? [] : filteredParentSublist,
-                }),
-            })
-                .then(() => {
-                    cascadingChildrenRemoval(id);
-                })
-                .then(() => {
-                    fetch(`http://localhost:3000/notes/${id}`, {
-                        method: "DELETE",
-                    });
-                })
-                .then(() => {
+        cascadingChildrenRemoval(id)
+            .then(() =>
+                updateFirebaseProperty(
+                    urlParent,
+                    "subList",
+                    filteredParentSublist === [] ? [] : filteredParentSublist
+                )
+            )
+            .then(() => {
+                setTimeout(() => {
+                    parentChangeSyncStatus();
                     setLocalAnimationState(false);
-
-                    setTimeout(() => {
-                        parentChangeSyncStatus();
-                    }, 300);
-                });
-        }
+                }, 300);
+            })
+            .then(() => remove(ref(fireData, `notes/${id}`)));
     };
 
-    const addChildInputField = useCallback(() => {
-        const newID = uniqid();
+    /////////////////////
+    // END
+    /////////////////////////////////////////////////////////////////////////////
 
-        return fetch(`http://localhost:3000/notes`, {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({
-                id: newID,
-                name: "Write here...",
-                done: false,
-                expanded: false,
-                subList: [],
-                hasDate: false,
-                date: "",
-            }),
-        })
-            .then(() => {
-                fetch(`http://localhost:3000/notes/${id}`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        expanded: true,
-                        subList: [newID, ...listItemObject.subList],
-                    }),
-                });
-            })
-            .then(() => {
-                changeSyncStateToReloadComponentAfterNoteEdit();
-            });
-    }, [listItemObject]);
+    let filteredParentSublist =
+        parentSublist &&
+        parentSublist.filter((value) => {
+            if (value !== listItemObject.id) {
+                return value;
+            }
+        });
+
+    let urlParent = parentList[parentList.length - 2];
 
     const moveUpCurrentInput = () => {
         const swappedIndex = parentSublist.indexOf(id);
@@ -221,15 +222,7 @@ export const ListItem = ({
             const swapped = parentSublist[swappedIndex - 1];
             parentSublist[swappedIndex - 1] = parentSublist[swappedIndex];
             parentSublist[swappedIndex] = swapped;
-            fetch(`http://localhost:3000/notes/${urlParent}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    subList: parentSublist,
-                }),
-            }).then(() => parentChangeSyncStatus());
+            updateFirebaseProperty(urlParent, "subList", parentSublist);
         }
     };
 
@@ -239,44 +232,12 @@ export const ListItem = ({
             const swapped = parentSublist[swappedIndex + 1];
             parentSublist[swappedIndex + 1] = parentSublist[swappedIndex];
             parentSublist[swappedIndex] = swapped;
-            fetch(`http://localhost:3000/notes/${urlParent}`, {
-                method: "PATCH",
-                headers: {
-                    "Content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    subList: parentSublist,
-                }),
-            }).then(() => parentChangeSyncStatus());
+            updateFirebaseProperty(urlParent, "subList", parentSublist);
         }
     };
 
     const toggleIsMarkedAsDone = () => {
-        fetch(`http://localhost:3000/notes/${id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({
-                done: !isMarkedAsDone,
-            }),
-        }).then(() => {
-            setIsMarkedAsDone(!isMarkedAsDone);
-        });
-    };
-
-    const toggleChildrenVisible = () => {
-        fetch(`http://localhost:3000/notes/${id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({
-                expanded: !childrenVisible,
-            }),
-        }).then(() => {
-            setChildrenVisible(!childrenVisible);
-        });
+        updateFirebaseProperty(id, "done", !isMarkedAsDone);
     };
 
     const removeDate = () => {
@@ -357,13 +318,13 @@ export const ListItem = ({
                                             isLastInList={isLastInList}
                                             setIsInlineContextVisibile={setIsInlineContextVisibile}
                                             removeCurrentInput={removeCurrentInput}
-                                            addChildInputField={addChildInputField}
                                             moveUpCurrentInput={moveUpCurrentInput}
                                             moveDownCurrentInput={moveDownCurrentInput}
                                             isMarkedAsDone={isMarkedAsDone}
                                             toggleIsMarkedAsDone={toggleIsMarkedAsDone}
                                             setIsDialogOn={setIsDialogOn}
                                             removeDate={removeDate}
+                                            createNewNote={createNewNote}
                                             listItemObjectDate={listItemObjectDate}
                                         />
                                     )}
@@ -399,10 +360,10 @@ export const ListItem = ({
                                 <S.ListElementDateAndTitleContainer>
                                     <NameInput
                                         isFirst={isFirst}
-                                        addChildInputField={addChildInputField}
                                         removeCurrentInput={removeCurrentInput}
                                         listItemObject={listItemObject}
                                         isMarkedAsDone={isMarkedAsDone}
+                                        createNewNote={createNewNote}
                                     />
                                     <ListElementDateComponent
                                         key={`date-el-${id}`}
@@ -420,7 +381,7 @@ export const ListItem = ({
                                     <TransitionGroup>
                                         {/* loop generating listItems */}
 
-                                        {listItemObject.subList.map((id, index) => (
+                                        {listItemObject.subList?.map((id, index) => (
                                             <CSSTransition
                                                 timeout={300}
                                                 classNames={"pageMain"}
@@ -467,4 +428,3 @@ export const ListItem = ({
         </AppContext.Consumer>
     );
 };
-

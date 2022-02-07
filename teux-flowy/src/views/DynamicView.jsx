@@ -9,12 +9,10 @@ const StyledMainList = styled.ul`
     min-height: 50vh;
 `
 
-
 function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState  }) {
 
     const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || "HOME";
     const parentList = currentNotes.currentPath;
-
 
     return (
             <CSSTransition

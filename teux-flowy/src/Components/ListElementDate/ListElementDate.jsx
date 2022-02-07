@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { faCalendar } from '@fortawesome/fontawesome-free-regular'
-import {  DialogContext } from "../../ContextApi";
+import { DialogContext } from "../../ContextApi";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { format } from 'date-fns'
 import {parseJSON} from "date-fns"

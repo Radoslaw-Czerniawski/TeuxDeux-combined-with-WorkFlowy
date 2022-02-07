@@ -6,8 +6,6 @@ import { faCalendar } from "@fortawesome/fontawesome-free-regular";
 
 import uniqid from "uniqid";
 
-
-
 function Header({ idPath, setGlobalState, setCssAnimationState }) {
     return (
         <S.HeaderContainer>
@@ -69,7 +67,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState }) {
                 })}
             </S.BreadcrumbsContainer>
             <S.DisplayModeToggleContainer>
-                <S.StyledNavLinkLeft activeClassName="active" onClick={() => {
+                <S.StyledNavLinkLeft onClick={() => {
                     setGlobalState({
                         names: [],
                         currentPath: [],
@@ -80,7 +78,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState }) {
                 </S.StyledNavLinkLeft>
 
 
-                <S.StyledNavLinkRight activeClassName="active" to="/">
+                <S.StyledNavLinkRight to="/">
                     <FontAwesomeIcon icon={faList} size="2x" />
                 </S.StyledNavLinkRight>
             </S.DisplayModeToggleContainer>

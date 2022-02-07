@@ -9,10 +9,10 @@ import { Footer } from "./Components/Footer/Footer";
 import styled from "styled-components";
 
 // Firebase
-import { getDatabase, ref, onValue } from "firebase/database"
-import {db as fireData} from "./DB/DB";
+
 
 function App() {
+
     const [currentNotes, setCurrentNotes] = useState({
         names: [],
         currentPath: [],
@@ -39,13 +39,6 @@ function App() {
     const ViewsContainer = styled.div`
         width: 100%;
     `;
-
-    // Get a list of cities from your database
-    const starCountRef = ref(fireData, "notes/" + "HOME" + "/name");
-    onValue(starCountRef, (snapshot) => {
-        const data = snapshot.val();
-        console.log(data);
-    });
 
     return (
         <BrowserRouter>
@@ -75,12 +68,4 @@ function App() {
         </BrowserRouter>
     );
 }
-
-// localhost:3001/id1/id2/id3/id4
-// route path=id1/id2/:params
-
-// localhost:3001/?path=id1:id2:id3:id4
-// ==> array
-// array[length-1]
-
 export default App;
