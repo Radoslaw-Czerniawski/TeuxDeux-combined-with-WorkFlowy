@@ -9,9 +9,9 @@ const StyledMainList = styled.ul`
     min-height: 50vh;
 `
 
-function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState  }) {
+function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState, currentHomeId  }) {
 
-    const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || "HOME";
+    const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || `HOME-${currentHomeId}`;
     const parentList = currentNotes.currentPath;
 
     return (

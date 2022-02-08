@@ -199,7 +199,7 @@ export const ListItem = ({
                     setLocalAnimationState(false);
                 }, 300);
             })
-            .then(() => remove(ref(fireData, `notes/${id}`)));
+            .then(() => remove(ref(fireData, `notes-/${id}`)));
     };
 
     /////////////////////

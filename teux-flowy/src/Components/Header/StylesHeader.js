@@ -47,23 +47,52 @@ export const BreadcrumbCurrentElement = styled.span`
     align-items: center;
     padding: 0 1rem;
     user-select: none;
-
 `;
 
+export const DropdownListMenuButton = styled.div`
+    min-width: 5rem;
+    border-radius: 1rem;
+    border: 1px solid ${PALLETE.grey};
+    padding: 1rem;
+    transition: opacity 1s;
+    position: relative;
+
+    &:hover{
+        opacity: 0.9;
+    }
+`
+
+export const DropdownListMenu = styled.li`
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    list-style: none;
+    background: white;
+    border: 1px solid ${PALLETE.grey};
+    border-radius: 0 0 1rem 1rem;
+`
+
+export const DropdownListMenuItem = styled.ul`
+    margin: 1px;
+    width: 100%;
+    border-top: 1px solid ${PALLETE.grey};
+`
+
 export const DisplayModeToggleContainer = styled.div`
+    font-size: 1.5rem;
    margin: 0 2rem;
    display: flex;
 `
 
 export const StyledNavLink = styled(NavLink)`
-    --border-radius: 2rem;
+    --border-radius: 1rem;
     height: 4rem;
-    width: 4.6rem;
+    width: 4rem;
     padding: 1.2rem;
     display: flex;
     align-items: center;
-    
-    
+
+
     color: ${PALLETE.secondary};
     background: ${PALLETE.greyST};
     box-shadow: inset 5px 5px 5px -3px ${PALLETE.grey};
