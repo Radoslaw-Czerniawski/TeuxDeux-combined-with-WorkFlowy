@@ -9,6 +9,7 @@ export const HeaderContainer = styled.div`
     align-items: center;
     padding: 2rem;
     box-shadow: #aaa 5px 0px 10px 1px;
+    z-index:0;
 `;
 
 export const BreadcrumbsContainer = styled.ul`
@@ -49,30 +50,38 @@ export const BreadcrumbCurrentElement = styled.span`
     user-select: none;
 `;
 
+export const DropdownContainer = styled.div`
+    position: relative;
+`
+
 export const DropdownListMenuButton = styled.div`
     min-width: 5rem;
-    border-radius: 1rem;
+    border-radius:${props => props.isDropdownExt ? "1rem 1rem 0 0 " : "1rem"};
     border: 1px solid ${PALLETE.grey};
-    padding: 1rem;
+    padding: 1rem 2rem;
+    font-size: 1.4rem;
     transition: opacity 1s;
-    position: relative;
 
+    background: #fff;
     &:hover{
-        opacity: 0.9;
+        opacity: 0.3;
     }
 `
 
 export const DropdownListMenu = styled.li`
     position: absolute;
     width: 100%;
-    bottom: 0;
+    top: 100%;
+    left:0;
     list-style: none;
     background: white;
     border: 1px solid ${PALLETE.grey};
     border-radius: 0 0 1rem 1rem;
+    border-top: none;
 `
 
 export const DropdownListMenuItem = styled.ul`
+    padding: 1rem;
     margin: 1px;
     width: 100%;
     border-top: 1px solid ${PALLETE.grey};
@@ -80,8 +89,8 @@ export const DropdownListMenuItem = styled.ul`
 
 export const DisplayModeToggleContainer = styled.div`
     font-size: 1.5rem;
-   margin: 0 2rem;
-   display: flex;
+    margin: 0 2rem;
+    display: flex;
 `
 
 export const StyledNavLink = styled(NavLink)`

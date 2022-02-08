@@ -11,7 +11,7 @@ const StyledMainList = styled.ul`
 
 function DynamicView({ currentNotes, cssAnimationState, setCssAnimationState, currentHomeId  }) {
 
-    const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || `HOME-${currentHomeId}`;
+    const id = currentNotes.currentPath[currentNotes.currentPath.length - 1] || `HOME`;
     const parentList = currentNotes.currentPath;
 
     return (

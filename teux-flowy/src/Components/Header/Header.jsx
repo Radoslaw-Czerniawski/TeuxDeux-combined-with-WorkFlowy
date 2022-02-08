@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight, faHome, faBars, faList } from "@fortawesome/fontawesome-free-solid";
 import { longTextPreview } from "../../helpers/helpers"
 import { faCalendar } from "@fortawesome/fontawesome-free-regular";
+import { CSSTransition } from "react-transition-group";
 
 import uniqid from "uniqid";
 
@@ -72,22 +73,36 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo }) {
             </S.BreadcrumbsContainer>
 
             {/* DROPDOWN WITH CHOOSING LIST */}
-            {userInfo.isLogged && <S.DropdownListMenuButton
-                onClick={setIsDropdownExt(oldState => !oldState)}
+            {userInfo.isLogged && <S.DropdownContainer>
+
+                <S.DropdownListMenuButton
+                onClick={() => setIsDropdownExt(oldState => !oldState)}
+                isDropdownExt={isDropdownExt}
                 >
-                Current notes
-                <S.DropdownListMenu>
-                    <S.DropdownListMenuItem>
-                        + new list
-                    </S.DropdownListMenuItem>
-                    <S.DropdownListMenuItem>
-                        List item
-                    </S.DropdownListMenuItem>
-                    <S.DropdownListMenuItem>
-                        List item
-                    </S.DropdownListMenuItem>
-                </S.DropdownListMenu>
-            </S.DropdownListMenuButton>}
+                    Current notes
+                </S.DropdownListMenuButton>
+                <CSSTransition
+                    in={isDropdownExt}
+                    timeout={300}
+                    classNames={"dropdown"}
+                    unmountOnExit
+                >
+                    <S.DropdownListMenu >
+
+                        <S.DropdownListMenuItem>
+                            + new list
+                        </S.DropdownListMenuItem>
+                        <S.DropdownListMenuItem>
+                            List item asd asd
+                        </S.DropdownListMenuItem>
+                        <S.DropdownListMenuItem>
+                            List item
+                        </S.DropdownListMenuItem>
+                    </S.DropdownListMenu>
+                </CSSTransition>
+
+            </S.DropdownContainer>}
+
 
             {/* SWITCH NOTES VIEW */}
             {userInfo.isLogged && <S.DisplayModeToggleContainer>

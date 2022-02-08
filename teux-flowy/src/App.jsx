@@ -21,7 +21,7 @@ function App() {
     const [cssAnimationState, setCssAnimationState] = useState(true);
 
     const [userInfo, setUserInfo] = useState({
-        isLogged: false,
+        isLogged: true,
         notesAccess: [],
         currentHomeId: "",
     });
