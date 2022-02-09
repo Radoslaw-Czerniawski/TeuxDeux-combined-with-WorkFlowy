@@ -1,81 +1,147 @@
-import styled from "styled-components";
-import { PALLETE } from "../Colors/colors";
+// Styled Components
+import * as S from "./StylesLogin";
+// React States
+import { useRef, useState } from "react";
+
+//Logos
 import logo from "../assets/kisspng-google-logo-google-search-google-now-5b1dacc1d7db69.8759511015286714258842.png";
+import logo2 from "../assets/pngegg.png";
+import logo3 from "../assets/key-outline.png";
 
-const Login = () => {
+// Firebase Authentication functions
+import {
+    signInWithPopup,
+    getAuth,
+    GoogleAuthProvider,
+    signInWithEmailAndPassword,
+} from "firebase/auth";
+
+// Firebase Database
+import { db as fireData } from "../DB/DB";
+
+// Firebase Database methods
+import { get, child, ref } from "firebase/database";
+
+// React Router Navigation
+import { Navigate, useNavigate } from "react-router-dom";
+
+const Login = ({ setUserInfo, userInfo }) => {
+    const form = useRef();
+
+    const navigation = useNavigate();
+
+    const emailAndPasswordSignInHandler = (e) => {
+        e.preventDefault();
+
+        signInWithEmailAndPassword(auth, form.current.email.value, form.current.password.value)
+            .then((userCredential) => {
+                // Signed in
+                return userCredential.user;
+            })
+            .then((user) =>
+                setUserInfo((oldState) => ({
+                    ...oldState,
+                    userUID: user.uid,
+                    isLogged: true,
+                }))
+            )
+            .then(() => navigation("/"))
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                console.log(errorMessage);
+            });
+    };
+
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+
+    const googleSignInHandler = async () => {
+        try {
+            const response = await signInWithPopup(auth, provider);
+            const userData = response.user;
+            console.log(userData);
+            const response2 = await get(child(ref(fireData), `users/${userData.uid}`));
+            const userNotes = response2.val();
+
+            console.log(userNotes[0]);
+
+            setUserInfo(() => ({
+                isLogged: true,
+                notesAccess: userNotes,
+                currentHomeId: userNotes[0],
+                userUID: userData.uid,
+            }));
+
+            navigation("/");
+        } catch (error) {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // The email of the user's account used.
+            const email = error.email;
+            // The AuthCredential type that was used.
+            const credential = GoogleAuthProvider.credentialFromError(error);
+        }
+
+        // signInWithPopup(auth, provider)
+        //     .then((result) => {
+        //         // This gives you a Google Access Token. You can use it to access the Google API.
+        //         const credential = GoogleAuthProvider.credentialFromResult(result);
+        //         const token = credential.accessToken;
+        //         const user = result.user;
+        //         return user
+        //     })
+        //     .then(() => {
+
+        //     })
+        //     .then((user) => setUserInfo((oldState) => ({
+        //         ...oldState,
+        //         userUID: user.uid,
+        //         isLogged: true,
+        //     })))
+        //     .then(() => navigation("/"))
+        // .catch((error) => {
+        //     // Handle Errors here.
+        //     const errorCode = error.code;
+        //     const errorMessage = error.message;
+        //     // The email of the user's account used.
+        //     const email = error.email;
+        //     // The AuthCredential type that was used.
+        //     const credential = GoogleAuthProvider.credentialFromError(error);
+        //     // ...
+        // });
+    };
+
     return (
-        <StyledLoginWrapper>
-            <StyledGoogleSignInButton>
-                <StyledGoogleLogoWrapper>
-                    <StyledGoogleLogo src={logo} />
-                </StyledGoogleLogoWrapper>
+        <S.ViewWrapper>
+            <S.LoginWrapper>
+                <S.GoogleSignInButtonWrapper>
+                    <S.GoogleSignInButton onClick={googleSignInHandler}>
+                        <S.GoogleLogoWrapper>
+                            <S.GoogleLogo src={logo} />
+                        </S.GoogleLogoWrapper>
 
-                <StyledGoogleText> Sign in with Google</StyledGoogleText>
-            </StyledGoogleSignInButton>
-            <StyledLoginForm></StyledLoginForm>
-        </StyledLoginWrapper>
+                        <S.GoogleText> Sign in with Google</S.GoogleText>
+                    </S.GoogleSignInButton>
+                </S.GoogleSignInButtonWrapper>
+
+                <S.LoginForm ref={form} onSubmit={emailAndPasswordSignInHandler}>
+                    <S.FormHeading>Sign in With E-mail</S.FormHeading>
+
+                    <S.InputWrapper>
+                        <S.Input name="email" type="email" required placeholder="E-mail" />
+                        <S.EmailLogo src={logo2}></S.EmailLogo>
+                    </S.InputWrapper>
+                    <S.InputWrapper>
+                        <S.Input name="password" type="password" required placeholder="Password" />
+                        <S.KeyLogo src={logo3}></S.KeyLogo>
+                    </S.InputWrapper>
+
+                    <S.SubmitButton>Submit</S.SubmitButton>
+                </S.LoginForm>
+            </S.LoginWrapper>
+        </S.ViewWrapper>
     );
 };
 
 export { Login };
-
-const StyledLoginWrapper = styled.div`
-    display: flex;
-    margin: 20rem auto 0;
-    height: 50vh;
-    width: 100%;
-    max-width: 45rem;
-    justify-content: center;
-    border-radius: 1rem;
-    box-shadow: 0 3px 10px 1px ${PALLETE.greyOpacity};
-`;
-
-const StyledGoogleSignInButton = styled.button`
-    display: flex;
-    align-items: center;
-    height: 5rem;
-    justify-content: space-between;
-    margin-top: 5rem;
-    padding: 0;
-    background-color: white;
-    color: grey;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    border: none;
-    box-shadow:  0 1px 2px 0 ${PALLETE.greyOpacity};
-    overflow: hidden;
-    transition: background-color 100ms;
-
-    &:hover {
-        background-color: #4f86ec;
-        color: white;
-        &:active {
-            transform: scale(.99);
-            transition: transform 50ms;
-        }
-    }
-`;
-
-const StyledGoogleLogoWrapper = styled.div`
-    height: 100%;
-    box-sizing: border-box;
-    padding: .2rem 1rem .2rem .2rem;
-    overflow: hidden;
-`;
-
-const StyledGoogleLogo = styled.img`
-    height: 100%;
-    width:  100%;
-    background: #fff;
-    object-fit: cover;
-    aspect-ratio: 1 / 1;
-    border-radius: .3rem;
-`;
-
-const StyledGoogleText = styled.div`
-    padding: 1rem;
-`;
-
-const StyledLogoWrapper = styled.div``;
-
-const StyledLoginForm = styled.form``;

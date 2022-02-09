@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { PALLETE } from "../../Colors/colors"
 
 export const ListElement = styled.li`
     font-size: 1.6rem;
@@ -79,7 +80,7 @@ export const ListElementHeader = styled.div`
     align-items: center;
     padding-bottom: ${(props) => props.isFirst ? ".2rem" : "0"};
     transition: background-color 0.3s linear;
-
+    color: ${(props) => props.isFirst ? PALLETE.secondary : "inherit"};
     &:hover ${InlineContextButton} {
         visibility: visible;
     }

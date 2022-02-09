@@ -8,6 +8,7 @@ export const HeaderContainer = styled.div`
     justify-content: flex-start;
     align-items: center;
     padding: 2rem;
+    font-size: 1.4rem;
     box-shadow: #aaa 5px 0px 10px 1px;
     z-index:0;
 `;
@@ -26,11 +27,9 @@ export const BreadcrumbDivider = styled.li`
 `;
 
 export const BreadcrumbElement = styled(BreadcrumbDivider)`
-
+    cursor: pointer;
     color: ${PALLETE.secondary};
-
     &:hover {
-        cursor: pointer;
         opacity: .5;
     }
 `;
@@ -56,39 +55,78 @@ export const DropdownContainer = styled.div`
 
 export const DropdownListMenuButton = styled.div`
     min-width: 5rem;
-    border-radius:${props => props.isDropdownExt ? "1rem 1rem 0 0 " : "1rem"};
-    border: 1px solid ${PALLETE.grey};
-    padding: 1rem 2rem;
-    font-size: 1.4rem;
-    transition: opacity 1s;
+    border-radius:${props => props.isDropdownExt ? "0.5rem 0.5rem 0 0 " : "0.5rem"};
+    border: 1px solid ${PALLETE.secondary};
+    ${props => props.isDropdownExt && "border-bottom: none;"}
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    background: ${PALLETE.secondary};
+    color: #fff;
+    transition: opacity 0.2s;
+    z-index: 5;
+    user-select: none;
+    box-shadow: 0 1px 6px 0 rgb(128 128 128 / 80%);
 
-    background: #fff;
     &:hover{
-        opacity: 0.3;
+        opacity: ${props => props.isDropdownExt ? "1" : ".9"};
     }
 `
 
-export const DropdownListMenu = styled.li`
+export const DropdownListMenu = styled.ul`
+    z-index: 3;
     position: absolute;
     width: 100%;
     top: 100%;
     left:0;
     list-style: none;
     background: white;
-    border: 1px solid ${PALLETE.grey};
-    border-radius: 0 0 1rem 1rem;
     border-top: none;
+    overflow: hidden;
+    color: ${PALLETE.secondary};
+    background-color: ${PALLETE.lightGrey};
+    overflow: hidden;
+    border-radius: 0 0 .6rem 0.6rem;
+    box-shadow: 0 1px 6px 0 rgb(128 128 128 / 80%);
+    /* box-shadow: 1px 3px 8px 0 ${PALLETE.greyOpacity}; */
 `
 
-export const DropdownListMenuItem = styled.ul`
-    padding: 1rem;
-    margin: 1px;
+export const DropDownListItemsWrapper = styled.div`
+    border-radius: 0 0 .6rem .6rem;
+    overflow: hidden;
+    box-shadow: 0 1px 2px -0.5px rgb(128 128 128 / 80%);
+`
+
+export const DropdownListMenuItem = styled.li`
+    padding: 1rem 1.5rem;
+    background-color: white;
+    margin: 0;
     width: 100%;
-    border-top: 1px solid ${PALLETE.grey};
+    border-top: 1px solid ${PALLETE.secondaryST};
+    cursor: pointer;
+    transition: background-color 0.3s;
+    &:hover{
+        background: ${PALLETE.lightGrey};
+    }
+`
+
+export const DropdownListMenuNewItem = styled(DropdownListMenuItem)`
+    background-color: transparent;
+    padding: .8rem 1.5rem;
+    border: none;
+    border-radius: 0 0 .8rem 0.8rem;
+    font-weight: 700;
+    color: ${PALLETE.grey};
+    display: flex;
+    justify-content: center;
+    transition: color 0.3s;
+    &:hover{
+        background-color: transparent;
+        color: ${PALLETE.active};
+    }
 `
 
 export const DisplayModeToggleContainer = styled.div`
-    font-size: 1.5rem;
+
     margin: 0 2rem;
     display: flex;
 `

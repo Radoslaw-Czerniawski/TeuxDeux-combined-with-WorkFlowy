@@ -1,15 +1,53 @@
 import * as S from "./StylesHeader";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight, faHome, faBars, faList } from "@fortawesome/fontawesome-free-solid";
-import { longTextPreview } from "../../helpers/helpers"
+import { faChevronRight, faHome, faBars, faList, faPlusCircle } from "@fortawesome/fontawesome-free-solid";
+import { longTextPreview } from "../../helpers/helpers";
 import { faCalendar } from "@fortawesome/fontawesome-free-regular";
 import { CSSTransition } from "react-transition-group";
-
+import { Profile } from "../Profile/Profile";
 import uniqid from "uniqid";
+import { db as fireData } from "../../DB/DB";
+import {
+    ref,
+    onValue,
+    set,
+    push,
+    update,
+    remove,
+    get,
+    child,
+} from "firebase/database";
+
+
+export const addListToUser = (listID, userUID) => {
+    return update(ref(fireData, `users/${userUID}/`), { [listID]: true });
+};
+
+const createNewList =  (userInfo) => {
+    if (!userInfo.isLogged) {
+        return
+    }
+
+    const newListRef = ref(fireData, `testnotes/`);
+    const key = push(newListRef);
+
+    const newList = {
+        date: "",
+        done: false,
+        expanded: true,
+        hasDate: false,
+        name: "New sublist...",
+        subList: [],
+    }
+
+    const newListID = key._path.pieces_[1];
+
+    set(key, newList);
+    addListToUser(newListID, userInfo.userUID)
+}
 
 function Header({ idPath, setGlobalState, setCssAnimationState, userInfo }) {
-
     const [isDropdownExt, setIsDropdownExt] = useState(false);
 
     return (
@@ -73,54 +111,55 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo }) {
             </S.BreadcrumbsContainer>
 
             {/* DROPDOWN WITH CHOOSING LIST */}
-            {userInfo.isLogged && <S.DropdownContainer>
-
-                <S.DropdownListMenuButton
-                onClick={() => setIsDropdownExt(oldState => !oldState)}
-                isDropdownExt={isDropdownExt}
-                >
-                    Current notes
-                </S.DropdownListMenuButton>
-                <CSSTransition
-                    in={isDropdownExt}
-                    timeout={300}
-                    classNames={"dropdown"}
-                    unmountOnExit
-                >
-                    <S.DropdownListMenu >
-
-                        <S.DropdownListMenuItem>
-                            + new list
-                        </S.DropdownListMenuItem>
-                        <S.DropdownListMenuItem>
-                            List item asd asd
-                        </S.DropdownListMenuItem>
-                        <S.DropdownListMenuItem>
-                            List item
-                        </S.DropdownListMenuItem>
-                    </S.DropdownListMenu>
-                </CSSTransition>
-
-            </S.DropdownContainer>}
-
+            {userInfo.isLogged && (
+                <S.DropdownContainer>
+                    <S.DropdownListMenuButton
+                        onClick={() => setIsDropdownExt((oldState) => !oldState)}
+                        isDropdownExt={isDropdownExt}
+                    >
+                        Current notes
+                    </S.DropdownListMenuButton>
+                    <CSSTransition
+                        in={isDropdownExt}
+                        timeout={300}
+                        classNames={"dropdown"}
+                        unmountOnExit
+                    >
+                        <S.DropdownListMenu>
+                            <S.DropDownListItemsWrapper>
+                                <S.DropdownListMenuItem>List item asd asd</S.DropdownListMenuItem>
+                                <S.DropdownListMenuItem>List item</S.DropdownListMenuItem>
+                            </S.DropDownListItemsWrapper>
+                            <S.DropdownListMenuNewItem onClick={()=>createNewList(userInfo)}>
+                                <FontAwesomeIcon icon={faPlusCircle} size="1x" /> New Note
+                            </S.DropdownListMenuNewItem>
+                        </S.DropdownListMenu>
+                    </CSSTransition>
+                </S.DropdownContainer>
+            )}
 
             {/* SWITCH NOTES VIEW */}
-            {userInfo.isLogged && <S.DisplayModeToggleContainer>
-                <S.StyledNavLinkLeft onClick={() => {
-                    setGlobalState({
-                        names: [],
-                        currentPath: [],
-                    });
-                }}
-                to="/calendar">
-                    <FontAwesomeIcon icon={faCalendar} size="1x" />
-                </S.StyledNavLinkLeft>
+            {userInfo.isLogged && (
+                <S.DisplayModeToggleContainer>
+                    <S.StyledNavLinkLeft
+                        onClick={() => {
+                            setGlobalState({
+                                names: [],
+                                currentPath: [],
+                            });
+                        }}
+                        to="/calendar"
+                    >
+                        <FontAwesomeIcon icon={faCalendar} size="1x" />
+                    </S.StyledNavLinkLeft>
 
+                    <S.StyledNavLinkRight to="/">
+                        <FontAwesomeIcon icon={faList} size="1x" />
+                    </S.StyledNavLinkRight>
+                </S.DisplayModeToggleContainer>
+            )}
 
-                <S.StyledNavLinkRight to="/">
-                    <FontAwesomeIcon icon={faList} size="1x" />
-                </S.StyledNavLinkRight>
-            </S.DisplayModeToggleContainer>}
+            <Profile userInfo={userInfo} />
         </S.HeaderContainer>
     );
 }

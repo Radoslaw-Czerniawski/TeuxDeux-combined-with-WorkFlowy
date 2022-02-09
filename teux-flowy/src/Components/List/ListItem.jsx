@@ -93,7 +93,7 @@ export const ListItem = ({
     // FIREBASE FUNCTIONS
     /////////////////////
 
-    const fbData = ref(fireData, "notes/" + id);
+    const fbData = ref(fireData, `notes/${id}`);
 
     // Fetch list item data on mount
     useEffect(() => {
@@ -275,7 +275,7 @@ export const ListItem = ({
                                     setIsDialogOn={setIsDialogOn}
                                     setNeedComponentReload={setNeedComponentReload}
                                     id={id}
-                                ></DialogComponent>
+                                />
                             )}
                             <S.ListElementHeader isFirst={isFirst}>
                                 <S.ListElementButtonContainer>

@@ -21,9 +21,10 @@ function App() {
     const [cssAnimationState, setCssAnimationState] = useState(true);
 
     const [userInfo, setUserInfo] = useState({
-        isLogged: true,
+        isLogged: false,
         notesAccess: [],
         currentHomeId: "",
+        userUID: "",
     });
 
     if (currentNotes.currentPath.length === 1) {
@@ -68,7 +69,7 @@ function App() {
                         }
                     />
                     <Route path="calendar" element={<CalendarView />} />
-                    <Route path="login" element={<Login />} />
+                    <Route path="login" element={<Login userInfo={userInfo} setUserInfo={setUserInfo}/>} />
                 </Routes>
                 <Footer />
             </AppContext.Provider>
