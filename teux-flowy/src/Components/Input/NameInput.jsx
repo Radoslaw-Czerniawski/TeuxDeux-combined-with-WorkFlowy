@@ -50,6 +50,7 @@ const NameInput = ({
     const [dataValue, setDataValue] = useState(listItemObject.name);
 
     const putNewInputValue = debounce((e) => {
+
         updateFirebaseProperty(listItemObject.id, "name", e.target.textContent);
         let range = new Range();
 
@@ -79,7 +80,7 @@ const NameInput = ({
                 }
             }}
             onKeyUp={(e) => {
-                if(e.key !== "Backspace" && e.target.textContent !== "" ) putNewInputValue(e);
+                if(e.key === "Backspace" && e.target.textContent === "" ) {} else {putNewInputValue(e);}
 
 
                 if (e.key === "Enter" && e.target.textContent !== "") {

@@ -42,6 +42,7 @@ export const updateFirebaseProperty = (noteId, property, value) => {
 };
 
 export const ListItem = ({
+    userInfo,
     id,
     parentList,
     parentNameList,
@@ -85,6 +86,7 @@ export const ListItem = ({
         parentList = [...parentList, id];
     }
 
+
     const changeSyncStateToReloadComponentAfterNoteEdit = useCallback(() => {
         setNeedComponentReload(true);
     }, [needComponentReload]);
@@ -99,7 +101,6 @@ export const ListItem = ({
     useEffect(() => {
         onValue(fbData, (snapshot) => {
             const data = snapshot.val();
-            console.log(`${data.name}: ${data.subList}`);
             setListItemObject({
                 id: `${id}`,
                 name: `${data.name}`,
@@ -171,7 +172,7 @@ export const ListItem = ({
             });
     };
 
-    const removeCurrentInput = () => {
+     const removeCurrentInput = () => {
         const cascadingChildrenRemoval = async (noteId) => {
             const response = await get(child(ref(fireData), `notes/${noteId}`));
             const data = response.val().subList;
@@ -199,7 +200,7 @@ export const ListItem = ({
                     setLocalAnimationState(false);
                 }, 300);
             })
-            .then(() => remove(ref(fireData, `notes-/${id}`)));
+            .then(() => remove(ref(fireData, `notes/${id}`)));
     };
 
     /////////////////////
@@ -364,6 +365,7 @@ export const ListItem = ({
                                         listItemObject={listItemObject}
                                         isMarkedAsDone={isMarkedAsDone}
                                         createNewNote={createNewNote}
+                                        parentList={parentList}
                                     />
                                     <ListElementDateComponent
                                         key={`date-el-${id}`}

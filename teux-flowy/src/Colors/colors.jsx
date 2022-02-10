@@ -4,7 +4,7 @@ export const PALLETE = {
     "primary": "#3466aa",
     "secondary": "#194C94",
     "light": "#82b7dc",
-    "white": "#f1f1f1",
+    "white": "#fefefe",
     "grey": "rgba(128,128,128)",
     "lightGrey": "rgba(238,238,238)",
     "black": "#1c1c1c",

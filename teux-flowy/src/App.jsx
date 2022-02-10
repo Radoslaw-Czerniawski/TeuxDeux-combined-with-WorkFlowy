@@ -9,8 +9,7 @@ import { Footer } from "./Components/Footer/Footer";
 import styled from "styled-components";
 import { Authentication } from "./Components/Authentication/Authentication";
 import { Login } from "./views/Login";
-
-// Firebase
+import { AppendUserToList } from "./views/AppendUserToList";
 
 function App() {
     const [currentNotes, setCurrentNotes] = useState({
@@ -20,11 +19,19 @@ function App() {
 
     const [cssAnimationState, setCssAnimationState] = useState(true);
 
-    const [userInfo, setUserInfo] = useState({
-        isLogged: false,
-        notesAccess: [],
-        currentHomeId: "",
-        userUID: "",
+    const [userInfo, setUserInfo] = useState(() => {
+        const localState = window.localStorage.getItem("userInfo");
+
+        if (localState === null) {
+            return {
+                isLogged: false,
+                currentHomeId: "",
+                userUID: "",
+                displayName: "",
+            };
+        }
+
+        return JSON.parse(localState);
     });
 
     if (currentNotes.currentPath.length === 1) {
@@ -50,7 +57,7 @@ function App() {
                     userInfo={userInfo}
                     idPath={currentNotes}
                     setGlobalState={setCurrentNotes}
-                    cssAnimationState={cssAnimationState}
+                    setUserInfo={setUserInfo}
                     setCssAnimationState={setCssAnimationState}
                 />
                 <Routes>
@@ -59,6 +66,8 @@ function App() {
                         element={
                             <Authentication isLogged={userInfo.isLogged}>
                                 <DynamicView
+                                    userInfo={userInfo}
+                                    setUserInfo={setUserInfo}
                                     currentHomeId={userInfo.currentHomeId}
                                     setCssAnimationState={setCssAnimationState}
                                     cssAnimationState={cssAnimationState}
@@ -69,7 +78,15 @@ function App() {
                         }
                     />
                     <Route path="calendar" element={<CalendarView />} />
-                    <Route path="login" element={<Login userInfo={userInfo} setUserInfo={setUserInfo}/>} />
+                    <Route
+                        path="login"
+                        element={<Login userInfo={userInfo} setUserInfo={setUserInfo} />}
+                    />
+                    <Route
+                        path="append/:data"
+                        element={<AppendUserToList />}
+                        userInfo={userInfo}
+                    />
                 </Routes>
                 <Footer />
             </AppContext.Provider>

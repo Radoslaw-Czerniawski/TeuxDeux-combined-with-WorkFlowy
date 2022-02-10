@@ -2,11 +2,12 @@ import styled from "styled-components";
 import { PALLETE } from "../../Colors/colors";
 
 const StyledFooter = styled.div`
-    background: transparent;
+    background:${PALLETE.white};
     display: flex;
     padding: 2rem;
     justify-content: center;
-    color: ${PALLETE.grey};
+    color: ${PALLETE.secondary};
+    box-shadow: 0 -1px 4px 0 rgb(0 0 0 / 40%);
 `
 
 export const Footer = () => {
@@ -14,4 +15,3 @@ export const Footer = () => {
         by Radosław & Przemysław
     </StyledFooter>;
 }
- 

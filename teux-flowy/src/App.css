@@ -70,6 +70,7 @@
 
 .dropdown{
     overflow: hidden;
+    z-index: 9999;
 }
 
 .dropdown-enter {
@@ -80,17 +81,19 @@
 .dropdown-enter-active {
     opacity: 1;
     transform: translateY(0px);
-    transition:  transform 100ms, opacity 200ms;
+    transition:  transform 50ms, opacity 200ms;
+    z-index: 9999;
+
 }
 
 .dropdown-exit {
     opacity: 1;
     transform: translateY(0px);
-    transition: transform 100ms, opacity 200ms;
+    transition: transform 50ms, opacity 200ms;
 }
 
 .dropdown-exit-active {
     opacity: 0;
     transform: translateY(-5px);
-    transition: transform 100ms, opacity 200ms 50ms;
+    transition: transform 50ms, opacity 200ms 10ms;
 }

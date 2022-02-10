@@ -27,30 +27,42 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = ({ setUserInfo, userInfo }) => {
     const form = useRef();
-
     const navigation = useNavigate();
 
-    const emailAndPasswordSignInHandler = (e) => {
+    const emailAndPasswordSignInHandler = async (e) => {
         e.preventDefault();
 
-        signInWithEmailAndPassword(auth, form.current.email.value, form.current.password.value)
-            .then((userCredential) => {
-                // Signed in
-                return userCredential.user;
-            })
-            .then((user) =>
-                setUserInfo((oldState) => ({
-                    ...oldState,
-                    userUID: user.uid,
-                    isLogged: true,
-                }))
-            )
-            .then(() => navigation("/"))
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorMessage);
-            });
+        const email = form.current.email.value;
+        const password = form.current.password.value;
+
+        try {
+            const response = await signInWithEmailAndPassword(auth, email, password)
+            console.log(response);
+            const { user: userData} = response;
+            const response2 = await get(child(ref(fireData), `users/${userData.uid}`));
+            const userNotes = response2.val() || [];
+
+            setUserInfo((oldState) => ({
+                ...oldState,
+                isLogged: true,
+                currentHomeId: Object.keys(userNotes)[0],
+                userUID: userData.uid,
+                displayName: userData.email
+            }));
+
+            window.localStorage.setItem("userInfo", JSON.stringify({
+                isLogged: true,
+                currentHomeId: Object.keys(userNotes)[0],
+                userUID: userData.uid,
+                displayName: userData.email
+            }));
+
+            navigation("/");
+        } catch (error) {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorMessage);
+        }
     };
 
     const provider = new GoogleAuthProvider();
@@ -60,17 +72,26 @@ const Login = ({ setUserInfo, userInfo }) => {
         try {
             const response = await signInWithPopup(auth, provider);
             const userData = response.user;
-            console.log(userData);
             const response2 = await get(child(ref(fireData), `users/${userData.uid}`));
-            const userNotes = response2.val();
+            const userNotes = response2.val() || [];
 
-            console.log(userNotes[0]);
 
-            setUserInfo(() => ({
+
+            setUserInfo((oldState) => ({
+                ...oldState,
                 isLogged: true,
-                notesAccess: userNotes,
-                currentHomeId: userNotes[0],
+                currentHomeId: Object.keys(userNotes)[0],
                 userUID: userData.uid,
+                displayName: userData.email
+            }));
+
+
+
+            window.localStorage.setItem("userInfo", JSON.stringify({
+                isLogged: true,
+                currentHomeId: Object.keys(userNotes)[0],
+                userUID: userData.uid,
+                displayName: userData.email
             }));
 
             navigation("/");
@@ -114,6 +135,7 @@ const Login = ({ setUserInfo, userInfo }) => {
 
     return (
         <S.ViewWrapper>
+            {userInfo.isLogged && <Navigate to="/"/>}
             <S.LoginWrapper>
                 <S.GoogleSignInButtonWrapper>
                     <S.GoogleSignInButton onClick={googleSignInHandler}>

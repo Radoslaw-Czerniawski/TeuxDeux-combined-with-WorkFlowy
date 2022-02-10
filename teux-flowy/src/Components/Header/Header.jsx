@@ -1,10 +1,22 @@
 import * as S from "./StylesHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronRight, faHome, faBars, faList, faPlusCircle } from "@fortawesome/fontawesome-free-solid";
+import {
+    faChevronRight,
+    faHome,
+    faBars,
+    faList,
+    faPlusCircle,
+    faTrash,
+    faCircle,
+    faMinusCircle,
+    faTrashAlt,
+    faTransgender,
+    faXRay,
+} from "@fortawesome/fontawesome-free-solid";
 import { longTextPreview } from "../../helpers/helpers";
 import { faCalendar } from "@fortawesome/fontawesome-free-regular";
-import { CSSTransition } from "react-transition-group";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Profile } from "../Profile/Profile";
 import uniqid from "uniqid";
 import { db as fireData } from "../../DB/DB";
@@ -17,38 +29,125 @@ import {
     remove,
     get,
     child,
+    query,
+    orderByKey,
+    equalTo,
+    orderByChild,
+    off,
 } from "firebase/database";
+import { getAuth } from "firebase/auth";
 
-
-export const addListToUser = (listID, userUID) => {
-    return update(ref(fireData, `users/${userUID}/`), { [listID]: true });
+export const addListToUser = (listID, userUID, setIsDropdownExt) => {
+    return update(ref(fireData, `users/${userUID}/`), { [listID]: "" });
 };
 
-const createNewList =  (userInfo) => {
+const createNewList = (userInfo, setIsDropdownExt) => {
     if (!userInfo.isLogged) {
-        return
+        return;
     }
 
-    const newListRef = ref(fireData, `testnotes/`);
+    const newListRef = ref(fireData, `notes/`);
     const key = push(newListRef);
+
+    const usersAccess = {
+        hasAccess: true,
+        displayName: userInfo.displayName,
+    };
 
     const newList = {
         date: "",
         done: false,
+        users: {
+            [userInfo.userUID]: usersAccess,
+        },
         expanded: true,
         hasDate: false,
-        name: "New sublist...",
+        name: "My new list",
         subList: [],
-    }
+    };
 
     const newListID = key._path.pieces_[1];
 
     set(key, newList);
-    addListToUser(newListID, userInfo.userUID)
-}
+    addListToUser(newListID, userInfo.userUID);
+    setIsDropdownExt(true);
+};
 
-function Header({ idPath, setGlobalState, setCssAnimationState, userInfo }) {
+function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUserInfo }) {
     const [isDropdownExt, setIsDropdownExt] = useState(false);
+    const [currentNotesNames, setCurrentNotesNames] = useState([]);
+
+    const removeList = async (id) => {
+        const cascadingChildrenRemoval = async (noteId) => {
+            const response = await get(child(ref(fireData), `notes/${noteId}`));
+            const data = response.val().subList;
+
+            if (data !== [] && data) {
+                return data.forEach((listItemId) => {
+                    cascadingChildrenRemoval(listItemId);
+                    remove(ref(fireData, `notes/${listItemId}`));
+                });
+            }
+            return remove(ref(fireData, `notes/${noteId}`));
+        };
+
+        const note = await get(child(ref(fireData), `notes/${id}`));
+        const noteData = note.val();
+
+        if (Object.keys(noteData.users).length > 1) {
+            remove(ref(fireData, `notes/${id}/${userInfo.userUID}`));
+            remove(ref(fireData, `users/${userInfo.userUID}/${id}`));
+            if (id === userInfo.currentHomeId) {
+                setUserInfo((oldState) => ({
+                    ...oldState,
+                    currentHomeId: "",
+                }));
+            }
+        } else if (Object.keys(noteData.users).length === 1) {
+            cascadingChildrenRemoval(id).then(() => {
+                remove(ref(fireData, `notes/${id}`));
+                remove(ref(fireData, `users/${userInfo.userUID}/${id}`));
+                if (id === userInfo.currentHomeId) {
+                    setUserInfo((oldState) => ({
+                        ...oldState,
+                        currentHomeId: "",
+                    }));
+                }
+            });
+        }
+    };
+
+    useEffect(() => {
+        let listener;
+
+        if (userInfo.isLogged) {
+            const querySearch = query(
+                ref(fireData, "notes"),
+                orderByChild(`users/${userInfo.userUID}/hasAccess`),
+                equalTo(true)
+            );
+
+            listener = onValue(querySearch, (snapshot) => {
+                if (!snapshot.exists()) {
+                    setCurrentNotesNames(null);
+                } else {
+                    const data = snapshot.val();
+
+                    const currentNotes = Object.keys(data).map((key) => ({
+                        name: data[key].name,
+                        id: key,
+                    }));
+                    setCurrentNotesNames(currentNotes);
+                }
+            });
+        }
+
+        return () => {
+            if (listener) {
+                off(listener);
+            }
+        };
+    }, [userInfo.isLogged]);
 
     return (
         <S.HeaderContainer>
@@ -109,7 +208,6 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo }) {
                     );
                 })}
             </S.BreadcrumbsContainer>
-
             {/* DROPDOWN WITH CHOOSING LIST */}
             {userInfo.isLogged && (
                 <S.DropdownContainer>
@@ -127,10 +225,39 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo }) {
                     >
                         <S.DropdownListMenu>
                             <S.DropDownListItemsWrapper>
-                                <S.DropdownListMenuItem>List item asd asd</S.DropdownListMenuItem>
-                                <S.DropdownListMenuItem>List item</S.DropdownListMenuItem>
+                                <TransitionGroup>
+                                    {currentNotesNames?.map((note) => (
+                                        <CSSTransition
+                                            timeout={300}
+                                            classNames={"dropdown"}
+                                            unmountOnExit
+                                            key={note.id}
+                                        >
+                                            <S.DropdownListMenuItem
+                                                onClick={() =>
+                                                    setUserInfo((oldState) => ({
+                                                        ...oldState,
+                                                        currentHomeId: note.id,
+                                                    }))
+                                                }
+                                            >
+                                                {note.name}
+                                                <S.RemoveNoteButton
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        removeList(note.id);
+                                                    }}
+                                                >
+                                                    <FontAwesomeIcon icon={faMinusCircle} />
+                                                </S.RemoveNoteButton>
+                                            </S.DropdownListMenuItem>
+                                        </CSSTransition>
+                                    ))}
+                                </TransitionGroup>
                             </S.DropDownListItemsWrapper>
-                            <S.DropdownListMenuNewItem onClick={()=>createNewList(userInfo)}>
+                            <S.DropdownListMenuNewItem
+                                onClick={() => createNewList(userInfo, setIsDropdownExt)}
+                            >
                                 <FontAwesomeIcon icon={faPlusCircle} size="1x" /> New Note
                             </S.DropdownListMenuNewItem>
                         </S.DropdownListMenu>
@@ -159,7 +286,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo }) {
                 </S.DisplayModeToggleContainer>
             )}
 
-            <Profile userInfo={userInfo} />
+            <Profile userInfo={userInfo} setUserInfo={setUserInfo} />
         </S.HeaderContainer>
     );
 }
