@@ -8,6 +8,7 @@ const StyledFooter = styled.div`
     justify-content: center;
     color: ${PALLETE.secondary};
     box-shadow: 0 -1px 4px 0 rgb(0 0 0 / 40%);
+    z-index: 1;
 `
 
 export const Footer = () => {

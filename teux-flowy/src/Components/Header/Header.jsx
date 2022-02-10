@@ -39,6 +39,7 @@ import { getAuth } from "firebase/auth";
 import { useCallback } from "react";
 
 export const addListToUser = (listID, userUID) => {
+    
     return update(ref(fireData, `users/${userUID}/`), { [listID]: "" });
 };
 
@@ -63,6 +64,7 @@ const createNewList = (userInfo, setIsDropdownExt) => {
         hasDate: false,
         name: "My new list",
         subList: [],
+        isShared: false,
     };
 
     const newListID = key._path.pieces_[1];
@@ -129,9 +131,6 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
                         setCurrentNotesNames(null);
                     } else {
                         const data = snapshot.val();
-
-                        console.log(data);
-
                         const currentNotes = Object.keys(data).map((key) => ({
                             name: data[key].name,
                             id: key,

@@ -84,8 +84,10 @@ function App() {
                     />
                     <Route
                         path="append/:data"
-                        element={<AppendUserToList />}
+                        element={<AppendUserToList 
                         userInfo={userInfo}
+                        setUserInfo={setUserInfo} />}
+                        
                     />
                 </Routes>
                 <Footer />
