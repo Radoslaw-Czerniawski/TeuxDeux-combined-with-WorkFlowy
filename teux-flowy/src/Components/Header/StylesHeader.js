@@ -10,7 +10,7 @@ export const HeaderContainer = styled.div`
     padding: 2rem;
     font-size: 1.4rem;
     box-shadow: 0 1px 4px 0 rgb(0 0 0 / 40%);
-    z-index: 1;
+    z-index: 2;
 `;
 
 export const BreadcrumbsContainer = styled.ul`
@@ -66,7 +66,7 @@ export const DropdownListMenuButton = styled.div`
     background: ${PALLETE.secondary};
     color: #fff;
     transition: opacity 0.2s;
-    z-index: 5;
+    z-index: 11;
     user-select: none;
     box-shadow: 0 1px 3px 0 rgb(128 128 128 / 80%);
 
@@ -76,7 +76,7 @@ export const DropdownListMenuButton = styled.div`
 `;
 
 export const DropdownListMenu = styled.ul`
-    z-index: 999;
+    z-index: 12;
     position: absolute;
     width: 100%;
     top: 100%;

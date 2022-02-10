@@ -39,7 +39,7 @@ import { getAuth } from "firebase/auth";
 import { useCallback } from "react";
 
 export const addListToUser = (listID, userUID) => {
-    
+
     return update(ref(fireData, `users/${userUID}/`), { [listID]: "" });
 };
 
@@ -96,7 +96,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
         const noteData = note.val();
 
         if (Object.keys(noteData.users).length > 1) {
-            remove(ref(fireData, `notes/${id}/${userInfo.userUID}`));
+            remove(ref(fireData, `notes/${id}/users/${userInfo.userUID}`));
             remove(ref(fireData, `users/${userInfo.userUID}/${id}`));
             if (id === userInfo.currentHomeId) {
                 setUserInfo((oldState) => ({

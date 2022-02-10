@@ -80,7 +80,7 @@ function DynamicView({
         <>
         {userInfo.currentHomeId ? <ViewWrapper>
 
-            
+
             <StyledUsersTab isExt={isUsersTabVis}>
                 <StyledUsersTitle>users</StyledUsersTitle>
                  {noteUsers?.map(user => (
@@ -94,11 +94,11 @@ function DynamicView({
                         <StyledAddUserIcon onClick={handleStopSharingButton}>
                             <FontAwesomeIcon icon={faUserSlash} />
                         </StyledAddUserIcon>
-                        
+
                         <StyledInviteUrl>
                             {`${href}append/${userInfo.currentHomeId}`}
                         </StyledInviteUrl>
-                        
+
                     </StyledAddUser>
                 ) : (
                     <StyledAddUser>
@@ -116,7 +116,7 @@ function DynamicView({
                     <RotatingExtensionIcon isExt={isUsersTabVis} icon={faChevronCircleRight} />
                 </StyledUsersTabButton>
             </StyledUsersButtonTab>
-            
+
 
             <CSSTransition in={cssAnimationState} timeout={300} classNames={"page"} unmountOnExit>
                 <StyledMainList key={`main-list-${id}`}>
@@ -139,7 +139,7 @@ function DynamicView({
             </CSSTransition>
         </ViewWrapper> : <NoListWrapper>
             <NoListText>
-                Choose one of your lists or create a new one 
+                Choose one of your lists or create a new one
             </NoListText>
         </NoListWrapper>}
         </>
@@ -158,7 +158,7 @@ const ViewWrapper = styled.div`
 const StyledMainList = styled.ul`
     min-height: 50vh;
     flex-grow: 1;
-    z-index: -1;
+    z-index: 0;
 `;
 
 const StyledUsersButtonTab = styled.div`
@@ -178,7 +178,7 @@ const StyledUsersTabButton = styled.button`
     border-radius: 0 var(--border-r) var(--border-r) 0;
     cursor: pointer;
     transition: background-color 0.4s;
-    z-index: -1;
+    z-index: 0;
     &:hover {
         background: ${(props) => (props.isExt ? PALLETE.secondary : PALLETE.light)};
         color: #fff;
@@ -213,7 +213,7 @@ const StyledUsersTab = styled.div`
     opacity: ${(props) => (props.isExt ? "1" : "0")};
     overflow: hidden;
     transition: max-width 0.4s, background-color 0.4s, opacity 0.3s;
-    z-index: 0;
+    z-index: 1;
     background: #fff;
 `;
 
@@ -282,7 +282,7 @@ const NoListWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
 `
 
 const Animation = keyframes`
