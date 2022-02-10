@@ -17,6 +17,7 @@ import {
     remove,
     get,
     child,
+    off
 } from "firebase/database";
 import { db as fireData } from "../../DB/DB";
 
@@ -86,7 +87,6 @@ export const ListItem = ({
         parentList = [...parentList, id];
     }
 
-
     const changeSyncStateToReloadComponentAfterNoteEdit = useCallback(() => {
         setNeedComponentReload(true);
     }, [needComponentReload]);
@@ -100,32 +100,34 @@ export const ListItem = ({
     // Fetch list item data on mount
     useEffect(() => {
         onValue(fbData, (snapshot) => {
-            const data = snapshot.val();
-            setListItemObject({
-                id: `${id}`,
-                name: `${data.name}`,
-                subList: data.subList ? data.subList : [],
-            });
-            setListItemObjectDate({
-                hasDate: data.hasDate,
-                date: `${data.date}`,
-            });
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                setListItemObject({
+                    id: `${id}`,
+                    name: `${data.name}`,
+                    subList: data.subList ? data.subList : [],
+                });
+                setListItemObjectDate({
+                    hasDate: data.hasDate,
+                    date: `${data.date}`,
+                });
 
-            setChildrenVisible(data.expanded);
-            setIsMarkedAsDone(data.done);
+                setChildrenVisible(data.expanded);
+                setIsMarkedAsDone(data.done);
 
-            if (isFirst) {
-                setCssAnimationState(true);
-                setLocalAnimationState(true);
-                setNeedComponentReload(false);
-                changeSyncStateToReloadComponentAfterNoteEdit();
-            } else {
-                setTimeout(() => {
+                if (isFirst) {
                     setCssAnimationState(true);
                     setLocalAnimationState(true);
                     setNeedComponentReload(false);
                     changeSyncStateToReloadComponentAfterNoteEdit();
-                }, 0);
+                } else {
+                    setTimeout(() => {
+                        setCssAnimationState(true);
+                        setLocalAnimationState(true);
+                        setNeedComponentReload(false);
+                        changeSyncStateToReloadComponentAfterNoteEdit();
+                    }, 0);
+                }
             }
         });
     }, []);
@@ -172,7 +174,7 @@ export const ListItem = ({
             });
     };
 
-     const removeCurrentInput = () => {
+    const removeCurrentInput = () => {
         const cascadingChildrenRemoval = async (noteId) => {
             const response = await get(child(ref(fireData), `notes/${noteId}`));
             const data = response.val().subList;

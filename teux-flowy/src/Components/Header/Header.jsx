@@ -36,8 +36,9 @@ import {
     off,
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
+import { useCallback } from "react";
 
-export const addListToUser = (listID, userUID, setIsDropdownExt) => {
+export const addListToUser = (listID, userUID) => {
     return update(ref(fireData, `users/${userUID}/`), { [listID]: "" });
 };
 
@@ -49,16 +50,14 @@ const createNewList = (userInfo, setIsDropdownExt) => {
     const newListRef = ref(fireData, `notes/`);
     const key = push(newListRef);
 
-    const usersAccess = {
-        hasAccess: true,
-        displayName: userInfo.displayName,
-    };
-
     const newList = {
         date: "",
         done: false,
         users: {
-            [userInfo.userUID]: usersAccess,
+            [userInfo.userUID]: {
+                hasAccess: true,
+                displayName: userInfo.displayName,
+            },
         },
         expanded: true,
         hasDate: false,
@@ -118,34 +117,32 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
     };
 
     useEffect(() => {
-        let listener;
-
         if (userInfo.isLogged) {
-            const querySearch = query(
-                ref(fireData, "notes"),
-                orderByChild(`users/${userInfo.userUID}/hasAccess`),
-                equalTo(true)
-            );
+            onValue(
+                query(
+                    ref(fireData, "notes"),
+                    orderByChild(`users/${userInfo.userUID}/hasAccess`),
+                    equalTo(true)
+                ),
+                (snapshot) => {
+                    if (!snapshot.exists()) {
+                        setCurrentNotesNames(null);
+                    } else {
+                        const data = snapshot.val();
 
-            listener = onValue(querySearch, (snapshot) => {
-                if (!snapshot.exists()) {
-                    setCurrentNotesNames(null);
-                } else {
-                    const data = snapshot.val();
+                        console.log(data);
 
-                    const currentNotes = Object.keys(data).map((key) => ({
-                        name: data[key].name,
-                        id: key,
-                    }));
-                    setCurrentNotesNames(currentNotes);
+                        const currentNotes = Object.keys(data).map((key) => ({
+                            name: data[key].name,
+                            id: key,
+                        }));
+                        setCurrentNotesNames(currentNotes);
+                    }
                 }
-            });
+            );
         }
 
         return () => {
-            if (listener) {
-                off(listener);
-            }
         };
     }, [userInfo.isLogged]);
 
@@ -169,7 +166,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
                         <FontAwesomeIcon icon={faHome} size="1x" />
                     </S.NodeUrlLink>
                 </S.BreadcrumbElement>
-                {idPath.currentPath.map((parent, index) => {
+                {idPath?.currentPath.map((parent, index) => {
                     return (
                         index !== 0 && (
                             <>
