@@ -4,95 +4,22 @@ import "react-calendar/dist/Calendar.css";
 import { useState } from "react";
 import { parseJSON } from "date-fns";
 import { PALLETE } from "../../Colors/colors";
+import { ref, get, child, update } from "firebase/database";
+import { db as fireData } from "../../DB/DB";
 
-const StyledDialog = styled.div`
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-`;
+const Dialog = ({ setIsDialogOn, id, userInfo }) => {
 
-const DatePickerContainer = styled.div`
-    padding: 2rem;
-    align-text: center;
-    background: #fff;
-    border-radius: 1rem;
-`;
-const StyledConfirmButton = styled.button`
-    cursor: pointer;
-    display: block;
-    margin: 2rem auto 0 auto;
-    padding: 1rem 3rem;
-    background: ${PALLETE.secondary};
-    color: ${PALLETE.white};
-    border-radius: 1rem;
-    border: none;
-    box-shadow: ${PALLETE.black} 0.3rem 0.3rem 1.5rem -0.3rem;
-    &:hover {
-        opacity: 0.9;
-        box-shadow: #416b46 0.5rem 0.5rem 2rem -0.1rem;
-    }
-`;
-const StyledTitle = styled.div`
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    font-size: 2rem;
-    text-align: center;
-    text-transform: uppercase;
-`;
-
-const patchDate = (id, pickedDate) => {
-    return fetch(`http://localhost:3000/notes/${id}`, {
-        method: "PATCH",
-        headers: {
-            "Content-type": "application/json",
-        },
-        body: JSON.stringify({
-            hasDate: true,
-            date: pickedDate,
-        }),
-    }).then(() => {
-        const dateAdress = JSON.stringify(pickedDate).replace(/"/g, "");
-        fetch(`http://localhost:3000/dates/${dateAdress}`)
-            .then((res) => res.json())
-            .then((data) => {
-                if (!data.id) {
-                    fetch(`http://localhost:3000/dates`, {
-                        method: "POST",
-                        headers: {
-                            "Content-type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            id: pickedDate,
-                            notes: [id]
-                        }),
-                    });
-                } else {
-                    fetch(`http://localhost:3000/dates/${dateAdress}`, {
-                        method: "PATCH",
-                        headers: {
-                            "Content-type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            notes: [
-                                ...data.notes,
-                                id,
-                            ]
-                        }),
-                    })
-                }
-            });
-    });
-};
-
-const Dialog = ({ setIsDialogOn, id, setNeedComponentReload }) => {
     const [pickedDate, setPickedDate] = useState(new Date());
+
+    const updateDate = async (pickedDate) => {
+        console.log("Update date")
+        const res = await update(ref(fireData, `notes/${id}/`), {
+            date: pickedDate,
+            hasDate: "true,"
+        });
+        console.log(res)
+        setIsDialogOn(false);
+    };
 
     return (
         <StyledDialog onClick={() => setIsDialogOn(false)}>
@@ -102,16 +29,10 @@ const Dialog = ({ setIsDialogOn, id, setNeedComponentReload }) => {
                 }}
             >
                 <StyledTitle>Set date</StyledTitle>
-                <Calendar onChange={(value, event) => setPickedDate(value)} />
+                <StyledCalendar onChange={(value, event) => setPickedDate(value)} />
                 <StyledConfirmButton
                     onClick={() => {
-                        patchDate(id, parseJSON(pickedDate))
-                            .then(() => {
-                                setIsDialogOn(false);
-                            })
-                            .then(() => {
-                                setNeedComponentReload(true);
-                            });
+                        updateDate(parseJSON(pickedDate))
                     }}
                 >
                     Confirm
@@ -122,3 +43,62 @@ const Dialog = ({ setIsDialogOn, id, setNeedComponentReload }) => {
 };
 
 export default Dialog;
+
+const StyledDialog = styled.div`
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: ${PALLETE.secondary};
+`;
+
+const DatePickerContainer = styled.div`
+    padding: 2rem;
+    align-text: center;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 1px 1px 7px 0px ${PALLETE.grey};
+`;
+
+const StyledConfirmButton = styled.button`
+    cursor: pointer;
+    display: block;
+    margin: 2rem auto 0 auto;
+    padding: 1rem 3rem;
+    background: ${PALLETE.secondary};
+    color: ${PALLETE.white};
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 1px 1px 7px 0px ${PALLETE.grey};
+    transition: transform 0.2s;
+    &:hover {
+        transform: scale(1.03);
+        box-shadow: 1px 1px 7px 1px ${PALLETE.grey};
+    }
+    &:focus {
+        transform: scale(0.97);
+        box-shadow: 1px 1px 7px -1px ${PALLETE.grey};
+    }
+`;
+const StyledTitle = styled.div`
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid  ${PALLETE.secondary};
+    font-size: 2rem;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 700;
+`;
+
+const StyledCalendar = styled(Calendar)`
+    border: none;
+`
+
+

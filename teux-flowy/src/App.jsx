@@ -10,6 +10,7 @@ import styled from "styled-components";
 import { Authentication } from "./Components/Authentication/Authentication";
 import { Login } from "./views/Login";
 import { AppendUserToList } from "./views/AppendUserToList";
+import { Register } from "./views/Register";
 
 function App() {
     const [currentNotes, setCurrentNotes] = useState({
@@ -83,11 +84,15 @@ function App() {
                         element={<Login userInfo={userInfo} setUserInfo={setUserInfo} />}
                     />
                     <Route
+                        path="register"
+                        element={<Register userInfo={userInfo} setUserInfo={setUserInfo} />}
+                    />
+                    <Route
                         path="append/:data"
-                        element={<AppendUserToList 
+                        element={<AppendUserToList
                         userInfo={userInfo}
                         setUserInfo={setUserInfo} />}
-                        
+
                     />
                 </Routes>
                 <Footer />

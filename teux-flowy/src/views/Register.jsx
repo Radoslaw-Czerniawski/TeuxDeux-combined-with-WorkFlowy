@@ -11,6 +11,7 @@ import logo3 from "../assets/key-outline.png";
 // Firebase Authentication functions
 import {
     signInWithPopup,
+    createUserWithEmailAndPassword,
     getAuth,
     GoogleAuthProvider,
     signInWithEmailAndPassword,
@@ -24,20 +25,25 @@ import { get, child, ref } from "firebase/database";
 
 // React Router Navigation
 import { Navigate, useNavigate } from "react-router-dom";
+import { set } from "lodash";
 
-const Login = ({ setUserInfo, userInfo }) => {
+const Register = ({ setUserInfo, userInfo }) => {
+    const [errorMessage, setErrorMessage] = useState(null)
+
     const form = useRef();
     const navigation = useNavigate();
+    const auth = getAuth();
 
-    const emailAndPasswordSignInHandler = async (e) => {
+    const register = async (e) => {
         e.preventDefault();
 
         const email = form.current.email.value;
         const password = form.current.password.value;
 
         try {
+            const res1 = await createUserWithEmailAndPassword(auth, email, password)
+
             const response = await signInWithEmailAndPassword(auth, email, password);
-            console.log(response);
             const { user: userData } = response;
             const response2 = await get(child(ref(fireData), `users/${userData.uid}`));
             const userNotes = response2.val() || [];
@@ -65,45 +71,10 @@ const Login = ({ setUserInfo, userInfo }) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             console.log(errorMessage);
-        }
-    };
-
-    const provider = new GoogleAuthProvider();
-    const auth = getAuth();
-
-    const googleSignInHandler = async () => {
-        try {
-            const response = await signInWithPopup(auth, provider);
-            const userData = response.user;
-            const response2 = await get(child(ref(fireData), `users/${userData.uid}`));
-            const userNotes = response2.val() || [];
-
-            setUserInfo((oldState) => ({
-                ...oldState,
-                isLogged: true,
-                currentHomeId: Object.keys(userNotes)[0],
-                userUID: userData.uid,
-                displayName: userData.email,
-            }));
-
-            window.localStorage.setItem(
-                "userInfo",
-                JSON.stringify({
-                    isLogged: true,
-                    currentHomeId: Object.keys(userNotes)[0],
-                    userUID: userData.uid,
-                    displayName: userData.email,
-                })
-            );
-
-            navigation("/");
-        } catch (error) {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // The email of the user's account used.
-            const email = error.email;
-            // The AuthCredential type that was used.
-            const credential = GoogleAuthProvider.credentialFromError(error);
+            setErrorMessage(errorMessage)
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000);
         }
     };
 
@@ -111,18 +82,8 @@ const Login = ({ setUserInfo, userInfo }) => {
         <S.ViewWrapper>
             {userInfo.isLogged && <Navigate to="/" />}
             <S.LoginWrapper>
-                <S.GoogleSignInButtonWrapper>
-                    <S.GoogleSignInButton onClick={googleSignInHandler}>
-                        <S.GoogleLogoWrapper>
-                            <S.GoogleLogo src={logo} />
-                        </S.GoogleLogoWrapper>
-
-                        <S.GoogleText> Sign in with Google</S.GoogleText>
-                    </S.GoogleSignInButton>
-                </S.GoogleSignInButtonWrapper>
-
-                <S.LoginForm ref={form} onSubmit={emailAndPasswordSignInHandler}>
-                    <S.FormHeading>Sign in With E-mail</S.FormHeading>
+                <S.LoginForm ref={form} onSubmit={register}>
+                    <S.FormHeading>Register With E-mail</S.FormHeading>
 
                     <S.InputWrapper>
                         <S.Input name="email" type="email" required placeholder="E-mail" />
@@ -132,8 +93,8 @@ const Login = ({ setUserInfo, userInfo }) => {
                         <S.Input name="password" type="password" required placeholder="Password" />
                         <S.KeyLogo src={logo3}></S.KeyLogo>
                     </S.InputWrapper>
-                    <S.SubmitButton type="submit">Login</S.SubmitButton>
-                    <S.RegisterLink to='/register'>Register an account</S.RegisterLink>
+                    <S.SubmitButton type="submit">Register</S.SubmitButton>
+                    {errorMessage && (<S.ErrorMessage>{errorMessage}</S.ErrorMessage>)}
                 </S.LoginForm>
 
             </S.LoginWrapper>
@@ -141,4 +102,5 @@ const Login = ({ setUserInfo, userInfo }) => {
     );
 };
 
-export { Login };
+export { Register };
+

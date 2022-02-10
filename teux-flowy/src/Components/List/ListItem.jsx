@@ -275,6 +275,7 @@ export const ListItem = ({
                         <S.ListElement key={listItemObject.id} isFirst={isFirst}>
                             {isDialogOn && (
                                 <DialogComponent
+                                    userInfo={userInfo}
                                     setIsDialogOn={setIsDialogOn}
                                     setNeedComponentReload={setNeedComponentReload}
                                     id={id}
@@ -394,6 +395,7 @@ export const ListItem = ({
                                             >
                                                 <>
                                                     <ListItem
+                                                        userInfo={userInfo}
                                                         parentLocalAnimationState={
                                                             localAnimationState
                                                         }

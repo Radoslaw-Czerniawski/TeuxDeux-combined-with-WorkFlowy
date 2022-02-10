@@ -17,12 +17,23 @@ export const AppendUserToList = ({ userInfo, setUserInfo }) => {
             get(child(ref(fireData), `notes/${params.data}`))
                 .then((snapshot) => {
                     if (!snapshot.exists()) {
-                        console.log("No data");
+                        setUserInfo((oldState) => ({
+                            ...oldState,
+                            currentHomeId: null,
+                        }));
                         setIsDone(false);
                         setIsSuccessfull(false);
+
                         return false;
                     }
                     if (!snapshot.val().isShared) {
+                        setUserInfo((oldState) => ({
+                            ...oldState,
+                            currentHomeId: null,
+                        }));
+                        setIsDone(false);
+                        setIsSuccessfull(false);
+
                         return false;
                     }
                     const userData = {
@@ -44,12 +55,14 @@ export const AppendUserToList = ({ userInfo, setUserInfo }) => {
                 })
                 .then((res) => {
                     setTimeout(() => {
+                        if (res) {
+                            setUserInfo((oldState) => ({
+                                ...oldState,
+                                currentHomeId: params.data,
+                            }));
+                        }
                         setIsDone(true);
                         setIsSuccessfull(res);
-                        setUserInfo((oldState) => ({
-                            ...oldState,
-                            currentHomeId: params.data,
-                        }));
                     }, 1000); // I did just to show off the loading circle, this is its only purpose
                 });
         }
@@ -64,7 +77,8 @@ export const AppendUserToList = ({ userInfo, setUserInfo }) => {
                             <Navigate to="/" replace={true} />
                         </div>
                     ) : (
-                        <Error>ERROR_NOTE_NOT_FOUND</Error>
+                        <Error>ERROR_NOTE_NOT_FOUND<Navigate to="/" replace={true} /></Error>
+
                     )}
                 </div>
             ) : (

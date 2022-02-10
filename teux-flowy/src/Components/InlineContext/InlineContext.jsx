@@ -9,9 +9,9 @@ const StyledInlineContext = styled.ul`
     position: absolute;
     width: 18rem;
     ${(props) =>  props.clickCords.y < 200 ? "top: 0;": "bottom: 0;"};
-    ${(props) => props.clickCords.x > 200 ? "right: 100% ": "left: 4rem"};
+    ${(props) => props.clickCords.x > 380 ? "right: 100% ": "left: 4rem"};
     background: white;
-    z-index:10;
+    z-index:20;
     border-radius: 1rem;
     overflow: hidden;
     border: 1px solid #ddd;

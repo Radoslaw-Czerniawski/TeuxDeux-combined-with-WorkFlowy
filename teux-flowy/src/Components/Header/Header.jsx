@@ -37,6 +37,7 @@ import {
 } from "firebase/database";
 import { getAuth } from "firebase/auth";
 import { useCallback } from "react";
+import { useLocation } from "react-router-dom";
 
 export const addListToUser = (listID, userUID) => {
 
@@ -71,12 +72,18 @@ const createNewList = (userInfo, setIsDropdownExt) => {
 
     set(key, newList);
     addListToUser(newListID, userInfo.userUID);
-    setIsDropdownExt(true);
+    return newListID;
 };
+
+
 
 function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUserInfo }) {
     const [isDropdownExt, setIsDropdownExt] = useState(false);
     const [currentNotesNames, setCurrentNotesNames] = useState([]);
+
+    const location = useLocation().pathname;
+    console.log(location)
+    const isSwitchViewVButtonVisible = ((location === "/") || (location === "/calendar"));
 
     const removeList = async (id) => {
         const cascadingChildrenRemoval = async (noteId) => {
@@ -205,7 +212,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
                 })}
             </S.BreadcrumbsContainer>
             {/* DROPDOWN WITH CHOOSING LIST */}
-            {userInfo.isLogged && (
+            {userInfo.isLogged && isSwitchViewVButtonVisible && (
                 <S.DropdownContainer>
                     <S.DropdownListMenuButton
                         onClick={() => setIsDropdownExt((oldState) => !oldState)}
@@ -230,11 +237,13 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
                                             key={note.id}
                                         >
                                             <S.DropdownListMenuItem
-                                                onClick={() =>
+                                                onClick={() =>{
+                                                    setIsDropdownExt(false);
                                                     setUserInfo((oldState) => ({
                                                         ...oldState,
                                                         currentHomeId: note.id,
                                                     }))
+                                                    }
                                                 }
                                             >
                                                 {note.name}
@@ -252,7 +261,14 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
                                 </TransitionGroup>
                             </S.DropDownListItemsWrapper>
                             <S.DropdownListMenuNewItem
-                                onClick={() => createNewList(userInfo, setIsDropdownExt)}
+                                onClick={() => {
+                                    const newListID = createNewList(userInfo, setIsDropdownExt)
+                                    setUserInfo((oldState) => ({
+                                        ...oldState,
+                                        currentHomeId: newListID,
+                                    }))
+                                    setIsDropdownExt(false);
+                                }}
                             >
                                 <FontAwesomeIcon icon={faPlusCircle} size="1x" /> New Note
                             </S.DropdownListMenuNewItem>
@@ -262,7 +278,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
             )}
 
             {/* SWITCH NOTES VIEW */}
-            {userInfo.isLogged && (
+            {userInfo.isLogged && isSwitchViewVButtonVisible && (
                 <S.DisplayModeToggleContainer>
                     <S.StyledNavLinkLeft
                         onClick={() => {

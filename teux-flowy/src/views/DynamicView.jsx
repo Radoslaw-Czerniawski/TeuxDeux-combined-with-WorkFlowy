@@ -76,6 +76,8 @@ function DynamicView({
         .then(res=>{setIsShared(false)})
     };
 
+    console.log(userInfo.currentHomeId )
+
     return (
         <>
         {userInfo.currentHomeId ? <ViewWrapper>
@@ -308,11 +310,12 @@ const NoListText = styled.div`
     font-size: 5.8rem;
     color: ${PALLETE.light};
     position: relative;
+    user-select: none;
     &:after{
         content: "";
         display: inline-block;
         width:3rem;
-        height:0.5rem;
+        height:.5rem;
         background:${PALLETE.light};
         transform-origin: left;
         animation: ${Animation} 2s infinite;

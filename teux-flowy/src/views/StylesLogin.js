@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { PALLETE } from "../Colors/colors";
+import { Link } from "react-router-dom";
 
 export const ViewWrapper = styled.div`
     display: flex;
@@ -77,6 +78,7 @@ export const LoginForm = styled.form`
     padding: 4rem 2rem;
     background-color: #194c94;
     align-items: center;
+    position: relative;
 `;
 
 export const FormHeading = styled.h2`
@@ -126,6 +128,11 @@ export const KeyLogo = styled(EmailLogo)`
     right: 1rem;
 `;
 
+export const ButtonWrapper = styled.div`
+    display: flex;
+    gap: 5rem;
+`;
+
 export const SubmitButton = styled.button`
     border: none;
     box-shadow: inset 0 1px 1px -3px rgb(0 0 0 / 100%);
@@ -146,4 +153,19 @@ export const SubmitButton = styled.button`
             transition: transform 50ms;
         }
     }
+`;
+
+export const RegisterLink = styled(Link)`
+    color: black;
+    font-size: 1.4rem;
+    position: absolute;
+    color: white;
+    bottom: 1.5rem;
+`;
+
+export const ErrorMessage = styled.span`
+    position: absolute;
+    color: red;
+    font-size: 1.2rem;
+    bottom: 10.1rem;
 `;
