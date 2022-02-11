@@ -41,7 +41,6 @@ function App() {
             currentPath: [],
         });
     }
-
     useEffect(() => {
         setCssAnimationState(true);
     }, [currentNotes.currentPath]);
@@ -78,7 +77,7 @@ function App() {
                             </Authentication>
                         }
                     />
-                    <Route path="calendar" element={<CalendarView />} />
+                    <Route path="calendar" element={<CalendarView userInfo={userInfo} />} />
                     <Route
                         path="login"
                         element={<Login userInfo={userInfo} setUserInfo={setUserInfo} />}
@@ -89,10 +88,7 @@ function App() {
                     />
                     <Route
                         path="append/:data"
-                        element={<AppendUserToList
-                        userInfo={userInfo}
-                        setUserInfo={setUserInfo} />}
-
+                        element={<AppendUserToList userInfo={userInfo} setUserInfo={setUserInfo} />}
                     />
                 </Routes>
                 <Footer />

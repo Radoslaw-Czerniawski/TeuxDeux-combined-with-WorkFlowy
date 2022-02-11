@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 import { useState } from "react";
 import { parseJSON } from "date-fns";
 import { PALLETE } from "../../Colors/colors";
@@ -14,9 +13,8 @@ const Dialog = ({ setIsDialogOn, id, userInfo }) => {
     const updateDate = async (pickedDate) => {
         const res = await update(ref(fireData, `notes/${id}/`), {
             date: pickedDate,
-            hasDate: "true,"
+            hasDate: true,
         });
-        console.log(res)
         setIsDialogOn(false);
     };
 
@@ -28,7 +26,10 @@ const Dialog = ({ setIsDialogOn, id, userInfo }) => {
                 }}
             >
                 <StyledTitle>Set date</StyledTitle>
-                <StyledCalendar onChange={(value, event) => setPickedDate(value)} />
+                <StyledCalendar
+                    onChange={(value, event) => setPickedDate(value)}
+                    tileClassName="calendar-tile"
+                />
                 <StyledConfirmButton
                     onClick={() => {
                         updateDate(pickedDate.toJSON())
@@ -97,7 +98,8 @@ const StyledTitle = styled.div`
 `;
 
 const StyledCalendar = styled(Calendar)`
-    border: none;
+    border: 1px solid transparent;
+    border-radius: .5rem;
 `
 
 

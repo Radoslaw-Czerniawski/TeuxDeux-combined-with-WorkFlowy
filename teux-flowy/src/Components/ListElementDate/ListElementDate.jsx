@@ -6,7 +6,7 @@ import { format } from 'date-fns'
 import {parseJSON} from "date-fns"
 import { useEffect, useState } from "react"
 
-const ListElementDate = styled.div`
+const ListElementDateComponent = styled.div`
     font-size: 1.2rem;
     opacity: 0.5;
     margin-top: 0.5rem;
@@ -16,7 +16,7 @@ const StyledClickableDate = styled.div`
     cursor: pointer;
 `
 
-export const ListElementDateComponent = ({isFirst, listItemObjectDate, setIsDialogOn}) => {
+const ListElementDate = ({isFirst, listItemObjectDate, setIsDialogOn}) => {
 
     const [date, setDate] = useState(null)
 
@@ -30,9 +30,9 @@ export const ListElementDateComponent = ({isFirst, listItemObjectDate, setIsDial
             return
         }
         setDate(formatDate)
-    }, [])
+    }, [listItemObjectDate])
 
-    return <ListElementDate isFirst={isFirst}>
+    return <ListElementDateComponent isFirst={isFirst}>
         {listItemObjectDate.hasDate && <StyledClickableDate
                         onClick={() => {
                         setIsDialogOn(true);
@@ -41,8 +41,8 @@ export const ListElementDateComponent = ({isFirst, listItemObjectDate, setIsDial
             {date}
             </StyledClickableDate>
         }
-        </ListElementDate>
+        </ListElementDateComponent>
 
 }
 
-export default ListElementDateComponent;
+export {ListElementDate};

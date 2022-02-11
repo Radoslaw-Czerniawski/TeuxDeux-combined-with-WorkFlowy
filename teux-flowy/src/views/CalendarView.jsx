@@ -1,27 +1,33 @@
 import { CalendarCard } from "../Components/CalendarCard/CalendarCard";
-import { format, addDays, differenceInCalendarDays  } from "date-fns";
+import { format, addDays, differenceInCalendarDays } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight } from "@fortawesome/fontawesome-free-solid";
+import { faChevronLeft, faChevronRight} from "@fortawesome/fontawesome-free-solid";
 import { PALLETE } from "../Colors/colors";
 import { CalendarNav } from "../Components/CalendarNav/CalendarNav";
+import { Navigate } from "react-router-dom";
 
 // Config values
 
-const slidingWindowsSize = 5;
 const baseOffset = 3;
-const totalSize = slidingWindowsSize + baseOffset * 2;
+const totalSize = 5 + baseOffset * 2;
 
-const CalendarView = () => {
+const CalendarView = ({ userInfo }) => {
     const [activeDay, setActiveDay] = useState(new Date(new Date().setHours(0, 0, 0, 0)));
     const [targetOffset, setTargetOffset] = useState(0);
     const [days, setDays] = useState([]);
+    const [slidingSize, setSlidingSize] = useState(window.visualViewport.width < 900 ? 1 : 5)
+
 
     const containerRef = useRef(null);
     const currentOffset = useRef(0);
 
     useEffect(() => {
+        window.addEventListener("resize", (e) => {
+            window.visualViewport.width < 900 ? setSlidingSize(1) : setSlidingSize(5);
+        });
+
         let id;
         const updateIncrementallyCarouselPositionAfterAnimationStart = () => {
             const currentCardsContainer = containerRef.current;
@@ -61,57 +67,62 @@ const CalendarView = () => {
         setTargetOffset((prevState) => prevState - 1);
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         const days = Array.from({ length: totalSize }, (_, i) => {
             return addDays(activeDay, i - 4);
-        })
+        });
         setDays(days);
-    }, [activeDay])
-    ;
-
+    }, [activeDay]);
 
     return (
-            <CalendarViewWrapper>
-                <CalendarNav setActiveDay={setActiveDay} activeDay={activeDay}/>
-                <CalendarCarouselWrapper>
-                    <CalendarSideContainer>
-                        <StyledLeftArrow onClick={carouselBackward}>
+        <CalendarViewWrapper>
+            {!userInfo.isLogged && <Navigate to="/" />}
+            <CalendarNav
+                setActiveDay={setActiveDay}
+                activeDay={activeDay}
+                slidingSize={slidingSize}
+            />
+            <CalendarCarouselWrapper>
+                <CalendarSideContainer>
+                    <StyledLeftArrow onClick={carouselBackward}>
                         <FontAwesomeIcon icon={faChevronLeft} size="3x" />
                     </StyledLeftArrow>
-                    </CalendarSideContainer>
+                </CalendarSideContainer>
 
-                    <DaysViewport ref={containerRef}>
-                        <DaysContainer >
-                            {days?.map((day) => {
-                                return (
-                                    <DayContainer
-                                        daysDiff={differenceInCalendarDays(Date.now(), activeDay)}
-                                        key={day.getTime()}>
-                                        <CalendarCard
-                                            date={day}
-                                            key={`${day.toString()}card`}/>
-                                    </DayContainer>
-                                );
-                            })}
-                        </DaysContainer>
-                    </DaysViewport>
+                <DaysViewport slidingSize={slidingSize} ref={containerRef}>
+                    <DaysContainer>
+                        {days?.map((day) => {
+                            return (
+                                <DayContainer
+                                    daysDiff={differenceInCalendarDays(Date.now(), activeDay)}
+                                    key={day.getTime()}
+                                >
+                                    <CalendarCard
+                                        homeId={userInfo.currentHomeId}
+                                        date={day}
+                                        key={`${day.toString()}card`}
+                                    />
+                                </DayContainer>
+                            );
+                        })}
+                    </DaysContainer>
+                </DaysViewport>
 
-                    <CalendarSideContainer>
-                        <StyledRightArrow onClick={carouselForward}>
-                            <FontAwesomeIcon icon={faChevronRight} size="3x" />
-                        </StyledRightArrow>
-                    </CalendarSideContainer>
-                </CalendarCarouselWrapper>
-            </CalendarViewWrapper>
+                <CalendarSideContainer>
+                    <StyledRightArrow onClick={carouselForward}>
+                        <FontAwesomeIcon icon={faChevronRight} size="3x" />
+                    </StyledRightArrow>
+                </CalendarSideContainer>
+            </CalendarCarouselWrapper>
+        </CalendarViewWrapper>
     );
 };
 
 export { CalendarView };
 
-
 const CalendarViewWrapper = styled.div`
     transition: opacity 1s;
-`
+`;
 
 const CalendarCarouselWrapper = styled.div`
     display: grid;
@@ -130,7 +141,7 @@ const DaysViewport = styled.div`
     --offset: 0;
     --totalOffset: calc(var(--offset) + var(--baseOffset));
     --totalSize: ${totalSize};
-    --slidingWindowSize: ${slidingWindowsSize};
+    --slidingWindowSize: ${(props) => props.slidingSize};
     box-sizing: border-box;
     width: 100%;
     border: none;
@@ -153,12 +164,10 @@ const DayContainer = styled.section`
     flex-basis: calc(100% / var(--slidingWindowSize));
     position: relative;
     box-sizing: border-box;
-    border-radius: .8rem;
-    &:nth-child(${props => props.daysDiff % 2 ? "2n" : "2n+1"}) {
+    border-radius: 0.8rem;
+    &:nth-child(${(props) => (props.daysDiff % 2 ? "2n" : "2n+1")}) {
         background: ${PALLETE.lightST};
     }
-    ${props => console.log(props.daysDiff)}
-    
 `;
 
 const StyledArrow = styled.button`
@@ -178,7 +187,7 @@ const StyledArrow = styled.button`
 
 const StyledLeftArrow = styled(StyledArrow)`
     border-radius: 0 1rem 1rem 0;
-`
+`;
 
 const StyledRightArrow = styled(StyledArrow)`
     border-radius: 1rem 0 0 1rem;

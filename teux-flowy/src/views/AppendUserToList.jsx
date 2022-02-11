@@ -13,7 +13,6 @@ export const AppendUserToList = ({ userInfo, setUserInfo }) => {
 
     useEffect(() => {
         if (params && userInfo) {
-            console.log(`Add list: ${params.data} to user: ${userInfo.userUID}`);
             get(child(ref(fireData), `notes/${params.data}`))
                 .then((snapshot) => {
                     if (!snapshot.exists()) {

@@ -38,9 +38,9 @@ import {
 import { getAuth } from "firebase/auth";
 import { useCallback } from "react";
 import { useLocation } from "react-router-dom";
+import { useRef } from "react";
 
 export const addListToUser = (listID, userUID) => {
-
     return update(ref(fireData, `users/${userUID}/`), { [listID]: "" });
 };
 
@@ -75,15 +75,30 @@ const createNewList = (userInfo) => {
     return newListID;
 };
 
-
-
 function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUserInfo }) {
     const [isDropdownExt, setIsDropdownExt] = useState(false);
     const [currentNotesNames, setCurrentNotesNames] = useState([]);
+    const [currentListTitle, setCurrentListTitle] = useState("");
+
+    const dropdownRef = useRef();
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setIsDropdownExt(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside, true);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside, true);
+        };
+    }, []);
+
 
     const location = useLocation().pathname;
-    console.log(location)
-    const isSwitchViewVButtonVisible = ((location === "/") || (location === "/calendar"));
+    const isSwitchViewVButtonVisible = location === "/" || location === "/calendar";
+    const isListTitleVisible = location === "/calendar";
 
     const removeList = async (id) => {
         const cascadingChildrenRemoval = async (noteId) => {
@@ -120,6 +135,7 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
                         ...oldState,
                         currentHomeId: "",
                     }));
+                    setCurrentListTitle("");
                 }
             });
         }
@@ -148,13 +164,12 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
             );
         }
 
-        return () => {
-        };
+        return () => {};
     }, [userInfo.isLogged]);
 
     return (
         <S.HeaderContainer>
-            <S.BreadcrumbsContainer>
+            {!isListTitleVisible && <S.BreadcrumbsContainer>
                 <S.BreadcrumbElement key="home">
                     <S.NodeUrlLink
                         to="/"
@@ -210,10 +225,15 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
                         )
                     );
                 })}
-            </S.BreadcrumbsContainer>
+            </S.BreadcrumbsContainer>}
+
+            {isListTitleVisible && <S.ListTitle>
+                {currentListTitle}
+            </S.ListTitle>}
+
             {/* DROPDOWN WITH CHOOSING LIST */}
             {userInfo.isLogged && isSwitchViewVButtonVisible && (
-                <S.DropdownContainer>
+                <S.DropdownContainer ref={dropdownRef}>
                     <S.DropdownListMenuButton
                         onClick={() => setIsDropdownExt((oldState) => !oldState)}
                         isDropdownExt={isDropdownExt}
@@ -237,20 +257,20 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
                                             key={note.id}
                                         >
                                             <S.DropdownListMenuItem
-                                                onClick={() =>{
-                                                    setIsDropdownExt(false);
+                                                onClick={() => {
+                                                    setCurrentListTitle(note.name)
                                                     setUserInfo((oldState) => ({
                                                         ...oldState,
                                                         currentHomeId: note.id,
-                                                    }))
-                                                    }
-                                                }
+                                                    }));
+                                                }}
                                             >
                                                 {note.name}
                                                 <S.RemoveNoteButton
                                                     onClick={(e) => {
                                                         e.stopPropagation();
                                                         removeList(note.id);
+
                                                     }}
                                                 >
                                                     <FontAwesomeIcon icon={faMinusCircle} />
@@ -262,12 +282,11 @@ function Header({ idPath, setGlobalState, setCssAnimationState, userInfo, setUse
                             </S.DropDownListItemsWrapper>
                             <S.DropdownListMenuNewItem
                                 onClick={() => {
-                                    const newListID = createNewList(userInfo, setIsDropdownExt)
+                                    const newListID = createNewList(userInfo, setIsDropdownExt);
                                     setUserInfo((oldState) => ({
                                         ...oldState,
                                         currentHomeId: newListID,
-                                    }))
-                                    setIsDropdownExt(false);
+                                    }));
                                 }}
                             >
                                 <FontAwesomeIcon icon={faPlusCircle} size="1x" /> New Note

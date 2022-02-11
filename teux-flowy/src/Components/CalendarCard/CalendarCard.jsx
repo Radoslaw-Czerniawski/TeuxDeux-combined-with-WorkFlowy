@@ -18,33 +18,34 @@ import {
     off,
 } from "firebase/database";
 
-const CalendarCard = ({ date }) => {
+const CalendarCard = ({ date, homeId }) => {
     const [fetchedData, setFetchedData] = useState([]);
     const [allNotesFetched, setAllNotesFetched] = useState(false);
 
     useEffect(() => {
-        console.log(parseJSON(date))
-        onValue(
+        homeId && onValue(
             query(
                 ref(fireData, "notes"),
-                orderByChild(`date`),
-                equalTo(date.toJSON())
+                orderByChild(`listID`),
+                equalTo(homeId)
             ),
             (snapshot) => {
                 if (!snapshot.exists()) {
                     setFetchedData([]);
                 } else {
                     const data = snapshot.val();
-                    console.log(data)
-                    const currentNotes = Object.values(data).map((item) => ({
+
+                    const filteredNotes = Object.values(data).filter(note => note.date === date.toJSON())
+                    const currentNotes = filteredNotes.map((item) => ({
                         name: item.name,
                         isDone: item.done
                     }));
+
                     setFetchedData(currentNotes);
                 }
             }
         );
-    }, [])
+    }, [homeId])
 
     const notesRowsNumber = new Array(25).fill(0);
 

@@ -36,7 +36,6 @@ function DynamicView({
     useEffect(() => {
         if (userInfo.currentHomeId) {
             onValue(ref(fireData, `notes/${userInfo.currentHomeId}`), (snapshot) => {
-                console.log(snapshot.exists())
                 if (!snapshot.exists()) {
                     setNoteUsers([]);
                     setIsShared(false);
@@ -45,7 +44,6 @@ function DynamicView({
                     const currentUsers = Object.values(data.users).map((user) => user.displayName);
                     setNoteUsers(currentUsers);
                     setIsShared(data.isShared);
-                    console.log("DATA CHANGE")
                 }
             });
         }
@@ -75,8 +73,6 @@ function DynamicView({
         .catch(err=>{return})
         .then(res=>{setIsShared(false)})
     };
-
-    console.log(userInfo.currentHomeId )
 
     return (
         <>

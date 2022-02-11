@@ -53,6 +53,13 @@ export const DropdownContainer = styled.div`
     position: relative;
 `;
 
+export const ListTitle = styled.div`
+    flex-grow: 1;
+    color: ${PALLETE.secondary};
+    text-transform: uppercase;
+    font-weight: 700;
+`
+
 export const DropdownListMenuButton = styled.div`
     min-width: 23rem;
     display:flex;

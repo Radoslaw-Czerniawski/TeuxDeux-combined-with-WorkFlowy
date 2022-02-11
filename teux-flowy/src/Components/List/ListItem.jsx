@@ -1,6 +1,6 @@
 // COMPONENTS
 import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
-import ListElementDateComponent from "../ListElementDate/ListElementDate";
+import {ListElementDate} from "../ListElementDate/ListElementDate";
 import InlineContext from "../InlineContext/InlineContext";
 import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
@@ -51,14 +51,12 @@ export const ListItem = ({
     isFirstInList,
     isLastInList,
     parentSublist,
-    parentChangeSyncStatus,
     cssAnimationState,
     setCssAnimationState,
     parentLocalAnimationState,
     setParentLocalAnimationState,
 }) => {
     // STATES
-    const [needComponentReload, setNeedComponentReload] = useState(true);
     const [listItemObject, setListItemObject] = useState({
         id: "",
         name: "",
@@ -87,17 +85,12 @@ export const ListItem = ({
         parentList = [...parentList, id];
     }
 
-    const changeSyncStateToReloadComponentAfterNoteEdit = useCallback(() => {
-        setNeedComponentReload(true);
-    }, [needComponentReload]);
-
     /////////////////////////////////////////////////////////////////////////////
     // FIREBASE FUNCTIONS
     /////////////////////
 
     const fbData = ref(fireData, `notes/${id}`);
 
-    // Fetch list item data on mount
     useEffect(() => {
         onValue(fbData, (snapshot) => {
             if (snapshot.exists()) {
@@ -107,9 +100,13 @@ export const ListItem = ({
                     name: `${data.name}`,
                     subList: data.subList ? data.subList : [],
                 });
-                setListItemObjectDate({
+                data.hasDate && setListItemObjectDate({
                     hasDate: data.hasDate,
                     date: `${data.date}`,
+                });
+                !data.hasDate && setListItemObjectDate({
+                    hasDate: data.hasDate,
+                    date: null,
                 });
 
                 setChildrenVisible(data.expanded);
@@ -118,18 +115,15 @@ export const ListItem = ({
                 if (isFirst) {
                     setCssAnimationState(true);
                     setLocalAnimationState(true);
-                    setNeedComponentReload(false);
-                    changeSyncStateToReloadComponentAfterNoteEdit();
                 } else {
                     setTimeout(() => {
                         setCssAnimationState(true);
                         setLocalAnimationState(true);
-                        setNeedComponentReload(false);
-                        changeSyncStateToReloadComponentAfterNoteEdit();
                     }, 0);
                 }
             }
         });
+
     }, []);
 
     function createNewNote() {
@@ -143,6 +137,7 @@ export const ListItem = ({
             name: "New note...",
             subList: [],
             isShared: false,
+            listID: userInfo.currentHomeId
         });
 
         updateFirebaseProperty(id, "subList", [...currentSublist, newID]);
@@ -176,7 +171,7 @@ export const ListItem = ({
             )
             .then(() => {
                 setTimeout(() => {
-                    parentChangeSyncStatus();
+
                     setLocalAnimationState(false);
                 }, 300);
             })
@@ -241,7 +236,6 @@ export const ListItem = ({
                                 <DialogComponent
                                     userInfo={userInfo}
                                     setIsDialogOn={setIsDialogOn}
-                                    setNeedComponentReload={setNeedComponentReload}
                                     id={id}
                                 />
                             )}
@@ -334,7 +328,7 @@ export const ListItem = ({
                                         createNewNote={createNewNote}
                                         parentList={parentList}
                                     />
-                                    <ListElementDateComponent
+                                    <ListElementDate
                                         key={`date-el-${id}`}
                                         setIsDialogOn={setIsDialogOn}
                                         id={id}
@@ -379,9 +373,6 @@ export const ListItem = ({
                                                         parentSublist={listItemObject.subList}
                                                         parentList={parentList}
                                                         parentNameList={parentNameList}
-                                                        parentChangeSyncStatus={
-                                                            changeSyncStateToReloadComponentAfterNoteEdit
-                                                        }
                                                     />
                                                     {!isFirst && <S.CoveringLine />}
                                                 </>
