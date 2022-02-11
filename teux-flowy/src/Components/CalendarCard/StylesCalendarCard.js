@@ -2,40 +2,42 @@ import styled from "styled-components";
 import {isBefore, isPast, isToday, isYesterday} from "date-fns";
 import { PALLETE } from "../../Colors/colors";
 
-
-
 const isItTodayOrYesterday = (date) => {
     if(isToday(date)) {
-        return PALLETE.primary
+        return PALLETE.secondary
     } else if(isBefore(date, Date.now())) {
         return PALLETE.greyOpacity
     }
-    return PALLETE.black
+    return PALLETE.primary
 }
-
-export const CardWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    color: ${(props) => isItTodayOrYesterday(props.date)};
-`;
 
 export const CardHeader = styled.header`
     display: flex;
     flex-direction: column;
     align-items:center;
     padding: 1rem;
+    
 `;
 
 export const MainHeadingDay = styled.h2`
     font-size: 2.4rem;
     font-weight: bold;
+    
 `;
 
 export const HeadingFullDate = styled.p`
     font-size: 1.4rem;
     margin-top: 1rem;
 `
+export const CardWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    color: ${(props) => isItTodayOrYesterday(props.date)};
+    & ${MainHeadingDay} {
+        text-decoration: ${(props) => isToday(props.date) ? "underline" : "none"};
+    }
+`;
 
 export const CardNotesArea = styled.div`
     padding: 0;
@@ -74,6 +76,7 @@ export const CardNotesArea = styled.div`
 `;
 
 export const NoteRow = styled.li`
+     text-decoration: ${props => props.isDone ? "line-through" : "none"};
     position: relative;
     font-size: 1.4rem;
     padding: 0 1rem;

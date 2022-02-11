@@ -142,6 +142,7 @@ export const ListItem = ({
             hasDate: false,
             name: "New note...",
             subList: [],
+            isShared: false,
         });
 
         updateFirebaseProperty(id, "subList", [...currentSublist, newID]);
@@ -149,29 +150,6 @@ export const ListItem = ({
 
     const toggleChildrenVisible = () => {
         updateFirebaseProperty(id, "expanded", !childrenVisible);
-    };
-
-    const removeOrEditGivenDateFromDatabse = (date) => {
-        const dateAdress = JSON.stringify(date).replace(/"/g, "");
-        fetch(`http://localhost:3000/dates/${dateAdress}`)
-            .then((res) => res.json())
-            .then((insideData) => {
-                if (insideData.notes.length === 1) {
-                    fetch(`http://localhost:3000/dates/${dateAdress}`, {
-                        method: "DELETE",
-                    });
-                } else {
-                    fetch(`http://localhost:3000/dates/${dateAdress}`, {
-                        method: "PATCH",
-                        headers: {
-                            "Content-type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            notes: insideData.notes.filter((value) => value !== id && value),
-                        }),
-                    });
-                }
-            });
     };
 
     const removeCurrentInput = () => {
@@ -204,6 +182,11 @@ export const ListItem = ({
             })
             .then(() => remove(ref(fireData, `notes/${id}`)));
     };
+
+    const removeDate = () => {
+        remove(ref(fireData, `notes/${id}/date`));
+        update(ref(fireData, `notes/${id}`), { ["hasDate"]: false });
+    }
 
     /////////////////////
     // END
@@ -241,25 +224,6 @@ export const ListItem = ({
 
     const toggleIsMarkedAsDone = () => {
         updateFirebaseProperty(id, "done", !isMarkedAsDone);
-    };
-
-    const removeDate = () => {
-        fetch(`http://localhost:3000/notes/${id}`, {
-            method: "PATCH",
-            headers: {
-                "Content-type": "application/json",
-            },
-            body: JSON.stringify({
-                hasDate: false,
-                date: "",
-            }),
-        })
-            .then(() => {
-                removeOrEditGivenDateFromDatabse(listItemObjectDate.date);
-            })
-            .then(() => {
-                changeSyncStateToReloadComponentAfterNoteEdit();
-            });
     };
 
     return (

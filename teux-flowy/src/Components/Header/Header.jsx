@@ -44,7 +44,7 @@ export const addListToUser = (listID, userUID) => {
     return update(ref(fireData, `users/${userUID}/`), { [listID]: "" });
 };
 
-const createNewList = (userInfo, setIsDropdownExt) => {
+const createNewList = (userInfo) => {
     if (!userInfo.isLogged) {
         return;
     }

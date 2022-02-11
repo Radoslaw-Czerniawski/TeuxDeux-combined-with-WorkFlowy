@@ -19,7 +19,7 @@ const StyledInlineContext = styled.ul`
     flex-direction: column;
     align-items: center;
     box-shadow: #222 .5rem .5rem 1.5rem -1rem;
-
+    background: #fff;
 `
 
 const StyledInlineContextOption = styled.li`

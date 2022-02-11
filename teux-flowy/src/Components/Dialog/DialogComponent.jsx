@@ -12,7 +12,6 @@ const Dialog = ({ setIsDialogOn, id, userInfo }) => {
     const [pickedDate, setPickedDate] = useState(new Date());
 
     const updateDate = async (pickedDate) => {
-        console.log("Update date")
         const res = await update(ref(fireData, `notes/${id}/`), {
             date: pickedDate,
             hasDate: "true,"
@@ -32,7 +31,7 @@ const Dialog = ({ setIsDialogOn, id, userInfo }) => {
                 <StyledCalendar onChange={(value, event) => setPickedDate(value)} />
                 <StyledConfirmButton
                     onClick={() => {
-                        updateDate(parseJSON(pickedDate))
+                        updateDate(pickedDate.toJSON())
                     }}
                 >
                     Confirm
