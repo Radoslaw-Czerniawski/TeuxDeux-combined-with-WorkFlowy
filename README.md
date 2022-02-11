@@ -23,12 +23,12 @@ Link to app: https://teuxflowy.web.app/
   `TeuxFlowy` allows its users to create infinitely nested lists that can be shared and edited by multiple users. The application has two major views `List view` inspired by `Workflowy` and `Calendar view` inspired by `TeuxDeux`.
 
 ### List view
-
+---
   `List view` enables users to create, remove and edit notes in realtime. Each note can be set as the master note for the purpose of more comfortable edition.
 
 
 ### Calendar view
-
+---
   `Calendar view` enables users to view notes that have assigned date to them in a card-like view for easier daily task management.
 
 ## Authors
