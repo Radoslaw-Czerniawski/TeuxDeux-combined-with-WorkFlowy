@@ -1,6 +1,6 @@
 // COMPONENTS
 import { ToggleVisibilty } from "../ToggleVisibility/ToggleVisibility";
-import {ListElementDate} from "../ListElementDate/ListElementDate";
+import { ListElementDate } from "../ListElementDate/ListElementDate";
 import InlineContext from "../InlineContext/InlineContext";
 import { NameInput } from "../Input/NameInput";
 import * as S from "./StylesListItem";
@@ -17,7 +17,7 @@ import {
     remove,
     get,
     child,
-    off
+    off,
 } from "firebase/database";
 import { db as fireData } from "../../DB/DB";
 
@@ -79,35 +79,47 @@ export const ListItem = ({
     // Extend forwarded parentList
     const listUrl = [...parentList, id];
 
-    //Extend parent name list
     if (parentList[parentList.length - 1] !== listItemObject.id) {
         parentNameList = [...parentNameList, listItemObject.name];
         parentList = [...parentList, id];
     }
 
+    let filteredParentSublist =
+        parentSublist &&
+        parentSublist.filter((value) => {
+            if (value !== listItemObject.id) {
+                return value;
+            }
+        });
+
+    let urlParent = parentList[parentList.length - 2];
+
+    //Extend parent name list
+
     /////////////////////////////////////////////////////////////////////////////
     // FIREBASE FUNCTIONS
     /////////////////////
 
-    const fbData = ref(fireData, `notes/${id}`);
-
     useEffect(() => {
-        onValue(fbData, (snapshot) => {
+        onValue(ref(fireData, `notes/${id}`), (snapshot) => {
             if (snapshot.exists()) {
                 const data = snapshot.val();
+                console.log("wow");
                 setListItemObject({
                     id: `${id}`,
                     name: `${data.name}`,
                     subList: data.subList ? data.subList : [],
                 });
-                data.hasDate && setListItemObjectDate({
-                    hasDate: data.hasDate,
-                    date: `${data.date}`,
-                });
-                !data.hasDate && setListItemObjectDate({
-                    hasDate: data.hasDate,
-                    date: null,
-                });
+                data.hasDate &&
+                    setListItemObjectDate({
+                        hasDate: data.hasDate,
+                        date: `${data.date}`,
+                    });
+                !data.hasDate &&
+                    setListItemObjectDate({
+                        hasDate: data.hasDate,
+                        date: null,
+                    });
 
                 setChildrenVisible(data.expanded);
                 setIsMarkedAsDone(data.done);
@@ -123,7 +135,6 @@ export const ListItem = ({
                 }
             }
         });
-
     }, []);
 
     function createNewNote() {
@@ -134,10 +145,10 @@ export const ListItem = ({
             done: false,
             expanded: true,
             hasDate: false,
-            name: "New note...",
+            name: "",
             subList: [],
             isShared: false,
-            listID: userInfo.currentHomeId
+            listID: userInfo.currentHomeId,
         });
 
         updateFirebaseProperty(id, "subList", [...currentSublist, newID]);
@@ -171,7 +182,6 @@ export const ListItem = ({
             )
             .then(() => {
                 setTimeout(() => {
-
                     setLocalAnimationState(false);
                 }, 300);
             })
@@ -181,21 +191,7 @@ export const ListItem = ({
     const removeDate = () => {
         remove(ref(fireData, `notes/${id}/date`));
         update(ref(fireData, `notes/${id}`), { ["hasDate"]: false });
-    }
-
-    /////////////////////
-    // END
-    /////////////////////////////////////////////////////////////////////////////
-
-    let filteredParentSublist =
-        parentSublist &&
-        parentSublist.filter((value) => {
-            if (value !== listItemObject.id) {
-                return value;
-            }
-        });
-
-    let urlParent = parentList[parentList.length - 2];
+    };
 
     const moveUpCurrentInput = () => {
         const swappedIndex = parentSublist.indexOf(id);

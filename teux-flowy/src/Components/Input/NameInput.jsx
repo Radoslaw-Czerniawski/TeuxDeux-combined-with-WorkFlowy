@@ -31,11 +31,19 @@ const StyledNameInputField = styled.span`
     overflow: visible;
     color: ${(props) => (props.isMarkedAsDone ? "#ddd" : "inherit")};
     text-decoration: ${(props) => (props.isMarkedAsDone ? "line-through" : "none")};
+    position: relative;
     &:active,
     &:focus {
         border: none;
         outline: none;
         animation: ${activeTextPulse} 1.6s infinite;
+    }
+    &:after {
+        position: absolute;
+        opacity: 0.5;
+        width: 10rem;
+        content: "${({ isText }) => (isText ? "" : "Start typing ...")}";
+        animation: ${activeTextPulse} 2s infinite;
     }
 `;
 
@@ -48,20 +56,23 @@ const NameInput = ({
     createNewNote,
 }) => {
     const [dataValue, setDataValue] = useState(listItemObject.name);
+    const [isText, setIsText] = useState(listItemObject.name === "" ? false : true);
 
     const putNewInputValue = debounce((e) => {
+        updateFirebaseProperty(listItemObject.id, "name", e.target.textContent).then(() => {
+            let range = new Range();
 
-        updateFirebaseProperty(listItemObject.id, "name", e.target.textContent);
-        let range = new Range();
+            range.setStart(e.target.childNodes[0], e.target.textContent.length);
+            range.collapse(true);
 
-        range.setStart(e.target.childNodes[0], e.target.textContent.length);
-        range.collapse(true);
+            const sel = window.getSelection();
 
-        const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        });
+    }, 500);
 
-        sel.removeAllRanges();
-        sel.addRange(range);
-    }, 250);
+    console.log(listItemObject.name);
 
     return (
         <StyledNameInputField
@@ -71,17 +82,26 @@ const NameInput = ({
             suppressContentEditableWarning={true}
             isFirst={isFirst}
             spellCheck="false"
+            onFocus={() => setIsText(true)}
             onBlur={(e) => {
                 setDataValue(e.target.textContent);
+                setIsText(true);
             }}
             onKeyDown={(e) => {
                 if (e.key === "Enter") {
                     e.preventDefault();
                 }
             }}
+            isText={isText}
             onKeyUp={(e) => {
-                if(e.key === "Backspace" && e.target.textContent === "" ) {} else {putNewInputValue(e);}
-
+                if (
+                    (e.key === "Backspace" && e.target.textContent === "") ||
+                    e.key === "Tab" ||
+                    e.key === "Enter"
+                ) {
+                } else {
+                    putNewInputValue(e);
+                }
 
                 if (e.key === "Enter" && e.target.textContent !== "") {
                     e.preventDefault();
